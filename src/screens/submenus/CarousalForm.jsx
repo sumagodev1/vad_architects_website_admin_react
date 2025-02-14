@@ -244,7 +244,7 @@
 
 
 import React, { useState, useEffect, useContext } from "react";
-import { Container, Row, Col, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Container, Row, Col, Button, Tooltip, OverlayTrigger, Modal } from "react-bootstrap";
 import { useSearchExport } from "../../context/SearchExportContext";
 import { ShowContext } from "../../context/ShowContext";
 import SearchInput from "../../components/search/SearchInput";
@@ -253,9 +253,10 @@ import "react-toastify/dist/ReactToastify.css";
 import instance from "../../api/AxiosInstance";
 import DataTable from "react-data-table-component";
 import { ThreeDots } from "react-loader-spinner";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash,  FaEye} from "react-icons/fa";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import './carousalform.css'
 
 const CarousalForm = () => {
   const { searchQuery, handleSearch, handleExport, setData, filteredData } = useSearchExport();
@@ -265,6 +266,10 @@ const CarousalForm = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalRows, setTotalRows] = useState(0);
+  //for show modal 
+  const [showModal, setShowModal] = useState(false); // State to handle modal visibility
+  const [selectedRecord, setSelectedRecord] = useState(null); // State to store the selected record for viewing
+
 
   useEffect(() => {
     fetchTeam(currentPage, rowsPerPage);
@@ -407,7 +412,8 @@ const CarousalForm = () => {
     },
     {
       name: <CustomHeader name="Message" />,
-      selector: (row) => row.message,
+      // selector: (row) => row.message,
+      selector: (row) => row.message.length > 30 ? row.message.slice(0, 30) + "..." : row.message,
       key: "message",
       grow: 3, // Assign even more space for the "Message" column
       style: {
@@ -425,6 +431,20 @@ const CarousalForm = () => {
       cell: (row) => (
         <div className="d-flex">
           <OverlayTrigger
+           key={`tooltip-${tooltipKey}`}
+            placement="top"
+            overlay={<Tooltip id="view-tooltip">View</Tooltip>}
+            >
+            <Button
+              className="ms-1"
+              style={{ backgroundColor: "blue", color: "white", borderColor: "blue" }}
+              onClick={() => viewDetails(row)} // Pass the full record to the modal
+            >
+            <FaEye />
+            </Button>
+          </OverlayTrigger>
+
+          <OverlayTrigger
             placement="top"
             overlay={<Tooltip id="delete-tooltip">Delete</Tooltip>}
           >
@@ -440,6 +460,21 @@ const CarousalForm = () => {
       ),
     },
   ];
+
+  // for modal show record
+  const viewDetails = (record) => {
+    setSelectedRecord(record); // Set the selected record
+    setShowModal(true); // Show the modal
+  };
+
+  const [tooltipKey, setTooltipKey] = useState(0);
+
+  const handleCloseModal = () => {
+    setShowModal(false); // Hide the modal
+    setSelectedRecord(null); // Reset the selected record
+    setTooltipKey(prevKey => prevKey + 1); // Trigger a re-render of tooltips
+  };
+  
 
   return (
     <Container>
@@ -488,6 +523,61 @@ const CarousalForm = () => {
           )}
         </Col>
       </Row>
+
+        {/* Modal to view the selected record */}
+      <Modal show={showModal} onHide={handleCloseModal} centered  backdrop="static" keyboard={false}>
+        <Modal.Header closeButton className="modal-header-custom">
+          <Modal.Title>Record Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedRecord && (
+            <div className="row">
+              <div className="col-6 mt-2">
+                <div className="form-group">
+                  <label><strong>Name:</strong></label>
+                  <div className="form-control-readonly">{selectedRecord.name}</div>
+                </div>
+              </div>
+              <div className="col-6 mt-2">
+                <div className="form-group">
+                  <label><strong>Email:</strong></label>
+                  <div className="form-control-readonly">{selectedRecord.email}</div>
+                </div>
+              </div>
+
+              <div className="col-6 mt-2">
+                <div className="form-group">
+                  <label><strong>Mobile:</strong></label>
+                  <div className="form-control-readonly">{selectedRecord.mobile}</div>
+                </div>
+              </div>
+              <div className="col-6 mt-2">
+                <div className="form-group">
+                  <label><strong>Date:</strong></label>
+                  <div className="form-control-readonly">{selectedRecord.createdAt?.slice(0, 10)}</div>
+                </div>
+              </div>
+
+              <div className="col-12 mt-2">
+                <div className="form-group">
+                  <label><strong>Message:</strong></label>
+                  <div className="form-control-readonly message-textarea">
+                    {selectedRecord.message}
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal} className="btn-custom">
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+
     </Container>
   );
 };

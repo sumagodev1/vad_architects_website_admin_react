@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Container, Row, Col, Button, Tooltip, OverlayTrigger, } from "react-bootstrap";
-import { FaDownload, FaTrash } from "react-icons/fa";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Tooltip,
+  OverlayTrigger,
+} from "react-bootstrap";
+import { FaDownload, FaTrash, FaEye } from "react-icons/fa";
 import { useSearchExport } from "../../context/SearchExportContext";
 import { ShowContext } from "../../context/ShowContext";
 import SearchInput from "../../components/search/SearchInput";
@@ -11,6 +18,8 @@ import DataTable from "react-data-table-component";
 import { ThreeDots } from "react-loader-spinner";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css for confirm alert
+import { Modal } from 'react-bootstrap';
+
 
 const UploadCv = () => {
   const {
@@ -26,6 +35,10 @@ const UploadCv = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  //for show modal 
+  const [showModal, setShowModal] = useState(false); // State to handle modal visibility
+  const [selectedRecord, setSelectedRecord] = useState(null); // State to store the selected record for viewing
 
   useEffect(() => {
     fetchTeam();
@@ -50,6 +63,11 @@ const UploadCv = () => {
       setLoading(false);
     }
   };
+
+    // This should be inside the component, after fetching data
+    const paginatedData = searchQuery.trim()
+    ? filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+    : team.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
   const customStyles = {
     rows: {
@@ -142,30 +160,41 @@ const UploadCv = () => {
       name: <CustomHeader name="Sr. No." />,
       selector: (row, index) => (currentPage - 1) * rowsPerPage + index + 1,
       key: "srNo",
-      width: "100px"
+      width: "100px",
     },
     {
       name: <CustomHeader name="Name" />,
       selector: (row) => row.name,
       key: "name",
-      width: "300px"
+      width: "300px",
     },
     {
       name: <CustomHeader name="Phone" />,
       selector: (row) => row.phone,
       key: "phone",
-      width: "200px"
+      width: "200px",
     },
     {
       name: <CustomHeader name="Subject" />,
       selector: (row) => row.subject,
       key: "subject",
       width: "300px",
-      cell: (row) => (
-        <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
-          {row.subject}
-        </div>
-      ),
+      cell: (row) => {
+        const subject = row.subject;
+        const truncatedSubject = subject.length > 40 ? subject.slice(0, 40) + "..." : subject;
+    
+        return (
+          <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+            {truncatedSubject}
+          </div>
+        );
+      },
+
+      // cell: (row) => (
+      //   <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+      //     {row.subject}
+      //   </div>
+      // ),
     },
     {
       name: <CustomHeader name="Message" />,
@@ -173,24 +202,34 @@ const UploadCv = () => {
       key: "message",
       wrap: true, // Enables text wrapping in the column
       width: "400px", // Adjust width as per requirement
-      cell: (row) => (
-        <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
-          {row.message}
-        </div>
-      ),
+      cell: (row) => {
+        const message = row.message;
+        const truncatedMessage = message.length > 60 ? message.slice(0, 60) + "..." : message;
+    
+        return (
+          <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+            {truncatedMessage}
+          </div>
+        );
+      },
+      // cell: (row) => (
+      //   <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+      //     {row.message}
+      //   </div>
+      // ),
     },
     {
       name: <CustomHeader name="Docs" />,
       cell: (row) => (
         <a href={row.cv} target="_blank" rel="noopener noreferrer">
-          View CV
+          view cv
         </a>
       ),
       key: "cv",
     },
     {
       name: <CustomHeader name="Date" />,
-      selector: (row) => (row.createdAt)?.slice(0, 10),
+      selector: (row) => row.createdAt?.slice(0, 10),
       key: "message",
     },
     {
@@ -198,10 +237,32 @@ const UploadCv = () => {
       cell: (row) => (
         <div className="d-flex">
           <OverlayTrigger
+            key={`tooltip-${tooltipKey}`}
+            placement="top"
+            overlay={<Tooltip id="view-tooltip">View</Tooltip>}
+            >
+            <Button
+              className="ms-1"
+              style={{ backgroundColor: "blue", color: "white", borderColor: "blue" }}
+              onClick={() => viewDetails(row)} // Pass the full record to the modal
+            >
+            <FaEye />
+            </Button>
+          </OverlayTrigger>
+
+          <OverlayTrigger
             placement="top"
             overlay={<Tooltip id="delete-tooltip">Delete</Tooltip>}
           >
-            <Button className="ms-1" style={{ backgroundColor: "red", color: "white", borderColor: "red" }} onClick={() => handleDelete(row.id)}>
+            <Button
+              className="ms-1"
+              style={{
+                backgroundColor: "red",
+                color: "white",
+                borderColor: "red",
+              }}
+              onClick={() => handleDelete(row.id)}
+            >
               <FaTrash />
             </Button>
           </OverlayTrigger>
@@ -210,6 +271,21 @@ const UploadCv = () => {
       key: "actions",
     },
   ];
+
+    // for modal show record
+    const viewDetails = (record) => {
+      setSelectedRecord(record); // Set the selected record
+      setShowModal(true); // Show the modal
+    };
+  
+    const [tooltipKey, setTooltipKey] = useState(0);
+  
+    const handleCloseModal = () => {
+      setShowModal(false); // Hide the modal
+      setSelectedRecord(null); // Reset the selected record
+      setTooltipKey(prevKey => prevKey + 1); // Trigger a re-render of tooltips
+    };
+
 
   return (
     <Container>
@@ -242,16 +318,14 @@ const UploadCv = () => {
           ) : (
             <DataTable
               columns={tableColumns}
-              data={filteredData.length > 0 ? filteredData : team}
+              data={paginatedData}  // Replace this line with paginatedData
               pagination
               paginationServer
               paginationTotalRows={
                 filteredData.length > 0 ? filteredData.length : team.length
               }
-              onChangePage={(page) => setCurrentPage(page)}
-              onChangeRowsPerPage={(newRowsPerPage) =>
-                setRowsPerPage(newRowsPerPage)
-              }
+              onChangePage={(page) => setCurrentPage(page)}  // Update page
+              onChangeRowsPerPage={(newRowsPerPage) => setRowsPerPage(newRowsPerPage)}  // Update rows per page
               paginationPerPage={rowsPerPage}
               responsive
               striped
@@ -261,12 +335,82 @@ const UploadCv = () => {
           )}
         </Col>
       </Row>
+
+        {/* Modal to view the selected record */}
+      <Modal show={showModal} onHide={handleCloseModal} centered  backdrop="static" keyboard={false} size="lg">
+        <Modal.Header closeButton className="modal-header-custom">
+          {/* <Modal.Title>{selectedRecord?.name || 'Record Details'}</Modal.Title> */}
+          <Modal.Title>{selectedRecord?.name ? `${selectedRecord.name} Details` : 'Record Details'}</Modal.Title>
+
+        </Modal.Header>
+        <Modal.Body>
+          {selectedRecord && (
+            <div className="row">
+              <div className="col-6">
+                <div className="form-group">
+                  <label><strong>Name:</strong></label>
+                  <div className="form-control-readonly">{selectedRecord.name}</div>
+                </div>
+              </div>
+              <div className="col-6">
+                <div className="form-group">
+                  <label><strong>Email:</strong></label>
+                  <div className="form-control-readonly">{selectedRecord.email}</div>
+                </div>
+              </div>
+
+              <div className="col-6 mt-2">
+                <div className="form-group">
+                  <label><strong>Mobile:</strong></label>
+                  <div className="form-control-readonly">{selectedRecord.phone}</div>
+                </div>
+              </div>
+              <div className="col-6 mt-2">
+                <div className="form-group">
+                  <label><strong>Date:</strong></label>
+                  <div className="form-control-readonly">{selectedRecord.createdAt?.slice(0, 10)}</div>
+                </div>
+              </div>
+
+              <div className="col-12 mt-2">
+                <div className="form-group">
+                  <label><strong>Subject:</strong></label>
+                  <div className="form-control-readonly">{selectedRecord.subject}</div>
+                </div>
+              </div>
+
+              <div className="col-12 mt-2">
+                <div className="form-group">
+                  <label><strong>Message:</strong></label>
+                  <div className="form-control-readonly message-textarea">
+                    {selectedRecord.message}
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-12 mt-2">
+                <div className="form-group">
+                  <label><strong>Uploaded CV:</strong></label>
+                  <div className="readonly mt-2 ms-2">
+                  <a href={selectedRecord.cv} target="_blank" rel="noopener noreferrer">
+                    view cv
+                  </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal} className="btn-custom">
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
     </Container>
   );
 };
 
 export default UploadCv;
-
-
-
-

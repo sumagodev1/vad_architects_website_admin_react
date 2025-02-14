@@ -196,6 +196,12 @@ const SidebarMenu = [
     subMenu: [],
   },
   {
+    menu: "User Data List",
+    url: "/carousalform",
+    mainIcon: <RiFileListLine style={{ color: "red" }} size={24} />,
+    subMenu: [],
+  },
+  {
     menu: "Logout",
     url: "/logout",
     mainIcon: <MdLogout size={24} />,
