@@ -76,7 +76,11 @@ const AreaTop = ({ buttonValue, tableView }) => {
     "/productimages",
     "/social-contact",
     "/leadership",
-    "/about"
+    "/about",
+    // new vivek
+    "/category",
+    "/projectName",
+    "/ProjectDetails"
   ];
   const isHiddenPath = hiddenPaths.includes(location.pathname);
 
@@ -135,6 +139,14 @@ const AreaTop = ({ buttonValue, tableView }) => {
       setHeader("Application Data");
     } else if (window.location.pathname == "/productimages") {
       setHeader("Product Images");
+    }
+    // new vivek
+    else if (window.location.pathname == "/category") {
+      setHeader("Category");
+    }else if (window.location.pathname == "/projectName") {
+      setHeader("Project Name");
+    }else if (window.location.pathname == "/projectDetails") {
+      setHeader("Project Deatils");
     }
 
   }, [window.location.pathname]);

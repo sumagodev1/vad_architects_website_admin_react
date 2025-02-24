@@ -189,6 +189,31 @@ const SidebarMenu = [
     ],
   },
   // New Option
+
+  {
+    menu: "Master",
+    url: "/master",
+    mainIcon: <RiTeamFill size={24} />,
+    subMenu: [
+      {
+        subMenus: "Category",
+        url: "/category",
+        icon: <RiFileListLine style={{ color: "red" }} size={24} />,
+      },
+      {
+        subMenus: "Project Name",
+        url: "/projectName",
+        icon: <RiFileListLine style={{ color: "red" }} size={24} />,
+      },
+      {
+        subMenus: "Project Details",
+        url: "/projectDetails",
+        icon: <RiFileListLine style={{ color: "red" }} size={24} />,
+      },
+    ],
+  },
+
+
   {
     menu: "Cv List",
     url: "/uploadcv",

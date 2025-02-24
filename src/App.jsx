@@ -49,6 +49,11 @@ import ProductImages from "./screens/submenus/ProductImages";
 import SocialContact from "./screens/submenus/SocialContact";
 import About from "./screens/submenus/About";
 
+// new mode
+import Category from "./screens/submenus/Category";
+import ProjectName from "./screens/submenus/ProjectName"
+import ProjectDetails from "./screens/submenus/ProjectDetails";
+
 function App() {
   return (
     <>
@@ -200,6 +205,22 @@ function App() {
             path="/logout"
             element={<ProtectedRoutes Component={Logout} />}
           />
+
+          {/* new mode */}
+
+          <Route
+            path="/category"
+            element={<ProtectedRoutes Component={Category} />}
+          />
+          <Route
+            path="/ProjectName"
+            element={<ProtectedRoutes Component={ProjectName} />}
+          />
+          <Route
+            path="/ProjectDetails"
+            element={<ProtectedRoutes Component={ProjectDetails}/>}
+          />
+
         </Route>
       </Routes>
     </>
