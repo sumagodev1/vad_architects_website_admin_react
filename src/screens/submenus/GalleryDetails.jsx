@@ -23,7 +23,8 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import { ThreeDots } from "react-loader-spinner";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import "../../App.scss";
-const Category = () => {
+import axios from "axios";
+const GalleryDetails = () => {
   // const {  setData, filteredData } =
   //   useSearchExport();
   const { searchQuery, handleSearch, handleExport, setData, filteredData } =
@@ -38,6 +39,10 @@ const Category = () => {
   const [showTable, setShowTable] = useState(true); // New state for toggling form and table view
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [projectcategory, setProjectcategory] = useState([]);
+  const [projectname, setProjectname] = useState([]);
+  const [filteredProjectNames, setFilteredProjectNames] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const CustomHeader = ({ name }) => (
     <div style={{ fontWeight: "bold", color: "black", fontSize: "16px" }}>
@@ -52,8 +57,18 @@ const Category = () => {
     },
 
     {
-      name: <CustomHeader name="Title" />,
-      cell: (row) => <span>{row.title}</span>,
+      name: <CustomHeader name="Gallery Category" />,
+      cell: (row) => <span>{row.gallery_category}</span>,
+    },
+    {
+      name: <CustomHeader name="Image" />,
+      cell: (row) => (
+        <img
+          src={row.img}
+          alt="GalleryDetails"
+          style={{ width: "100px", height: "auto" }}
+        />
+      ),
     },
     {
       name: <CustomHeader name="Actions" />,
@@ -143,7 +158,7 @@ const Category = () => {
     const accessToken = localStorage.getItem("accessToken"); // Retrieve access token
     try {
       const response = await instance.get(
-        "/category/get-category",
+        "galleryDetails/get-galleryDetails",
         {
           headers: {
             Authorization: "Bearer " + accessToken,
@@ -152,6 +167,7 @@ const Category = () => {
         }
       );
       const reversedData = response.data.responseData.reverse();
+    //   console.log("Fetched data:", reversedData);
       setTeam(reversedData);
       setData(reversedData);
     } catch (error) {
@@ -168,8 +184,18 @@ const Category = () => {
     let errors = {};
     let isValid = true;
 
-    if (!formData.title?.trim()) {
-      errors.title = "Title is required";
+    if (!formData.img) {
+      errors.img = "Image is not 338x220 pixels";
+      isValid = false;
+    } else if (
+      formData.img instanceof File &&
+      !validateImageSize(formData.img)
+    ) {
+      errors.img = "Image is required with 338x220 pixels";
+      isValid = false;
+    }
+    if (!formData.gallery_category?.trim()) {
+      errors.gallery_category = "gallery category is required";
       isValid = false;
     }
 
@@ -182,34 +208,97 @@ const Category = () => {
     return isValid;
   };
 
+  const validateImageSize = (file) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        if (img.width === 338 && img.height === 220) {
+          resolve();
+        } else {
+          reject("Image is required with 338x220 pixels");
+        }
+      };
+      img.onerror = () => reject("Error loading image");
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
+//   const handleChange = async (name, value) => {
+//     if (name === "img" && value instanceof File) {
+//       try {
+//         await validateImageSize(value);
+//         setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+//         setErrors((prevErrors) => ({ ...prevErrors, img: "" }));
+//       } catch (error) {
+//         setErrors((prevErrors) => ({ ...prevErrors, img: error }));
+//         setImagePreview("");
+//       }
+//     } else {
+//       setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+//       setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+//     }
+//   };
+
+  const handleChange = async (name, value) => {
+    if (name === "img" && value instanceof File) {
+      try {
+        await validateImageSize(value);
+        setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+        setErrors((prevErrors) => ({ ...prevErrors, img: "" }));
+      } catch (error) {
+        setErrors((prevErrors) => ({ ...prevErrors, img: error }));
+        setImagePreview("");
+      }
+    }  else {
+        setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+      }
+  };
+  
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // console.log("Submitting form with data:", formData);
     if (validateForm(formData)) {
       setLoading(true);
       const accessToken = localStorage.getItem("accessToken"); // Retrieve access token
       const data = new FormData();
-      for (const key in formData) {
-        data.append(key, formData[key]);
-      }
+
+          // Add categoryId and projectId explicitly
+    data.append("gallery_category", formData.gallery_category); 
+    
+    // Handle file (image)
+    if (formData.img instanceof File) {
+      data.append("img", formData.img);
+    }
+
+    // console.log("Form data being sent:", [...data.entries()]);
+
+    //   console.log("Form data being sent:", [...data.entries()]);
 
       try {
         if (editMode) {
-          await instance.put(`category/update-category/${editingId}`, data, {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-              "Content-Type": "application/json",
-            },
-          });
+          await instance.put(
+            `galleryDetails/update-galleryDetails/${editingId}`,
+            data,
+            {
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
           toast.success("Data Updated Successfully");
           const updatedTeam = team.map((member) =>
             member.id === editingId ? formData : member
           );
           setTeam(updatedTeam);
         } else {
-          await instance.post("category/create-category", data, {
+          await instance.post("galleryDetails/create-galleryDetails", data, {
             headers: {
               Authorization: "Bearer " + accessToken,
-              "Content-Type": "application/json",
+              "Content-Type": "multipart/form-data",
             },
           });
           toast.success("Data Submitted Successfully");
@@ -227,28 +316,7 @@ const Category = () => {
       }
     }
   };
-  const handleChange = async (name, value) => {
 
-    // Restrict Title field to only alphabets and spaces
-    if (name === "title" && !/^[a-zA-Z\s]*$/.test(value)) {
-      setErrors((prevErrors) => ({ ...prevErrors, [name]: "Only alphabets and spaces are allowed." }));
-      return;  // Prevent updating state
-    }
-
-    if (name === "img" && value instanceof File) {
-      try {
-        await validateImageSize(value);
-        setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-        setErrors((prevErrors) => ({ ...prevErrors, img: "" }));
-      } catch (error) {
-        setErrors((prevErrors) => ({ ...prevErrors, img: error }));
-        setImagePreview("");
-      }
-    } else {
-      setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-    }
-  };
   const handleDelete = async (id) => {
     confirmAlert({
       title: "Confirm to delete",
@@ -281,12 +349,15 @@ const Category = () => {
                 setLoading(true);
                 const accessToken = localStorage.getItem("accessToken");
                 try {
-                  await instance.delete(`category/isdelete-category/${id}`, {
-                    headers: {
-                      Authorization: `Bearer ${accessToken}`,
-                      "Content-Type": "application/json",
-                    },
-                  });
+                  await instance.delete(
+                    `galleryDetails/isdelete-galleryDetails/${id}`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        "Content-Type": "application/json",
+                      },
+                    }
+                  );
                   toast.success("Data Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
@@ -343,7 +414,7 @@ const Category = () => {
                 const accessToken = localStorage.getItem("accessToken");
                 try {
                   await instance.put(
-                    `category/isactive-category/${id}`,
+                    `galleryDetails/isactive-galleryDetails/${id}`,
                     { isVisible },
                     {
                       headers: {
@@ -476,15 +547,39 @@ const Category = () => {
               ) : (
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col md={6}>
+                    <Col md={12}>
+                      {imagePreview && (
+                        <img
+                          src={imagePreview}
+                          alt="Selected Preview"
+                          style={{
+                            width: "100px",
+                            height: "auto",
+                            marginBottom: "10px",
+                          }}
+                        />
+                      )}
                       <NewResuableForm
-                        label="Title"
-                        placeholder="Enter Title"
-                        name="title"
+                        label={"Upload project Image"}
+                        placeholder={"Upload Image"}
+                        name={"img"}
+                        type={"file"}
+                        onChange={handleChange}
+                        initialData={formData}
+                        error={errors.img}
+                        imageDimensiion="Image must be 338x220 pixels"
+                      />
+                    </Col>
+                    <Col md={6} className="mt-2">
+                      <NewResuableForm
+                        label="Project Category"
+                        placeholder="Enter Project Category"
+                        name="gallery_category"
                         type="text"
                         onChange={handleChange}
                         initialData={formData}
-                        error={errors.title}
+                        error={errors.gallery_category}
+                        // charLimit={1000}
                       />
                     </Col>
                   </Row>
@@ -508,4 +603,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default GalleryDetails;

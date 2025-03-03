@@ -53,6 +53,9 @@ import About from "./screens/submenus/About";
 import Category from "./screens/submenus/Category";
 import ProjectName from "./screens/submenus/ProjectName"
 import ProjectDetails from "./screens/submenus/ProjectDetails";
+import ProjectDetailsWithImages from "./screens/submenus/ProjectDetailsWithImages"
+import GalleryDetails from "./screens/submenus/GalleryDetails"
+import GalleryDetailsWithImages from "./screens/submenus/GalleryDetailsWithImages"
 
 function App() {
   return (
@@ -219,6 +222,18 @@ function App() {
           <Route
             path="/ProjectDetails"
             element={<ProtectedRoutes Component={ProjectDetails}/>}
+          />
+          <Route
+            path="/ProjectDetailsWithImages"
+            element={<ProtectedRoutes Component={ProjectDetailsWithImages}/>}
+          />
+          <Route
+            path="/GalleryDetails"
+            element={<ProtectedRoutes Component={GalleryDetails}/>}
+          />
+          <Route
+            path="/GalleryDetailsWithImages"
+            element={<ProtectedRoutes Component={GalleryDetailsWithImages}/>}
           />
 
         </Route>

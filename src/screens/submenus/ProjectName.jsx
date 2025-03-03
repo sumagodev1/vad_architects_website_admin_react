@@ -39,6 +39,7 @@ const ProjectName = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [projectcategory, setProjectcategory] = useState([]);
   const CustomHeader = ({ name }) => (
     <div style={{ fontWeight: "bold", color: "black", fontSize: "16px" }}>
       {name}
@@ -49,6 +50,10 @@ const ProjectName = () => {
     {
       name: <CustomHeader name="Sr. No." />,
       selector: (row, index) => (currentPage - 1) * rowsPerPage + index + 1,
+    },
+    {
+      name: <CustomHeader name="project_category" />,
+      cell: (row) => <span>{row.project_category}</span>,
     },
 
     {
@@ -173,6 +178,11 @@ const ProjectName = () => {
       isValid = false;
     }
 
+    if (!formData.project_category?.trim()) {
+      errors.project_category = "project category is required";
+      isValid = false;
+    }
+
     // else if (formData.desc.length > 1000) {
     //   errors.desc = "Description must be 1000 characters or less";
     //   isValid = false;
@@ -188,9 +198,14 @@ const ProjectName = () => {
       setLoading(true);
       const accessToken = localStorage.getItem("accessToken"); // Retrieve access token
       const data = new FormData();
-      for (const key in formData) {
-        data.append(key, formData[key]);
-      }
+      // for (const key in formData) {
+      //   data.append(key, formData[key]);
+      // }
+                // Add categoryId and projectId explicitly
+    data.append("project_category_id", formData.project_category_id); 
+    data.append("project_category", formData.project_category); 
+    data.append("project_name", formData.project_name); 
+  
 
       try {
         if (editMode) {
@@ -227,7 +242,30 @@ const ProjectName = () => {
       }
     }
   };
+  // const handleChange = async (name, value) => {
+  //   if (name === "img" && value instanceof File) {
+  //     try {
+  //       await validateImageSize(value);
+  //       setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  //       setErrors((prevErrors) => ({ ...prevErrors, img: "" }));
+  //     } catch (error) {
+  //       setErrors((prevErrors) => ({ ...prevErrors, img: error }));
+  //       setImagePreview("");
+  //     }
+  //   } else {
+  //     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  //     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  //   }
+  // };
+
   const handleChange = async (name, value) => {
+
+        // Restrict project_name field to only alphabets and spaces
+        if (name === "project_name" && !/^[a-zA-Z\s]*$/.test(value)) {
+          setErrors((prevErrors) => ({ ...prevErrors, [name]: "Only alphabets and spaces are allowed." }));
+          return;  // Prevent updating state
+        }
+
     if (name === "img" && value instanceof File) {
       try {
         await validateImageSize(value);
@@ -237,11 +275,32 @@ const ProjectName = () => {
         setErrors((prevErrors) => ({ ...prevErrors, img: error }));
         setImagePreview("");
       }
+    } else if (name === "project_category") {
+      // Handle category selection change
+      const categoryId = projectcategory.find(c => c.title === value)?.id;
+      setFormData((prevFormData) => ({ ...prevFormData, project_category: value, project_category_id: categoryId }));
     } else {
       setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
       setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
     }
   };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await instance.get("category/get-category");
+        console.log("categories:", response.data.responseData);
+  
+        setProjectcategory(Array.isArray(response.data.responseData) ? response.data.responseData : []);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setProjectcategory([]); 
+      }
+    };
+  
+    fetchCategories();
+  }, []);
+
   const handleDelete = async (id) => {
     confirmAlert({
       project_name: "Confirm to delete",
@@ -469,7 +528,22 @@ const ProjectName = () => {
               ) : (
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col md={6}>
+                    <Col md={6} className="mt-2">
+                        <Form.Group controlId="projectCategory">
+                        <Form.Label>Project Category</Form.Label>
+                        <Form.Select
+                            value={formData.project_category || ""} // Set selected option for edit mode
+                            onChange={(e) => handleChange("project_category", e.target.value)}
+                        >
+                            <option disabled value="">Choose Category</option>
+                            {projectcategory.map((a, index) => (
+                            <option key={a.id} value={a.title}>{a.title}</option>
+                            ))}
+                        </Form.Select>
+                        </Form.Group>
+                        <p className="text-danger">{errors.project_category}</p>
+                    </Col>
+                    <Col md={6} className="mt-2">
                       <NewResuableForm
                         label="Project Name"
                         placeholder="Enter Project Name"

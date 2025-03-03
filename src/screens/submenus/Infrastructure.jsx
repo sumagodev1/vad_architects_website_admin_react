@@ -62,6 +62,10 @@ const Infrastructure = () => {
       cell: (row) => <span>{row.title}</span>,
     },
     {
+      name: <CustomHeader name="SubTitle" />,
+      cell: (row) => <span>{row.subtitle}</span>,
+    },
+    {
       name: <CustomHeader name="Description" />,
       cell: (row) => <span>{row.desc}</span>,
     },
@@ -189,6 +193,10 @@ const Infrastructure = () => {
     }
     if (!formData.title?.trim()) {
       errors.title = "Title is required";
+      isValid = false;
+    }
+    if (!formData.subtitle?.trim()) {
+      errors.subtitle = "Sub Title is required";
       isValid = false;
     }
 
@@ -546,6 +554,17 @@ const Infrastructure = () => {
                       onChange={handleChange}
                       initialData={formData}
                       error={errors.title}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <NewResuableForm
+                      label="Sub Title"
+                      placeholder="Enter Sub Title"
+                      name="subtitle"
+                      type="text"
+                      onChange={handleChange}
+                      initialData={formData}
+                      error={errors.subtitle}
                     />
                   </Col>
                   <Col md={6}>

@@ -43,11 +43,11 @@ const SidebarMenu = [
         url: "/carousal",
         icon: <RiFileListLine style={{ color: "red" }} size={24} />,
       },
-      {
-        subMenus: "Image Slider",
-        url: "/homeslider",
-        icon: <AiOutlineProject style={{ color: "red" }} size={24} />,
-      },
+      // {
+      //   subMenus: "Image Slider",
+      //   url: "/homeslider",
+      //   icon: <AiOutlineProject style={{ color: "red" }} size={24} />,
+      // },
       {
         subMenus: "Testimonial",
         url: "/testimonial",
@@ -60,21 +60,21 @@ const SidebarMenu = [
     url: "/about",
     mainIcon: <RiTeamFill size={24} />,
     subMenu: [
+      // {
+      //   subMenus: "About",
+      //   url: "/about",
+      //   icon: <BsBuilding style={{ color: "red" }} size={24} />,
+      // },
       {
-        subMenus: "About",
-        url: "/about",
-        icon: <BsBuilding style={{ color: "red" }} size={24} />,
-      },
-      {
-        subMenus: "Infrastructure",
+        subMenus: "Services",
         url: "/infrastructure",
         icon: <BsBuilding style={{ color: "red" }} size={24} />,
       },
-      {
-        subMenus: "Leadership",
-        url: "/leadership",
-        icon: <FiUsers style={{ color: "red" }} size={24} />,
-      },
+      // {
+      //   subMenus: "Leadership",
+      //   url: "/leadership",
+      //   icon: <FiUsers style={{ color: "red" }} size={24} />,
+      // },
       {
         subMenus: "Our Team",
         url: "/ourteam",
@@ -82,43 +82,43 @@ const SidebarMenu = [
       },
     ],
   },
-  {
-    menu: "Product",
-    url: "/product",
-    mainIcon: <FiList size={24} />,
-    subMenu: [
-      {
-        subMenus: "Product Details",
-        url: "/productdetails",
-        icon: <IoIosOptions style={{ color: "red" }} size={24} />,
-      },
-      {
-        subMenus: "Product Images",
-        url: "/productimages",
-        icon: <IoIosOptions style={{ color: "red" }} size={24} />,
-      },
-      {
-        subMenus: "Models",
-        url: "/technicaldata",
-        icon: <FiFileText style={{ color: "red" }} size={24} />,
-      },
-      {
-        subMenus: "Accessories & Optional",
-        url: "/optionsdata",
-        icon: <IoIosOptions style={{ color: "red" }} size={24} />,
-      },
-      // {
-      //   subMenus: "Material Data",
-      //   url: "/materialdata",
-      //   icon: <RiFileListLine style={{ color: "red" }} size={24} />,
-      // },
-      {
-        subMenus: "Application Data",
-        url: "/applicationdata",
-        icon: <RiFileListLine style={{ color: "red" }} size={24} />,
-      },
-    ],
-  },
+  // {
+  //   menu: "Product",
+  //   url: "/product",
+  //   mainIcon: <FiList size={24} />,
+  //   subMenu: [
+  //     {
+  //       subMenus: "Product Details",
+  //       url: "/productdetails",
+  //       icon: <IoIosOptions style={{ color: "red" }} size={24} />,
+  //     },
+  //     {
+  //       subMenus: "Product Images",
+  //       url: "/productimages",
+  //       icon: <IoIosOptions style={{ color: "red" }} size={24} />,
+  //     },
+  //     {
+  //       subMenus: "Models",
+  //       url: "/technicaldata",
+  //       icon: <FiFileText style={{ color: "red" }} size={24} />,
+  //     },
+  //     {
+  //       subMenus: "Accessories & Optional",
+  //       url: "/optionsdata",
+  //       icon: <IoIosOptions style={{ color: "red" }} size={24} />,
+  //     },
+  //     // {
+  //     //   subMenus: "Material Data",
+  //     //   url: "/materialdata",
+  //     //   icon: <RiFileListLine style={{ color: "red" }} size={24} />,
+  //     // },
+  //     {
+  //       subMenus: "Application Data",
+  //       url: "/applicationdata",
+  //       icon: <RiFileListLine style={{ color: "red" }} size={24} />,
+  //     },
+  //   ],
+  // },
   {
     menu: "Blog",
     url: "/blog",
@@ -132,62 +132,62 @@ const SidebarMenu = [
     ],
   },
   
-  {
-    menu: "News and Event",
-    url: "/newsandevent",
-    mainIcon: <BsNewspaper size={24} />,
-    subMenu: [
-      {
-        subMenus: "News",
-        url: "/news",
-        icon: <BsNewspaper style={{ color: "red" }} size={24} />,
-      },
-      {
-        subMenus: "Events",
-        url: "/events",
-        icon: <BsNewspaper style={{ color: "red" }} size={24} />,
-      },
-    ],
-  },
-  {
-    menu: "Contact Us",
-    url: "/contactus",
-    mainIcon: <MdOutlinePermContactCalendar size={24} />,
-    subMenu: [
-      {
-        subMenus: "Contact Sales Person",
-        url: "/contactsalesperson",
-        icon: <AiOutlineAppstoreAdd style={{ color: "red" }} size={24} />,
-      },
-      {
-        subMenus: "Our Offices",
-        url: "/office",
-        icon: <BsBuilding style={{ color: "red" }} size={24} />,
-      },
-    ],
-  },
-  {
-    menu: "Contact Person Details",
-    url: "/contactus",
-    mainIcon: <MdOutlinePermContactCalendar size={24} />,
-    subMenu: [
-      {
-        subMenus: "User Data List",
-        url: "/carousalform",
-        icon: <RiFileListLine style={{ color: "red" }} size={24} />,
-      },
-      {
-        subMenus: "Cv List",
-        url: "/uploadcv",
-        icon: <FiUploadCloud style={{ color: "red" }} size={24} />,
-      },
-      {
-        subMenus: "Subscriber List",
-        url: "/subscribe",
-        icon: <RiContactsBookLine style={{ color: "red" }} size={24} />,
-      },
-    ],
-  },
+  // {
+  //   menu: "News and Event",
+  //   url: "/newsandevent",
+  //   mainIcon: <BsNewspaper size={24} />,
+  //   subMenu: [
+  //     {
+  //       subMenus: "News",
+  //       url: "/news",
+  //       icon: <BsNewspaper style={{ color: "red" }} size={24} />,
+  //     },
+  //     {
+  //       subMenus: "Events",
+  //       url: "/events",
+  //       icon: <BsNewspaper style={{ color: "red" }} size={24} />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   menu: "Contact Us",
+  //   url: "/contactus",
+  //   mainIcon: <MdOutlinePermContactCalendar size={24} />,
+  //   subMenu: [
+  //     {
+  //       subMenus: "Contact Sales Person",
+  //       url: "/contactsalesperson",
+  //       icon: <AiOutlineAppstoreAdd style={{ color: "red" }} size={24} />,
+  //     },
+  //     {
+  //       subMenus: "Our Offices",
+  //       url: "/office",
+  //       icon: <BsBuilding style={{ color: "red" }} size={24} />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   menu: "Contact Person Details",
+  //   url: "/contactus",
+  //   mainIcon: <MdOutlinePermContactCalendar size={24} />,
+  //   subMenu: [
+  //     {
+  //       subMenus: "User Data List",
+  //       url: "/carousalform",
+  //       icon: <RiFileListLine style={{ color: "red" }} size={24} />,
+  //     },
+  //     {
+  //       subMenus: "Cv List",
+  //       url: "/uploadcv",
+  //       icon: <FiUploadCloud style={{ color: "red" }} size={24} />,
+  //     },
+  //     {
+  //       subMenus: "Subscriber List",
+  //       url: "/subscribe",
+  //       icon: <RiContactsBookLine style={{ color: "red" }} size={24} />,
+  //     },
+  //   ],
+  // },
   // New Option
 
   {
@@ -210,6 +210,21 @@ const SidebarMenu = [
         url: "/projectDetails",
         icon: <RiFileListLine style={{ color: "red" }} size={24} />,
       },
+      {
+        subMenus: "Project Details With Images",
+        url: "/projectDetailsWithImages",
+        icon: <RiFileListLine style={{ color: "red" }} size={24} />,
+      },
+      {
+        subMenus: "Gallery Details",
+        url: "/galleryDetails",
+        icon: <RiFileListLine style={{ color: "red" }} size={24} />,
+      },
+      {
+        subMenus: "Gallery Details With Images",
+        url: "/galleryDetailsWithImages",
+        icon: <RiFileListLine style={{ color: "red" }} size={24} />,
+      },
     ],
   },
 
@@ -221,7 +236,7 @@ const SidebarMenu = [
     subMenu: [],
   },
   {
-    menu: "User Data List",
+    menu: "Contact Us",
     url: "/carousalform",
     mainIcon: <RiFileListLine style={{ color: "red" }} size={24} />,
     subMenu: [],

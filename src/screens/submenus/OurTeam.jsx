@@ -198,11 +198,19 @@ const OurTeam = () => {
     if (!formData.designation?.trim()) {
       errors.designation = "Designation is required";
       isValid = false;
+    } else if (formData.designation.length > 40) {
+      errors.designation = "Designation must not exceed 40 characters";
+      isValid = false;
     }
+  
     if (!formData.description?.trim()) {
       errors.description = "Description is required";
       isValid = false;
+    } else if (formData.description.length > 151) {
+      errors.description = "Description must not exceed 151 characters";
+      isValid = false;
     }
+    // formData.description.split(/\s+/).length > 25
     if (!formData.position_no) {
       errors.position_no = "Position no is required";
       isValid = false;

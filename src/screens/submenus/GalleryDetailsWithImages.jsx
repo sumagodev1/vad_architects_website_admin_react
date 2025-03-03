@@ -24,7 +24,8 @@ import { ThreeDots } from "react-loader-spinner";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import "../../App.scss";
 import axios from "axios";
-const ProjectDetails = () => {
+const GalleryDetailsWithImages = () => {
+  const baseURL = instance.defaults.baseURL;
   // const {  setData, filteredData } =
   //   useSearchExport();
   const { searchQuery, handleSearch, handleExport, setData, filteredData } =
@@ -35,13 +36,14 @@ const ProjectDetails = () => {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({});
   const [eyeVisibilityById, setEyeVisibilityById] = useState({});
-  const [imagePreview, setImagePreview] = useState("");
+  const [imagePreview, setImagePreviews] = useState("");
   const [showTable, setShowTable] = useState(true); // New state for toggling form and table view
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [projectcategory, setProjectcategory] = useState([]);
-  const [projectname, setProjectname] = useState([]);
-  const [filteredProjectNames, setFilteredProjectNames] = useState([]);
+  const [gallerycategory, setgallerycategory] = useState([]);
+  const [galleryname, setgalleryname] = useState([]);
+  const [filteredgalleryNames, setFilteredgalleryNames] = useState([]);
+  const [isCategorySelected, setIsCategorySelected] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const CustomHeader = ({ name }) => (
@@ -57,27 +59,61 @@ const ProjectDetails = () => {
     },
 
     {
-      name: <CustomHeader name="Project Category" />,
-      cell: (row) => <span>{row.project_category}</span>,
+      name: <CustomHeader name="Gallery Category" />,
+      cell: (row) => <span>{row.gallery_category}</span>,
     },
     {
-      name: <CustomHeader name="Project Name" />,
-      cell: (row) => <span>{row.project_name}</span>,
+      name: <CustomHeader name="Images" />,
+      cell: (row) => {
+        const images = JSON.parse(row.gallery_images); // Parse the JSON string into an array
+
+        // Check if images array exists and is not empty
+        if (images && images.length > 0) {
+          return (
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              {images.map((image, index) => (
+                <>
+                  {" "}
+                  <img
+                    key={index}
+                    src={`${baseURL}${image}`} // Access each image
+                    alt={`galleryImage-${index}`}
+                    style={{
+                      width: "100px",
+                      height: "auto",
+                      marginRight: "5px",
+                      marginBottom: "5px",
+                    }}
+                  />
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip id="delete-tooltip">Delete</Tooltip>}
+                  >
+                    <Button
+                      className="p-0"
+                      style={{
+                        backgroundColor: "red",
+                        color: "white",
+                        borderColor: "red",
+                        height: "20px",
+                        width: "20px",
+                        fontSize: "10px",
+                      }}
+                      onClick={() => handleDelete2(row.id, image)} // Pass the image path here
+                    >
+                      <FaTrash />
+                    </Button>
+                  </OverlayTrigger>
+                </>
+              ))}
+            </div>
+          );
+        } else {
+          return <span>No Images Available</span>; // Fallback if no images exist
+        }
+      },
     },
-    {
-      name: <CustomHeader name="Project Location" />,
-      cell: (row) => <span>{row.project_location}</span>,
-    },
-    {
-      name: <CustomHeader name="Image" />,
-      cell: (row) => (
-        <img
-          src={row.img}
-          alt="ProjectDetails"
-          style={{ width: "100px", height: "auto" }}
-        />
-      ),
-    },
+
     {
       name: <CustomHeader name="Actions" />,
       cell: (row) => (
@@ -151,13 +187,13 @@ const ProjectDetails = () => {
     if (formData.img && formData.img instanceof File) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
+        setImagePreviews(reader.result); // Use the base64 URL from the FileReader
       };
-      reader.readAsDataURL(formData.img);
+      reader.readAsDataURL(formData.img); // Read as data URL
     } else if (formData.img && typeof formData.img === "string") {
-      setImagePreview(formData.img);
+      setImagePreviews(formData.img); // Directly use the image URL from formData.img
     } else {
-      setImagePreview("");
+      setImagePreviews(""); // Clear the preview if no image is provided
     }
   }, [formData.img]);
 
@@ -166,7 +202,7 @@ const ProjectDetails = () => {
     const accessToken = localStorage.getItem("accessToken"); // Retrieve access token
     try {
       const response = await instance.get(
-        "projectDetails/find-projectDetails",
+        "/galleryImages/GalleryImages",
         {
           headers: {
             Authorization: "Bearer " + accessToken,
@@ -174,8 +210,8 @@ const ProjectDetails = () => {
           },
         }
       );
-      const reversedData = response.data.responseData.reverse();
-    //   console.log("Fetched data:", reversedData);
+      const reversedData = response.data.reverse();
+      //   console.log("Fetched data:", reversedData);
       setTeam(reversedData);
       setData(reversedData);
     } catch (error) {
@@ -188,34 +224,27 @@ const ProjectDetails = () => {
     }
   };
 
-  const validateForm = (formData) => {
+  const validateForm = (formData,isEditMode) => {
     let errors = {};
     let isValid = true;
-
-    if (!formData.img) {
+    if (!isEditMode || (formData.img && formData.img.length > 0)) {
+    if (formData.img && formData.img.length > 0) {
+      formData.img.forEach((file, index) => {
+        if (!validateImageSize(file)) {
+          errors.img = `Image ${file.name} is required with 338x220 pixels`;
+          isValid = false;
+        }
+      });
+    } else {
       errors.img = "Image is not 338x220 pixels";
       isValid = false;
-    } else if (
-      formData.img instanceof File &&
-      !validateImageSize(formData.img)
-    ) {
-      errors.img = "Image is required with 338x220 pixels";
-      isValid = false;
     }
-    if (!formData.project_category?.trim()) {
-      errors.project_category = "project category is required";
+  }
+    if (!formData.gallery_category?.trim()) {
+      errors.gallery_category = "gallery category is required";
       isValid = false;
     }
 
-    if (!formData.project_name?.trim()) {
-      errors.project_name = "project name is required";
-      isValid = false;
-    }
-
-    if (!formData.project_location?.trim()) {
-      errors.project_location = "project location is required";
-      isValid = false;
-    }
     // else if (formData.desc.length > 1000) {
     //   errors.desc = "Description must be 1000 characters or less";
     //   isValid = false;
@@ -230,127 +259,107 @@ const ProjectDetails = () => {
       const img = new Image();
       img.onload = () => {
         if (img.width === 338 && img.height === 220) {
-          resolve();
+          resolve(); // Validation successful
         } else {
-          reject("Image is required with 338x220 pixels");
+          reject(`Image "${file.name}" must be 338x220 pixels`); // Reject with specific error
         }
       };
       img.onerror = () => reject("Error loading image");
-      img.src = URL.createObjectURL(file);
+      img.src = URL.createObjectURL(file); // Set image source
     });
   };
 
-//   const handleChange = async (name, value) => {
-//     if (name === "img" && value instanceof File) {
-//       try {
-//         await validateImageSize(value);
-//         setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-//         setErrors((prevErrors) => ({ ...prevErrors, img: "" }));
-//       } catch (error) {
-//         setErrors((prevErrors) => ({ ...prevErrors, img: error }));
-//         setImagePreview("");
-//       }
-//     } else {
-//       setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-//       setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-//     }
-//   };
+  //   const handleChange = async (name, value) => {
+  //     if (name === "img" && value instanceof File) {
+  //       try {
+  //         await validateImageSize(value);
+  //         setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  //         setErrors((prevErrors) => ({ ...prevErrors, img: "" }));
+  //       } catch (error) {
+  //         setErrors((prevErrors) => ({ ...prevErrors, img: error }));
+  //         setImagePreview("");
+  //       }
+  //     } else {
+  //       setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  //       setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  //     }
+  //   };
 
   const handleChange = async (name, value) => {
-    if (name === "img" && value instanceof File) {
-      try {
-        await validateImageSize(value);
-        setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-        setErrors((prevErrors) => ({ ...prevErrors, img: "" }));
-      } catch (error) {
-        setErrors((prevErrors) => ({ ...prevErrors, img: error }));
-        setImagePreview("");
-      }
-    } else if (name === "project_category") {
-         // Find the categoryId based on selected category title
-      const categoryId = projectcategory.find((c) => c.title === value)?.id;
-      
-      // Set the selected category and clear the project name field
+    if (name === "gallery_category") {
+      const categoryId = gallerycategory.find((c) => c.gallery_category === value)?.id;
+      console.log(categoryId);
+  
       setFormData((prevFormData) => ({
         ...prevFormData,
-        project_category: value,
-        project_category_id: categoryId,
-        project_name: "", // Clear the project name when category is changed
+        gallery_category: value,
+        gallery_category_id: categoryId,
       }));
   
-      // Fetch project names for the selected category
-      const filteredNames = projectname.filter(
-        (project) => project.project_category_id === categoryId
-      );
-      setFilteredProjectNames(filteredNames); // Update the filtered project names list
-      } else if (name === "project_name") {
-        const projectId = projectname.find(p => p.project_name === value)?.id;
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          project_name: value,
-          project_name_id: projectId
-        }));
-      } else {
-        setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-        setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-      }
-  };
+      // Reset the flag and filtered gallery names when category changes
+      setIsCategorySelected(false);
+      setFilteredgalleryNames([]);
+    }  else {
+      setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+    }
   
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  };
+
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await instance.get("category/get-category");
-        setProjectcategory(Array.isArray(response.data.responseData) ? response.data.responseData : []);
+        const response = await instance.get("galleryDetails/get-galleryDetails");
+        console.log("gallery:", response.data.responseData);
+
+        setgallerycategory(
+          Array.isArray(response.data.responseData)
+            ? response.data.responseData
+            : []
+        );
       } catch (error) {
         console.error("Error fetching categories:", error);
-        setProjectcategory([]);
+        setgallerycategory([]);
       }
     };
-  
-    const fetchProjectNames = async () => {
-      try {
-        const response = await instance.get("projectName/get-projectName");
-        setProjectname(Array.isArray(response.data.responseData) ? response.data.responseData : []);
-      } catch (error) {
-        console.error("Error fetching project names:", error);
-        setProjectname([]);
-      }
-    };
-  
+
     fetchCategories();
-    fetchProjectNames();
   }, []);
-  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("Submitting form with data:", formData);
-    if (validateForm(formData)) {
+
+    if (validateForm(formData,editMode)) {
       setLoading(true);
-      const accessToken = localStorage.getItem("accessToken"); // Retrieve access token
+      const accessToken = localStorage.getItem("accessToken");
       const data = new FormData();
 
-          // Add categoryId and projectId explicitly
-    data.append("project_category_id", formData.project_category_id); 
-    data.append("project_category", formData.project_category); 
-    data.append("project_name_id", formData.project_name_id); 
-    data.append("project_name", formData.project_name);        
-    data.append("project_location", formData.project_location);
-    
-    // Handle file (image)
-    if (formData.img instanceof File) {
-      data.append("img", formData.img);
-    }
+      // Add other fields to FormData
+      data.append("gallery_category_id", formData.gallery_category_id);
+      data.append("gallery_category", formData.gallery_category);
 
-    // console.log("Form data being sent:", [...data.entries()]);
+      // Check if formData.img is an array and contains files
+      console.log(formData.img); // Verify formData.img contains files
 
-    //   console.log("Form data being sent:", [...data.entries()]);
+      // Append each file from formData.img to FormData
+      if (formData.img && Array.isArray(formData.img)) {
+        formData.img.forEach((file) => {
+          console.log(file); // Log each file to verify they are correct
+          data.append("gallery_images", file); // Append each file individually
+        });
+      }
+
+      // Log the FormData to check if files are being appended
+      for (let pair of data.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
+      }
 
       try {
         if (editMode) {
           await instance.put(
-            `projectDetails/update-projectDetails/${editingId}`,
+            `GalleryImages/GalleryImages/${editingId}/images`,
             data,
             {
               headers: {
@@ -359,30 +368,29 @@ const ProjectDetails = () => {
               },
             }
           );
-          toast.success("Data Updated Successfully");
-          const updatedTeam = team.map((member) =>
-            member.id === editingId ? formData : member
-          );
-          setTeam(updatedTeam);
         } else {
-          await instance.post("projectDetails/create-projectDetails", data, {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          toast.success("Data Submitted Successfully");
+          await instance.post(
+            "GalleryImages/create-GalleryImageDetailsWithImages",
+            data,
+            {
+              headers: {
+                Authorization: "Bearer " + accessToken,
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
         }
         fetchTeam();
 
         setEditMode(false);
         setFormData({});
-        setImagePreview("");
-        setShowTable(true); // Switch back to table view after submission
+        setImagePreviews("");
+        setShowTable(true);
       } catch (error) {
         console.error("Error handling form submission:", error);
+        toast.error(error);
       } finally {
-        setLoading(false); // Set loading to false
+        setLoading(false);
       }
     }
   };
@@ -420,7 +428,7 @@ const ProjectDetails = () => {
                 const accessToken = localStorage.getItem("accessToken");
                 try {
                   await instance.delete(
-                    `projectDetails/isdelete-projectDetails/${id}`,
+                    `galleryImages/GalleryImages/${id}/is-delete`,
                     {
                       headers: {
                         Authorization: `Bearer ${accessToken}`,
@@ -433,6 +441,70 @@ const ProjectDetails = () => {
                 } catch (error) {
                   console.error("Error deleting data:", error);
                   toast.error("Error deleting data");
+                } finally {
+                  setLoading(false);
+                }
+                onClose();
+              }}
+            >
+              Yes
+            </button>
+            <button className="btn btn-secondary" onClick={() => onClose()}>
+              No
+            </button>
+          </div>
+        </div>
+      ),
+    });
+  };
+  const handleDelete2 = async (id, imagePath) => {
+    confirmAlert({
+      title: "Confirm to delete",
+      message: "Are you sure you want to delete this image?",
+      customUI: ({ onClose }) => (
+        <div
+          style={{
+            textAlign: "left",
+            padding: "20px",
+            backgroundColor: "white",
+            borderRadius: "8px",
+            boxShadow: "0 4px 8px rgba(5, 5, 5, 0.2)",
+            maxWidth: "400px",
+            margin: "0 auto",
+          }}
+        >
+          <h2>Confirm to delete</h2>
+          <p>Are you sure you want to delete this image?</p>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: "20px",
+            }}
+          >
+            <button
+              style={{ marginRight: "10px" }}
+              className="btn btn-primary"
+              onClick={async () => {
+                setLoading(true);
+                const accessToken = localStorage.getItem("accessToken");
+                try {
+                  // Send the image path along with the gallery ID to the backend
+                  await instance.delete(
+                    `GalleryImages/GalleryImages/${id}/delete-image`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        "Content-Type": "application/json",
+                      },
+                      data: { imagePath: imagePath }, // Sending imagePath in the request body
+                    }
+                  );
+                  toast.success("Image Deleted Successfully");
+                  fetchTeam();
+                } catch (error) {
+                  console.error("Error deleting data:", error);
+                  toast.error("Error deleting image");
                 } finally {
                   setLoading(false);
                 }
@@ -484,7 +556,7 @@ const ProjectDetails = () => {
                 const accessToken = localStorage.getItem("accessToken");
                 try {
                   await instance.put(
-                    `projectDetails/isactive-projectDetails/${id}`,
+                    `GalleryImages/GalleryImages/${id}/is-active`,
                     { isVisible },
                     {
                       headers: {
@@ -523,8 +595,28 @@ const ProjectDetails = () => {
 
   const toggleEdit = (id) => {
     const selectedMember = team.find((member) => member.id === id);
+
+    if (!selectedMember) return;
+
+    // Parse `gallery_images` if it's a stringified JSON array
+    let parsedImages = [];
+    try {
+      parsedImages = JSON.parse(selectedMember.gallery_images);
+    } catch (error) {
+      console.error("Error parsing gallery_images:", error);
+    }
+
     setEditingId(id);
-    setFormData(selectedMember);
+    setFormData({
+      ...selectedMember,
+      gallery_images: parsedImages, // Store it as an array
+    });
+
+    console.log("%%%%%%%%%%%%%", {
+      ...selectedMember,
+      gallery_images: parsedImages,
+    });
+
     setEditMode(true);
     setShowTable(false); // Switch to form view when editing
   };
@@ -538,8 +630,48 @@ const ProjectDetails = () => {
   const handleView = () => {
     setFormData({});
     setEditMode(false);
-    setShowTable(true); // Switch to table view
+    setShowTable(true);
+    // window.location.reload();
   };
+  const handleImageChange = async (e) => {
+    const files = Array.from(e.target.files); // Convert FileList to an array
+    console.log(files); // Check if files are correctly selected
+
+    // Validate image size for each file before setting it in formData
+    const validFiles = [];
+    const invalidFiles = [];
+    for (const file of files) {
+      try {
+        await validateImageSize(file); // Wait for validation to complete
+        validFiles.push(file); // If valid, add to valid files
+      } catch (error) {
+        invalidFiles.push({ file, error }); // If invalid, store the error
+      }
+    }
+
+    // Update the formData with valid images
+    setFormData({
+      ...formData,
+      img: validFiles, // Store only valid files in formData
+    });
+
+    // Create image previews for valid files
+    const previews = validFiles.map((file) => URL.createObjectURL(file));
+    setImagePreviews(previews);
+
+    // Handle invalid files by setting the error messages
+    if (invalidFiles.length > 0) {
+      const errors = invalidFiles.map((item) => ({
+        file: item.file.name,
+        error: item.error,
+      }));
+      setErrors({ img: errors });
+    } else {
+      setErrors({ img: null }); // Clear previous errors if there are no invalid files
+    }
+  };
+
+  console.log(formData); // Make sure the files are in formData
 
   return (
     <Container fluid>
@@ -618,99 +750,94 @@ const ProjectDetails = () => {
                 <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md={12}>
-                      {imagePreview && (
-                        <img
-                          src={imagePreview}
-                          alt="Selected Preview"
-                          style={{
-                            width: "100px",
-                            height: "auto",
-                            marginBottom: "10px",
-                          }}
-                        />
+                      {imagePreview && imagePreview.length > 0 && (
+                        <div>
+                          {imagePreview.map((preview, index) => (
+                            <img
+                              key={index}
+                              src={preview}
+                              alt={`Selected Preview ${index}`}
+                              style={{
+                                width: "100px",
+                                height: "auto",
+                                marginBottom: "10px",
+                              }}
+                            />
+                          ))}
+                        </div>
                       )}
-                      <NewResuableForm
-                        label={"Upload project Image"}
-                        placeholder={"Upload Image"}
-                        name={"img"}
-                        type={"file"}
-                        onChange={handleChange}
-                        initialData={formData}
-                        error={errors.img}
-                        imageDimensiion="Image must be 338x220 pixels"
-                      />
-                    </Col>
-                    <Col md={6} className="mt-2">
-                        <Form.Group controlId="projectCategory">
-                        <Form.Label>Project Category</Form.Label>
-                        <Form.Select
-                            value={formData.project_category || ""} // Set selected option for edit mode
-                            onChange={(e) => handleChange("project_category", e.target.value)}
-                        >
-                            <option disabled value="">Choose Category</option>
-                            {projectcategory.map((a, index) => (
-                            <option key={a.id} value={a.title}>{a.title}</option>
-                            ))}
-                        </Form.Select>
-                        </Form.Group>
-                        <p className="text-danger">{errors.project_category}</p>
-                    </Col>
 
-                    <Col md={6} className="mt-2">
-                        <Form.Group controlId="projectName">
-                            <Form.Label>Project Name</Form.Label>
-                            <Form.Select
-                                value={formData.project_name || ""} // Set selected option for edit mode
-                                onChange={(e) => handleChange("project_name", e.target.value)}
-                                disabled={!formData.project_category} // Disable the project name field until a category is selected
-                            >
-                                <option disabled value="">
-                                {formData.project_category ? "Choose Project Name" : "Select a Category First"}
-                                </option>
-                                {filteredProjectNames.length > 0 ? (
-                                filteredProjectNames.map((a, index) => (
-                                    <option key={a.id} value={a.project_name}>
-                                    {a.project_name}
-                                    </option>
+                      <Form.Group controlId="gallery_images">
+                        <Form.Label>Upload multiple gallery Images</Form.Label>
+                        <Form.Control
+                          type="file"
+                          name="gallery_images"
+                          multiple
+                          onChange={handleImageChange}
+                          isInvalid={errors.img}
+                        />
+                        {(!editMode || (editMode && errors.img)) &&
+                          errors.img && (
+                            <Form.Control.Feedback type="invalid">
+                              {Array.isArray(errors.img) ? (
+                                errors.img.map((err, idx) => (
+                                  <div key={idx}>{err.error}</div>
                                 ))
-                                ) : (
-                                <option disabled>No project names available</option>
-                                )}
-                            </Form.Select>
-                            <p className="text-danger">{errors.project_name}</p>
-                        </Form.Group>
-                            <p className="text-danger">{errors.project_name}</p>
+                              ) : (
+                                <div>{errors.img}</div>
+                              )}
+                            </Form.Control.Feedback>
+                          )}
+                        <small>Image must be 338x220 pixels</small>
+                      </Form.Group>
                     </Col>
-
-
-                    {/* <Col md={6} className="mt-2">
-                        <Form.Group controlId="projectName">
-                        <Form.Label>Project Name</Form.Label>
-                        <Form.Select
-                            value={formData.project_name || ""} // Set selected option for edit mode
-                            onChange={(e) => handleChange("project_name", e.target.value)}
-                        >
-                            <option disabled value="">Choose Project Name</option>
-                            {projectname.map((a, index) => (
-                            <option key={a.id} value={a.project_name}>{a.project_name}</option>
+                    <Col md={12}>
+                      {formData.gallery_images &&
+                        formData.gallery_images.length > 0 && (
+                          <div>
+                            {formData.gallery_images.map((preview, index) => (
+                              <img
+                                key={index}
+                                src={`${baseURL}${preview}`} // Ensure the correct URL format
+                                alt={`Selected Preview ${index}`}
+                                style={{
+                                  width: "100px",
+                                  height: "auto",
+                                  margin: "10px",
+                                }}
+                              />
                             ))}
-                        </Form.Select>
-                        </Form.Group>
-                        <p className="text-danger">{errors.project_name}</p>
-                    </Col> */}
-                    <Col md={6} className="mt-2">
-                      <NewResuableForm
-                        label="Project Location"
-                        placeholder="Enter Project Location"
-                        name="project_location"
-                        type="text"
-                        onChange={handleChange}
-                        initialData={formData}
-                        error={errors.project_location}
-                        // charLimit={1000}
-                      />
+                          </div>
+                        )}
                     </Col>
+                    <Col md={6} className="mt-2">
+                      <Form.Group controlId="galleryCategory">
+                        <Form.Label>gallery Category</Form.Label>
+                        <Form.Control
+                          as="select"
+                          value={formData.gallery_category || ""}
+                          onChange={(e) =>
+                            handleChange("gallery_category", e.target.value)
+                          }
+                          isInvalid={errors.gallery_category}
+                        >
+                          <option disabled value="">
+                            Choose Category
+                          </option>
+                          {gallerycategory.map((a) => (
+                            <option key={a.id} value={a.gallery_category}>
+                              {a.gallery_category}
+                            </option>
+                          ))}
+                        </Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          {errors.gallery_category}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+
                   </Row>
+
                   <Row>
                     <div className="mt-3 d-flex justify-content-end">
                       <Button
@@ -731,4 +858,4 @@ const ProjectDetails = () => {
   );
 };
 
-export default ProjectDetails;
+export default GalleryDetailsWithImages;

@@ -80,7 +80,10 @@ const AreaTop = ({ buttonValue, tableView }) => {
     // new vivek
     "/category",
     "/projectName",
-    "/ProjectDetails"
+    "/projectDetails",
+    "/projectDetailsWithImages",
+    "/galleryDetails",
+    "/galleryDetailsWithImages"
   ];
   const isHiddenPath = hiddenPaths.includes(location.pathname);
 
@@ -147,6 +150,12 @@ const AreaTop = ({ buttonValue, tableView }) => {
       setHeader("Project Name");
     }else if (window.location.pathname == "/projectDetails") {
       setHeader("Project Deatils");
+    }else if (window.location.pathname == "/projectDetailsWithImages") {
+      setHeader("Project Deatils With Images");
+    }else if (window.location.pathname == "/galleryDetails") {
+      setHeader("Gallery Deatils");
+    }else if (window.location.pathname == "/galleryDetailsWithImages") {
+      setHeader("Gallery Deatils With Images");
     }
 
   }, [window.location.pathname]);
