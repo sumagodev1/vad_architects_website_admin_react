@@ -202,7 +202,7 @@ const GalleryDetailsWithImages = () => {
     const accessToken = localStorage.getItem("accessToken"); // Retrieve access token
     try {
       const response = await instance.get(
-        "/galleryImages/GalleryImages",
+        "/galleryImages/galleryImages",
         {
           headers: {
             Authorization: "Bearer " + accessToken,
@@ -359,7 +359,7 @@ const GalleryDetailsWithImages = () => {
       try {
         if (editMode) {
           await instance.put(
-            `GalleryImages/GalleryImages/${editingId}/images`,
+            `GalleryImages/galleryImages/${editingId}/images`,
             data,
             {
               headers: {
@@ -370,7 +370,7 @@ const GalleryDetailsWithImages = () => {
           );
         } else {
           await instance.post(
-            "GalleryImages/create-GalleryImageDetailsWithImages",
+            "GalleryImages/create-galleryImageDetailsWithImages",
             data,
             {
               headers: {
@@ -428,7 +428,7 @@ const GalleryDetailsWithImages = () => {
                 const accessToken = localStorage.getItem("accessToken");
                 try {
                   await instance.delete(
-                    `galleryImages/GalleryImages/${id}/is-delete`,
+                    `galleryImages/galleryImages/${id}/is-delete`,
                     {
                       headers: {
                         Authorization: `Bearer ${accessToken}`,
@@ -457,70 +457,70 @@ const GalleryDetailsWithImages = () => {
       ),
     });
   };
-  const handleDelete2 = async (id, imagePath) => {
-    confirmAlert({
-      title: "Confirm to delete",
-      message: "Are you sure you want to delete this image?",
-      customUI: ({ onClose }) => (
-        <div
-          style={{
-            textAlign: "left",
-            padding: "20px",
-            backgroundColor: "white",
-            borderRadius: "8px",
-            boxShadow: "0 4px 8px rgba(5, 5, 5, 0.2)",
-            maxWidth: "400px",
-            margin: "0 auto",
-          }}
-        >
-          <h2>Confirm to delete</h2>
-          <p>Are you sure you want to delete this image?</p>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: "20px",
-            }}
-          >
-            <button
-              style={{ marginRight: "10px" }}
-              className="btn btn-primary"
-              onClick={async () => {
-                setLoading(true);
-                const accessToken = localStorage.getItem("accessToken");
-                try {
-                  // Send the image path along with the gallery ID to the backend
-                  await instance.delete(
-                    `GalleryImages/GalleryImages/${id}/delete-image`,
-                    {
-                      headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        "Content-Type": "application/json",
-                      },
-                      data: { imagePath: imagePath }, // Sending imagePath in the request body
-                    }
-                  );
-                  toast.success("Image Deleted Successfully");
-                  fetchTeam();
-                } catch (error) {
-                  console.error("Error deleting data:", error);
-                  toast.error("Error deleting image");
-                } finally {
-                  setLoading(false);
-                }
-                onClose();
-              }}
-            >
-              Yes
-            </button>
-            <button className="btn btn-secondary" onClick={() => onClose()}>
-              No
-            </button>
-          </div>
-        </div>
-      ),
-    });
-  };
+  // const handleDelete2 = async (id, imagePath) => {
+  //   confirmAlert({
+  //     title: "Confirm to delete",
+  //     message: "Are you sure you want to delete this image?",
+  //     customUI: ({ onClose }) => (
+  //       <div
+  //         style={{
+  //           textAlign: "left",
+  //           padding: "20px",
+  //           backgroundColor: "white",
+  //           borderRadius: "8px",
+  //           boxShadow: "0 4px 8px rgba(5, 5, 5, 0.2)",
+  //           maxWidth: "400px",
+  //           margin: "0 auto",
+  //         }}
+  //       >
+  //         <h2>Confirm to delete</h2>
+  //         <p>Are you sure you want to delete this image?</p>
+  //         <div
+  //           style={{
+  //             display: "flex",
+  //             justifyContent: "flex-end",
+  //             marginTop: "20px",
+  //           }}
+  //         >
+  //           <button
+  //             style={{ marginRight: "10px" }}
+  //             className="btn btn-primary"
+  //             onClick={async () => {
+  //               setLoading(true);
+  //               const accessToken = localStorage.getItem("accessToken");
+  //               try {
+  //                 // Send the image path along with the gallery ID to the backend
+  //                 await instance.delete(
+  //                   `GalleryImages/GalleryImages/${id}/delete-image`,
+  //                   {
+  //                     headers: {
+  //                       Authorization: `Bearer ${accessToken}`,
+  //                       "Content-Type": "application/json",
+  //                     },
+  //                     data: { imagePath: imagePath }, // Sending imagePath in the request body
+  //                   }
+  //                 );
+  //                 toast.success("Image Deleted Successfully");
+  //                 fetchTeam();
+  //               } catch (error) {
+  //                 console.error("Error deleting data:", error);
+  //                 toast.error("Error deleting image");
+  //               } finally {
+  //                 setLoading(false);
+  //               }
+  //               onClose();
+  //             }}
+  //           >
+  //             Yes
+  //           </button>
+  //           <button className="btn btn-secondary" onClick={() => onClose()}>
+  //             No
+  //           </button>
+  //         </div>
+  //       </div>
+  //     ),
+  //   });
+  // };
 
   const handleIsActive = async (id, isVisible) => {
     confirmAlert({
@@ -556,7 +556,7 @@ const GalleryDetailsWithImages = () => {
                 const accessToken = localStorage.getItem("accessToken");
                 try {
                   await instance.put(
-                    `GalleryImages/GalleryImages/${id}/is-active`,
+                    `GalleryImages/galleryImages/${id}/is-active`,
                     { isVisible },
                     {
                       headers: {
