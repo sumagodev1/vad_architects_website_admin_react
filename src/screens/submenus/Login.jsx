@@ -86,7 +86,7 @@ const Login = () => {
                   <Image src={logo} alt="Logo" fluid style={{ maxWidth: "140px", width: "100%" }} />
                 </Col>
                 <Col xs={12}>
-                  <h3 className="text-center text-primary font-weight-bold">Modearch Steel</h3>
+                  <h3 className="text-center font-weight-bold">Modearch Steel</h3>
                 </Col>
               </Row>
 

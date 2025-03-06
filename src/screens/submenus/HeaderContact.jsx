@@ -147,7 +147,7 @@ const HeaderContact = () => {
         await instance.put(`header-contact/headercontact/${editingId}`, data, {
           headers: {
             Authorization: "Bearer " + accessToken,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         });
         toast.success("Data Updated Successfully");

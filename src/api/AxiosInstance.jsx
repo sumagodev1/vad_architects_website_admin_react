@@ -82,7 +82,8 @@ import { toast } from "react-toastify";
 const instance = axios.create({
 
   // baseURL: `http://localhost:8000/`,
-  baseURL: `https://staging-api.modearchsteel.com/`,
+  // baseURL: `https://staging-api.modearchsteel.com/`,
+  baseURL: `https://staging-api-v2.modearchsteel.com/`,
 });
 
 instance.interceptors.request.use(
