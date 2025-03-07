@@ -196,13 +196,13 @@ const Carousal = () => {
     // Check if formData.img is a File object
     if (!editMode) { // Only check for the image if not in edit mode
       if (!formData.img || !(formData.img instanceof File)) {
-        errors.img = "Image is required with 2548*1018 for Desktop and 1307*1018 pixels for mobile";
+        errors.img = "Image is required with 1920*685 for Desktop and 1360*1055 pixels for mobile";
         isValid = false;
       } else {
         // Validate image size
         const isSizeValid = validateImageSize(formData.img);
         if (!isSizeValid) {
-          errors.img = "Media size must be 2548*1018 for Desktop and 1307*1018 pixels for mobile";
+          errors.img = "Media size must be 1920*685for Desktop and 1360*1055 pixels for mobile";
           isValid = false;
         }
       }
@@ -211,7 +211,7 @@ const Carousal = () => {
       if (formData.img && formData.img instanceof File) {
         const isSizeValid = validateImageSize(formData.img);
         if (!isSizeValid) {
-          errors.img = "Media size must be 2548*1018 for Desktop and 1307*1018 pixels for mobile";
+          errors.img = "Media size must be 1920*685 for Desktop and 1360*1055 pixels for mobile";
           isValid = false;
         }
       }
@@ -236,10 +236,10 @@ const Carousal = () => {
 
       const img = new Image();
       img.onload = () => {
-        if ((img.width === 2548 || img.width === 1307) && img.height === 1018) {
+        if ((img.width === 1920 || img.width === 1360) && img.height === 685 || img.height === 1055) {
           resolve();
         } else {
-          reject("Media size: 2548x1018 for Desktop view, 1307x1018 for Mobile view. Videos must be less than 10 mb");
+          reject("Media size: 1920x685 for Desktop view, 1360x1055 for Mobile view. Videos must be less than 10 mb");
         }
       };
       img.onerror = () => reject("Error loading image");
@@ -586,7 +586,7 @@ const Carousal = () => {
                         }}
                         initialData={formData}
                         error={errors.img}
-                        imageDimensiion="Media size: 2548x1018 for Desktop view, 1307x1018 for Mobile view. Videos must be less than 10 mb"
+                        imageDimensiion="Media size: 1920x685 for Desktop view, 1360x1055 for Mobile view. Videos must be less than 10 mb"
                       />
                     </Col>
                     <Col md={4}>
