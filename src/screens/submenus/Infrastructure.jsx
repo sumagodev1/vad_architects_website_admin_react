@@ -577,7 +577,7 @@ const Infrastructure = () => {
                       initialData={formData}
                       textarea
                       error={errors.desc}
-                      // charLimit={1000}
+                      charLimit={500}
                     />
                   </Col>
                 </Row>

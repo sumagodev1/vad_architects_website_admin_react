@@ -251,19 +251,33 @@ const ProjectDetailsWithImages = () => {
   const validateForm = (formData, isEditMode) => {
     let errors = {};
     let isValid = true;
+    // if (!isEditMode || (formData.img && formData.img.length > 0)) {
+    //   if (formData.img && formData.img.length > 0) {
+    //     formData.img.forEach((file, index) => {
+    //       if (!validateImageSize(file)) {
+    //         errors.img = `Image ${file.name} is required with 338x220 pixels`;
+    //         isValid = false;
+    //       }
+    //     });
+    //   } else {
+    //     errors.img = "Image is not 338x220 pixels";
+    //     isValid = false;
+    //   }
+    // }
     if (!isEditMode || (formData.img && formData.img.length > 0)) {
       if (formData.img && formData.img.length > 0) {
-        formData.img.forEach((file, index) => {
+        formData.img.forEach((file) => {
           if (!validateImageSize(file)) {
-            errors.img = `Image ${file.name} is required with 338x220 pixels`;
+            errors.img = `Image ${file.name} must be less than 2MB`;
             isValid = false;
           }
         });
       } else {
-        errors.img = "Image is not 338x220 pixels";
+        errors.img = "Image is required";
         isValid = false;
       }
     }
+
     if (!formData.project_category?.trim()) {
       errors.project_category = "project category is required";
       isValid = false;
@@ -306,19 +320,24 @@ const ProjectDetailsWithImages = () => {
     return isValid;
   };
 
+  // const validateImageSize = (file) => {
+  //   return new Promise((resolve, reject) => {
+  //     const img = new Image();
+  //     img.onload = () => {
+  //       if (img.width === 338 && img.height === 220) {
+  //         resolve(); // Validation successful
+  //       } else {
+  //         reject(`Image "${file.name}" must be 338x220 pixels`); // Reject with specific error
+  //       }
+  //     };
+  //     img.onerror = () => reject("Error loading image");
+  //     img.src = URL.createObjectURL(file); // Set image source
+  //   });
+  // };
+
   const validateImageSize = (file) => {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => {
-        if (img.width === 338 && img.height === 220) {
-          resolve(); // Validation successful
-        } else {
-          reject(`Image "${file.name}" must be 338x220 pixels`); // Reject with specific error
-        }
-      };
-      img.onerror = () => reject("Error loading image");
-      img.src = URL.createObjectURL(file); // Set image source
-    });
+    const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+    return file.size <= maxSize; // Returns true if file size is within limit
   };
 
   //   const handleChange = async (name, value) => {
@@ -364,58 +383,147 @@ const ProjectDetailsWithImages = () => {
     }
   };
 
+  // const handleChange = async (name, value) => {
+
+  //       // Restrict project_status field to only alphabets and spaces
+  //       if (name === "project_status" && !/^[a-zA-Z\s]*$/.test(value)) {
+  //         setErrors((prevErrors) => ({ ...prevErrors, [name]: "Only alphabets and spaces are allowed." }));
+  //         return;  // Prevent updating state
+  //       }
+
+  //           // Restrict project_year_of_completion to only numbers
+  //         if (name === "project_year_of_completion" && !/^\d*$/.test(value)) {
+  //           setErrors((prevErrors) => ({ ...prevErrors, [name]: "Only numbers are allowed." }));
+  //           return;  // Prevent updating state
+  //       }
+
+  //   if (name === "project_category") {
+  //     const categoryId = projectcategory.find((c) => c.title === value)?.id;
+  //     console.log(categoryId);
+
+  //     setFormData((prevFormData) => ({
+  //       ...prevFormData,
+  //       project_category: value,
+  //       project_category_id: categoryId,
+  //       project_name: "", // Reset project name when category changes
+  //       project_location: "", // Clear project location
+  //       project_name_id: "", // Reset project_name_id
+  //     }));
+
+  //     // Reset the flag and filtered project names when category changes
+  //     setIsCategorySelected(false);
+  //     setFilteredProjectNames([]);
+  //   } else if (name === "project_name") {
+  //     const selectedProject = filteredProjectNames.find(
+  //       (project) => project.project_name === value
+  //     );
+  //     const selectedProjectId = selectedProject ? selectedProject.id : null;
+
+  //     setFormData((prevFormData) => ({
+  //       ...prevFormData,
+  //       project_name: value,
+  //       project_name_id: selectedProjectId, // Set project_name_id
+  //     }));
+
+  //     // Fetch the project location once a project name is selected
+  //     if (value) {
+  //       await fetchProjectLocation(value); // Fetch project location based on the selected project name
+  //     }
+  //   } else {
+  //     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  //   }
+
+  //   setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  // };
+
+
+useEffect(() => {
+  if (formData.project_category) {
+    // Find category ID from the selected category
+    const categoryId = projectcategory.find(c => c.title === formData.project_category)?.id;
+
+    // Fetch project names based on the stored category ID
+    const filteredNames = projectname.filter(project => project.project_category_id === categoryId);
+
+    // Update state with filtered names
+    setFilteredProjectNames(filteredNames);
+  }
+}, [formData.project_category, projectcategory, projectname]);
+
   const handleChange = async (name, value) => {
+  // Restrict project_status field to only alphabets and spaces
+  if (name === "project_status" && !/^[a-zA-Z\s]*$/.test(value)) {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "Only alphabets and spaces are allowed.",
+    }));
+    return; // Prevent updating state
+  }
 
-        // Restrict project_status field to only alphabets and spaces
-        if (name === "project_status" && !/^[a-zA-Z\s]*$/.test(value)) {
-          setErrors((prevErrors) => ({ ...prevErrors, [name]: "Only alphabets and spaces are allowed." }));
-          return;  // Prevent updating state
-        }
+  // Restrict project_year_of_completion to only numbers
+  if (name === "project_year_of_completion" && !/^\d*$/.test(value)) {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "Only numbers are allowed.",
+    }));
+    return; // Prevent updating state
+  }
 
-            // Restrict project_year_of_completion to only numbers
-          if (name === "project_year_of_completion" && !/^\d*$/.test(value)) {
-            setErrors((prevErrors) => ({ ...prevErrors, [name]: "Only numbers are allowed." }));
-            return;  // Prevent updating state
-        }
+  if (name === "project_category") {
+    const categoryId = projectcategory.find((c) => c.title === value)?.id;
+    console.log(categoryId);
 
-    if (name === "project_category") {
-      const categoryId = projectcategory.find((c) => c.title === value)?.id;
-      console.log(categoryId);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      project_category: value,
+      project_category_id: categoryId,
+      project_name: "", // Reset project name when category changes
+      project_location: "", // Clear project location
+      project_name_id: "", // Reset project_name_id
+    }));
 
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        project_category: value,
-        project_category_id: categoryId,
-        project_name: "", // Reset project name when category changes
-        project_location: "", // Clear project location
-        project_name_id: "", // Reset project_name_id
-      }));
+    // Reset the flag and filtered project names when category changes
+    setIsCategorySelected(false);
+    setFilteredProjectNames([]);
+  } else if (name === "project_name") {
+    const selectedProject = filteredProjectNames.find(
+      (project) => project.project_name === value
+    );
+    const selectedProjectId = selectedProject ? selectedProject.id : null;
 
-      // Reset the flag and filtered project names when category changes
-      setIsCategorySelected(false);
-      setFilteredProjectNames([]);
-    } else if (name === "project_name") {
-      const selectedProject = filteredProjectNames.find(
-        (project) => project.project_name === value
-      );
-      const selectedProjectId = selectedProject ? selectedProject.id : null;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      project_name: value,
+      project_name_id: selectedProjectId, // Set project_name_id
+    }));
 
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        project_name: value,
-        project_name_id: selectedProjectId, // Set project_name_id
-      }));
-
+    if (value) {
       // Fetch the project location once a project name is selected
-      if (value) {
-        await fetchProjectLocation(value); // Fetch project location based on the selected project name
-      }
-    } else {
-      setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-    }
+      const projectLocation = await fetchProjectLocation(value);
 
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-  };
+      if (!projectLocation) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          project_location:
+            "Project location not added. Please first add the project location for this project name.",
+        }));
+      } else {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          project_location: projectLocation,
+        }));
+
+        // Clear the error if location is found
+        setErrors((prevErrors) => ({ ...prevErrors, project_location: "" }));
+      }
+    }
+  } else {
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  }
+
+  setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+};
+
 
   // const handleChange = async (name, value) => {
   //   if (name === "project_category") {
@@ -936,68 +1044,6 @@ const ProjectDetailsWithImages = () => {
               ) : (
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col md={12}>
-                      {imagePreview && imagePreview.length > 0 && (
-                        <div>
-                          {imagePreview.map((preview, index) => (
-                            <img
-                              key={index}
-                              src={preview}
-                              alt={`Selected Preview ${index}`}
-                              style={{
-                                width: "100px",
-                                height: "auto",
-                                marginBottom: "10px",
-                              }}
-                            />
-                          ))}
-                        </div>
-                      )}
-
-                      <Form.Group controlId="project_images">
-                        <Form.Label>Upload multiple project Images</Form.Label>
-                        <Form.Control
-                          type="file"
-                          name="project_images"
-                          multiple
-                          onChange={handleImageChange}
-                          isInvalid={errors.img}
-                        />
-                        {(!editMode || (editMode && errors.img)) &&
-                          errors.img && (
-                            <Form.Control.Feedback type="invalid">
-                              {Array.isArray(errors.img) ? (
-                                errors.img.map((err, idx) => (
-                                  <div key={idx}>{err.error}</div>
-                                ))
-                              ) : (
-                                <div>{errors.img}</div>
-                              )}
-                            </Form.Control.Feedback>
-                          )}
-
-                        <small>Image must be 338x220 pixels</small>
-                      </Form.Group>
-                    </Col>
-                    <Col md={12}>
-                      {formData.project_images &&
-                        formData.project_images.length > 0 && (
-                          <div>
-                            {formData.project_images.map((preview, index) => (
-                              <img
-                                key={index}
-                                src={`${baseURL}${preview}`} // Ensure the correct URL format
-                                alt={`Selected Preview ${index}`}
-                                style={{
-                                  width: "100px",
-                                  height: "auto",
-                                  margin: "10px",
-                                }}
-                              />
-                            ))}
-                          </div>
-                        )}
-                    </Col>
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="projectCategory">
                         <Form.Label>Project Category</Form.Label>
@@ -1008,6 +1054,7 @@ const ProjectDetailsWithImages = () => {
                             handleChange("project_category", e.target.value)
                           }
                           isInvalid={errors.project_category}
+                          style={{ appearance: "auto", WebkitAppearance: "auto", MozAppearance: "auto" }} 
                         >
                           <option disabled value="">
                             Choose Category
@@ -1035,6 +1082,7 @@ const ProjectDetailsWithImages = () => {
                           }
                           disabled={!formData.project_category}
                           isInvalid={errors.project_name}
+                          style={{ appearance: "auto", WebkitAppearance: "auto", MozAppearance: "auto" }} 
                         >
                           <option disabled value="">
                             {formData.project_category
@@ -1147,6 +1195,70 @@ const ProjectDetailsWithImages = () => {
                         <Form.Control.Feedback type="invalid">
                           {errors.project_info}
                         </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={12} className="mt-3">
+                      {imagePreview && imagePreview.length > 0 && (
+                        <div>
+                          {imagePreview.map((preview, index) => (
+                            <img
+                              key={index}
+                              src={preview}
+                              alt={`Selected Preview ${index}`}
+                              style={{
+                                width: "100px",
+                                height: "auto",
+                                marginBottom: "10px",
+                              }}
+                            />
+                          ))}
+                        </div>
+                      )}
+
+                      <Col md={12}>
+                        {formData.project_images &&
+                          formData.project_images.length > 0 && (
+                            <div>
+                              {formData.project_images.map((preview, index) => (
+                                <img
+                                  key={index}
+                                  src={`${baseURL}${preview}`} // Ensure the correct URL format
+                                  alt={`Selected Preview ${index}`}
+                                  style={{
+                                    width: "100px",
+                                    height: "auto",
+                                    margin: "10px",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          )}
+                      </Col>
+
+                      <Form.Group controlId="project_images">
+                        <Form.Label>Upload multiple project Images <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Control
+                          type="file"
+                          name="project_images"
+                          multiple
+                          onChange={handleImageChange}
+                          isInvalid={errors.img}
+                        />
+                        {(!editMode || (editMode && errors.img)) &&
+                          errors.img && (
+                            <Form.Control.Feedback type="invalid">
+                              {Array.isArray(errors.img) ? (
+                                errors.img.map((err, idx) => (
+                                  <div key={idx}>{err.error}</div>
+                                ))
+                              ) : (
+                                <div>{errors.img}</div>
+                              )}
+                            </Form.Control.Feedback>
+                          )}
+
+                        
                       </Form.Group>
                     </Col>
                   </Row>

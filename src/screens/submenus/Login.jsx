@@ -68,7 +68,7 @@ const Login = () => {
         }
       } catch (error) {
         console.error("Error handling form submission:", error);
-        toast.error("Error in Submit");
+        toast.error("Login failed please enter correct email id & password");
       } finally {
         setLoading(false);
       }
@@ -106,11 +106,11 @@ const Login = () => {
                   <Form.Group controlId="formBasicEmail" className="mb-4">
                     <Form.Label className="d-flex align-items-center">
                       <FaUser className="me-2 text-secondary" />
-                      Email address
+                      Email id
                     </Form.Label>
                     <Form.Control
                       type="email"
-                      placeholder="Enter email"
+                      placeholder="Enter email id"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -129,7 +129,7 @@ const Login = () => {
                     <InputGroup className="bg-light border-0 shadow-sm rounded-pill">
                       <Form.Control
                         type={showPassword ? "text" : "password"}
-                        placeholder="Password"
+                        placeholder="Enter Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
@@ -153,7 +153,7 @@ const Login = () => {
                         variant="primary"
                         type="submit"
                         className="mt-4 py-2 px-5 rounded-pill shadow-lg"
-                        style={{ backgroundColor: "#007bff", border: "none" }}
+                        style={{ backgroundColor: "#000", border: "none" }}
                         disabled={loading}
                       >
                         Login

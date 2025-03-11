@@ -188,7 +188,7 @@ const HeaderContact = () => {
         <Col>
           <Card>
             <Card.Header>
-              <Row>
+              {/* <Row>
                 <Col className="d-flex justify-content-end align-items-center">
                   {showTable ? (
                     <SearchInput
@@ -203,7 +203,7 @@ const HeaderContact = () => {
                     </Button>
                   }
                 </Col>
-              </Row>
+              </Row> */}
             </Card.Header>
 
             <Card.Body>

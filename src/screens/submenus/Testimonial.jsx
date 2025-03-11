@@ -7,6 +7,7 @@ import {
   Card,
   Button,
   Form,
+  Modal
 } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import { useSearchExport } from "../../context/SearchExportContext";
@@ -15,7 +16,7 @@ import SearchInput from "../../components/search/SearchInput";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import instance from "../../api/AxiosInstance";
-import { FaEdit, FaTrash, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaEye, FaEyeSlash, FaListAlt } from "react-icons/fa";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { ThreeDots } from 'react-loader-spinner';
@@ -40,6 +41,19 @@ const Testimonial = () => {
       {name}
     </div>
   );
+  
+  // State for controlling modal visibility and data
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedTestimonial, setSelectedTestimonial] = useState({});
+
+  const handleShowDetails = (testimonial) => {
+    setSelectedTestimonial(testimonial);
+    setShowDetailsModal(true);
+  };
+
+  const handleCloseDetailsModal = () => {
+    setShowDetailsModal(false);
+  };
 
   const tableColumns = (currentPage, rowsPerPage) => [
     {
@@ -57,7 +71,7 @@ const Testimonial = () => {
     },
     {
       name: <CustomHeader name="Review" />,
-      cell: (row) => <span>{row.review}</span>,
+      cell: (row) => <span>{row.review?.length > 50 ? row.review.slice(0, 50) + "..." : row.review}</span>,
     },
     {
       name: <CustomHeader name="Star" />,
@@ -117,6 +131,19 @@ const Testimonial = () => {
               onClick={() => handleIsActive(row.id, !eyeVisibilityById[row.id])}
             >
               {eyeVisibilityById[row.id] ? <FaEyeSlash /> : <FaEye />}
+            </Button>
+          </OverlayTrigger>
+
+                {/* Show Details Button */}
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip id="show-details-tooltip">Show Details</Tooltip>}
+          >
+            <Button
+              className="ms-1"
+              onClick={() => handleShowDetails(row)}
+            >
+              <FaListAlt />
             </Button>
           </OverlayTrigger>
         </div>
@@ -502,7 +529,7 @@ const Testimonial = () => {
   };
 
   return (
-
+  <>
 
     <Container fluid>
       <Row>
@@ -654,7 +681,7 @@ const Testimonial = () => {
                         initialData={formData}
                         textarea
                         error={errors.review}
-                        charLimit={1000}
+                        // charLimit={1000}
                       />
                     </Col>
                   </Row>
@@ -675,6 +702,51 @@ const Testimonial = () => {
         </Col>
       </Row>
     </Container>
+
+        <Modal show={showDetailsModal} onHide={handleCloseDetailsModal} size="lg">
+          <Modal.Header closeButton>
+            <Modal.Title>Testimonial Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Row>
+              <Col md={6}>
+                <strong>Name:</strong> {selectedTestimonial.name}
+              </Col>
+              <Col md={6}>
+                <strong>Company Name:</strong> {selectedTestimonial.company_Name || "NA"}
+              </Col>
+              <Col md={6}>
+                <strong>Experience:</strong> {selectedTestimonial.experience}
+              </Col>
+              <Col md={6}>
+                <strong>Star Rating:</strong> {selectedTestimonial.star}
+              </Col>
+              <Col md={12}>
+                <strong>Review:</strong>
+                <p>{selectedTestimonial.review}</p>
+              </Col>
+              <Col md={12}>
+                <strong>Image:</strong> <br></br>
+                {selectedTestimonial.img ? (
+                  <img
+                    src={selectedTestimonial.img}
+                    alt="Testimonial"
+                    style={{ width: "100px", height: "auto" }}
+                  />
+                ) : (
+                  <span>NA</span>
+                )}
+              </Col>
+            </Row>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseDetailsModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+  </>  
   );
 };
 

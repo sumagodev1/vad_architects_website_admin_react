@@ -52,12 +52,12 @@ const ProjectName = () => {
       selector: (row, index) => (currentPage - 1) * rowsPerPage + index + 1,
     },
     {
-      name: <CustomHeader name="project_category" />,
+      name: <CustomHeader name="project category" />,
       cell: (row) => <span>{row.project_category}</span>,
     },
 
     {
-      name: <CustomHeader name="project_name" />,
+      name: <CustomHeader name="project name" />,
       cell: (row) => <span>{row.project_name}</span>,
     },
     {

@@ -63,13 +63,47 @@ const BlogDetails = () => {
       cell: (row) => <span>{row.title}</span>,
       width: "auto",
     },
+    // {
+    //   name: <CustomHeader name="Short Description" />,
+    //   cell: (row) => <span>{row.shortDesc}</span>,
+    // },
+    // {
+    //   name: <CustomHeader name="Long Description" />,
+    //   cell: (row) => <span>{row.longDesc}</span>,
+    //   width: "auto",
+    // },
     {
       name: <CustomHeader name="Short Description" />,
-      cell: (row) => <span>{row.shortDesc}</span>,
+      cell: (row) => (
+        <span
+          style={{
+            // display: "block",
+            overflow: "hidden",
+            WebkitLineClamp: 4,
+            WebkitBoxOrient: "vertical",
+            display: "-webkit-box",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {row.shortDesc}
+        </span>
+      ),
     },
     {
       name: <CustomHeader name="Long Description" />,
-      cell: (row) => <span>{row.longDesc}</span>,
+      cell: (row) => (
+        <span
+          style={{
+            overflow: "hidden",
+            WebkitLineClamp: 4,
+            WebkitBoxOrient: "vertical",
+            display: "-webkit-box",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {row.longDesc}
+        </span>
+      ),
       width: "auto",
     },
     {

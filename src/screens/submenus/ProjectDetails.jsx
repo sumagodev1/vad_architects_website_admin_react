@@ -256,6 +256,19 @@ const ProjectDetails = () => {
 //     }
 //   };
 
+useEffect(() => {
+  if (formData.project_category) {
+    // Find category ID from the selected category
+    const categoryId = projectcategory.find(c => c.title === formData.project_category)?.id;
+
+    // Fetch project names based on the stored category ID
+    const filteredNames = projectname.filter(project => project.project_category_id === categoryId);
+
+    // Update state with filtered names
+    setFilteredProjectNames(filteredNames);
+  }
+}, [formData.project_category, projectcategory, projectname]);
+
   const handleChange = async (name, value) => {
     if (name === "img" && value instanceof File) {
       try {
@@ -617,29 +630,7 @@ const ProjectDetails = () => {
               ) : (
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col md={12}>
-                      {imagePreview && (
-                        <img
-                          src={imagePreview}
-                          alt="Selected Preview"
-                          style={{
-                            width: "100px",
-                            height: "auto",
-                            marginBottom: "10px",
-                          }}
-                        />
-                      )}
-                      <NewResuableForm
-                        label={"Upload project Image"}
-                        placeholder={"Upload Image"}
-                        name={"img"}
-                        type={"file"}
-                        onChange={handleChange}
-                        initialData={formData}
-                        error={errors.img}
-                        imageDimensiion="Image must be 338x220 pixels"
-                      />
-                    </Col>
+
                     <Col md={6} className="mt-2">
                         <Form.Group controlId="projectCategory">
                         <Form.Label>Project Category</Form.Label>
@@ -679,7 +670,6 @@ const ProjectDetails = () => {
                             </Form.Select>
                             <p className="text-danger">{errors.project_name}</p>
                         </Form.Group>
-                            <p className="text-danger">{errors.project_name}</p>
                     </Col>
 
 
@@ -708,6 +698,30 @@ const ProjectDetails = () => {
                         initialData={formData}
                         error={errors.project_location}
                         // charLimit={1000}
+                      />
+                    </Col>
+
+                    <Col md={12} className="mt-4">
+                      {imagePreview && (
+                        <img
+                          src={imagePreview}
+                          alt="Selected Preview"
+                          style={{
+                            width: "100px",
+                            height: "auto",
+                            marginBottom: "10px",
+                          }}
+                        />
+                      )}
+                      <NewResuableForm
+                        label={"Upload project Image"}
+                        placeholder={"Upload Image"}
+                        name={"img"}
+                        type={"file"}
+                        onChange={handleChange}
+                        initialData={formData}
+                        error={errors.img}
+                        imageDimensiion="Image must be 338x220 pixels"
                       />
                     </Col>
                   </Row>

@@ -66,10 +66,10 @@ const OurTeam = () => {
       name: <CustomHeader name="Description" />,
       cell: (row) => <span>{row.description}</span>,
     },
-    {
-      name: <CustomHeader name="Position No" />,
-      cell: (row) => <span>{row.position_no}</span>,
-    },
+    // {
+    //   name: <CustomHeader name="Position No" />,
+    //   cell: (row) => <span>{row.position_no}</span>,
+    // },
     {
       name: <CustomHeader name="Image" />,
       cell: (row) => (
@@ -290,6 +290,19 @@ const OurTeam = () => {
         setShowTable(true); // Switch back to table view after submission
       } catch (error) {
         console.error("Error handling form submission:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message ===
+            "Position no already exists, please enter another number"
+        ) {
+          setErrors({
+            ...errors,
+            position_no: "Position no already exists, please enter another number",
+          });
+        } else {
+          toast.error("An error occurred. Please try again.");
+        }
       } finally {
         setLoading(false); // Set loading to false
       }
@@ -536,7 +549,7 @@ const OurTeam = () => {
                       />
                     )}
                     <NewResuableForm
-                      label={"Upload Blog Image"}
+                      label={"Upload photo"}
                       placeholder={"Upload Image"}
                       name={"img"}
                       type={"file"}

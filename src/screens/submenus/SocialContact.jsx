@@ -212,7 +212,7 @@ const SocialContact = () => {
       <Row>
         <Col>
           <Card>
-            <Card.Header>
+            {/* <Card.Header>
               <Row>
                 <Col className="d-flex justify-content-end align-items-center">
                   {showTable && (
@@ -224,7 +224,7 @@ const SocialContact = () => {
                   )}
                 </Col>
               </Row>
-            </Card.Header>
+            </Card.Header> */}
 
             <Card.Body>
               {loading ? (

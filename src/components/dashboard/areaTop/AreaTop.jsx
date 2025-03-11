@@ -101,7 +101,7 @@ const AreaTop = ({ buttonValue, tableView }) => {
     } else if (window.location.pathname == "/about") {
       setHeader("About");
     } else if (window.location.pathname == "/infrastructure") {
-      setHeader("Infrastructure");
+      setHeader("Services");
     } else if (window.location.pathname == "/ourteam") {
       setHeader("Our Team");
     } else if (window.location.pathname == "/social-contact") {
@@ -149,13 +149,13 @@ const AreaTop = ({ buttonValue, tableView }) => {
     }else if (window.location.pathname == "/projectName") {
       setHeader("Project Name");
     }else if (window.location.pathname == "/projectDetails") {
-      setHeader("Project Deatils");
+      setHeader("Project Details ");
     }else if (window.location.pathname == "/projectDetailsWithImages") {
-      setHeader("Project Deatils With Images");
+      setHeader("Project Details With Images");
     }else if (window.location.pathname == "/galleryDetails") {
-      setHeader("Gallery Deatils");
+      setHeader("Gallery Details");
     }else if (window.location.pathname == "/galleryDetailsWithImages") {
-      setHeader("Gallery Deatils With Images");
+      setHeader("Gallery Details With Images");
     }
 
   }, [window.location.pathname]);
