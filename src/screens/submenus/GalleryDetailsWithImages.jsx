@@ -99,7 +99,7 @@ const GalleryDetailsWithImages = () => {
                         width: "20px",
                         fontSize: "10px",
                       }}
-                      onClick={() => handleDelete2(row.id, image)} // Pass the image path here
+                      onClick={() => handleDelete2(row.id, image)} 
                     >
                       <FaTrash />
                     </Button>
@@ -173,7 +173,7 @@ const GalleryDetailsWithImages = () => {
     const storedVisibility =
       JSON.parse(localStorage.getItem("eyeVisibilityById")) || {};
     setEyeVisibilityById(storedVisibility);
-  }, []);
+  }, []); 
 
   useEffect(() => {
     // Store visibility state in localStorage whenever it changes
@@ -227,19 +227,35 @@ const GalleryDetailsWithImages = () => {
   const validateForm = (formData,isEditMode) => {
     let errors = {};
     let isValid = true;
-    if (!isEditMode || (formData.img && formData.img.length > 0)) {
+
+  //   if (!isEditMode || (formData.img && formData.img.length > 0)) {
+  //   if (formData.img && formData.img.length > 0) {
+  //     formData.img.forEach((file, index) => {
+  //       if (!validateImageSize(file)) {
+  //         errors.img = `Image ${file.name} is required with 338x220 pixels`;
+  //         isValid = false;
+  //       }
+  //     });
+  //   } else {
+  //     errors.img = "Image is not 338x220 pixels";
+  //     isValid = false;
+  //   }
+  // }
+
+  if (!isEditMode || (formData.img && formData.img.length > 0)) {
     if (formData.img && formData.img.length > 0) {
-      formData.img.forEach((file, index) => {
-        if (!validateImageSize(file)) {
-          errors.img = `Image ${file.name} is required with 338x220 pixels`;
+      formData.img.forEach((file) => {
+        if (file.size > 1 * 1024 * 1024) { // Check if file size exceeds 1MB
+          errors.img = `Image "${file.name}" must be 1MB or less`;
           isValid = false;
         }
       });
     } else {
-      errors.img = "Image is not 338x220 pixels";
+      errors.img = "Image is required";
       isValid = false;
     }
   }
+
     if (!formData.gallery_category?.trim()) {
       errors.gallery_category = "gallery category is required";
       isValid = false;
@@ -254,20 +270,31 @@ const GalleryDetailsWithImages = () => {
     return isValid;
   };
 
+  // const validateImageSize = (file) => {
+  //   return new Promise((resolve, reject) => {
+  //     const img = new Image();
+  //     img.onload = () => {
+  //       if (img.width === 338 && img.height === 220) {
+  //         resolve(); // Validation successful
+  //       } else {
+  //         reject(`Image "${file.name}" must be 338x220 pixels`); // Reject with specific error
+  //       }
+  //     };
+  //     img.onerror = () => reject("Error loading image");
+  //     img.src = URL.createObjectURL(file); // Set image source
+  //   });
+  // };
+
   const validateImageSize = (file) => {
     return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => {
-        if (img.width === 338 && img.height === 220) {
-          resolve(); // Validation successful
-        } else {
-          reject(`Image "${file.name}" must be 338x220 pixels`); // Reject with specific error
-        }
-      };
-      img.onerror = () => reject("Error loading image");
-      img.src = URL.createObjectURL(file); // Set image source
+      if (file.size > 1 * 1024 * 1024) { // 1MB = 1024 * 1024 bytes
+        reject(`Image "${file.name}" must be 1MB or less`);
+      } else {
+        resolve(); // Validation successful
+      }
     });
   };
+  
 
   //   const handleChange = async (name, value) => {
   //     if (name === "img" && value instanceof File) {
@@ -359,7 +386,7 @@ const GalleryDetailsWithImages = () => {
       try {
         if (editMode) {
           await instance.put(
-            `GalleryImages/galleryImages/${editingId}/images`,
+            `galleryImages/galleryImages/${editingId}/images`,
             data,
             {
               headers: {
@@ -370,7 +397,7 @@ const GalleryDetailsWithImages = () => {
           );
         } else {
           await instance.post(
-            "GalleryImages/create-galleryImageDetailsWithImages",
+            "galleryImages/create-galleryImageDetailsWithImages",
             data,
             {
               headers: {
@@ -522,6 +549,71 @@ const GalleryDetailsWithImages = () => {
   //   });
   // };
 
+  const handleDelete2 = async (id, imagePath) => {
+    confirmAlert({
+      title: "Confirm to delete",
+      message: "Are you sure you want to delete this image?",
+      customUI: ({ onClose }) => (
+        <div
+          style={{
+            textAlign: "left",
+            padding: "20px",
+            backgroundColor: "white",
+            borderRadius: "8px",
+            boxShadow: "0 4px 8px rgba(5, 5, 5, 0.2)",
+            maxWidth: "400px",
+            margin: "0 auto",
+          }}
+        >
+          <h2>Confirm to delete</h2>
+          <p>Are you sure you want to delete this image?</p>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: "20px",
+            }}
+          >
+            <button
+              style={{ marginRight: "10px" }}
+              className="btn btn-primary"
+              onClick={async () => {
+                setLoading(true);
+                const accessToken = localStorage.getItem("accessToken");
+                try {
+                  // Send the image path along with the project ID to the backend
+                  await instance.delete(
+                    `galleryImages/galleryImages/${id}/delete-image`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        "Content-Type": "application/json",
+                      },
+                      data: { imagePath: imagePath }, // Sending imagePath in the request body
+                    }
+                  );
+                  toast.success("Image Deleted Successfully");
+                  fetchTeam();
+                } catch (error) {
+                  console.error("Error deleting data:", error);
+                  toast.error("Error deleting image");
+                } finally {
+                  setLoading(false);
+                }
+                onClose();
+              }}
+            >
+              Yes
+            </button>
+            <button className="btn btn-secondary" onClick={() => onClose()}>
+              No
+            </button>
+          </div>
+        </div>
+      ),
+    });
+  };
+
   const handleIsActive = async (id, isVisible) => {
     confirmAlert({
       title: "Confirm to change visibility",
@@ -556,7 +648,7 @@ const GalleryDetailsWithImages = () => {
                 const accessToken = localStorage.getItem("accessToken");
                 try {
                   await instance.put(
-                    `GalleryImages/galleryImages/${id}/is-active`,
+                    `galleryImages/galleryImages/${id}/is-active`,
                     { isVisible },
                     {
                       headers: {
@@ -722,30 +814,52 @@ const GalleryDetailsWithImages = () => {
                   />
                 </div>
               ) : showTable ? (
+                // <DataTable
+                //   columns={tableColumns(currentPage, rowsPerPage)}
+                //   data={filteredData.length > 0 ? filteredData : team}
+                //   pagination
+                //   responsive
+                //   striped
+                //   noDataComponent="No Data Available"
+                //   onChangePage={(page) => setCurrentPage(page)}
+                //   onChangeRowsPerPage={(rowsPerPage) =>
+                //     setRowsPerPage(rowsPerPage)
+                //   }
+                //   customStyles={{
+                //     rows: {
+                //       style: {
+                //         alignItems: "flex-start", // Aligns text to the top-left corner
+                //       },
+                //     },
+                //     cells: {
+                //       style: {
+                //         textAlign: "left", // Ensures text is aligned to the left
+                //       },
+                //     },
+                //   }}
+                // />
                 <DataTable
-                  columns={tableColumns(currentPage, rowsPerPage)}
-                  data={filteredData.length > 0 ? filteredData : team}
-                  pagination
-                  responsive
-                  striped
-                  noDataComponent="No Data Available"
-                  onChangePage={(page) => setCurrentPage(page)}
-                  onChangeRowsPerPage={(rowsPerPage) =>
-                    setRowsPerPage(rowsPerPage)
-                  }
-                  customStyles={{
-                    rows: {
-                      style: {
-                        alignItems: "flex-start", // Aligns text to the top-left corner
-                      },
+                columns={tableColumns(currentPage, rowsPerPage)}
+                data={searchQuery.length > 0 ? filteredData : team} // Show testimonial initially, filteredData only when searching
+                pagination
+                responsive
+                striped
+                noDataComponent="No Data Available" // Show when search returns nothing
+                onChangePage={(page) => setCurrentPage(page)}
+                onChangeRowsPerPage={(rowsPerPage) => setRowsPerPage(rowsPerPage)}
+                customStyles={{
+                  rows: {
+                    style: {
+                      alignItems: "flex-start",
                     },
-                    cells: {
-                      style: {
-                        textAlign: "left", // Ensures text is aligned to the left
-                      },
+                  },
+                  cells: {
+                    style: {
+                      textAlign: "left",
                     },
-                  }}
-                />
+                  },
+                }}
+              />
               ) : (
                 <Form onSubmit={handleSubmit}>
                   <Row>
@@ -768,7 +882,7 @@ const GalleryDetailsWithImages = () => {
                       )}
 
                       <Form.Group controlId="gallery_images">
-                        <Form.Label>Upload multiple gallery Images</Form.Label>
+                        <Form.Label>Upload multiple gallery Images <small className="text-danger">(Image must be 1MB or less)</small></Form.Label>
                         <Form.Control
                           type="file"
                           name="gallery_images"
@@ -788,7 +902,7 @@ const GalleryDetailsWithImages = () => {
                               )}
                             </Form.Control.Feedback>
                           )}
-                        <small>Image must be 338x220 pixels</small>
+                        
                       </Form.Group>
                     </Col>
                     <Col md={12}>

@@ -577,30 +577,52 @@ const Testimonial = () => {
                   />
                 </div>
               ) : showTable ? (
+                // <DataTable
+                //   columns={tableColumns(currentPage, rowsPerPage)}
+                //   data={filteredData.length > 0 ? filteredData : testimonial}
+                //   pagination
+                //   responsive
+                //   striped
+                //   noDataComponent="No Data Available"
+                //   onChangePage={(page) => setCurrentPage(page)}
+                //   onChangeRowsPerPage={(rowsPerPage) =>
+                //     setRowsPerPage(rowsPerPage)
+                //   }
+                //   customStyles={{
+                //     rows: {
+                //       style: {
+                //         alignItems: "flex-start", // Aligns text to the top-left corner
+                //       },
+                //     },
+                //     cells: {
+                //       style: {
+                //         textAlign: "left", // Ensures text is aligned to the left
+                //       },
+                //     },
+                //   }}
+                // />
                 <DataTable
-                  columns={tableColumns(currentPage, rowsPerPage)}
-                  data={filteredData.length > 0 ? filteredData : testimonial}
-                  pagination
-                  responsive
-                  striped
-                  noDataComponent="No Data Available"
-                  onChangePage={(page) => setCurrentPage(page)}
-                  onChangeRowsPerPage={(rowsPerPage) =>
-                    setRowsPerPage(rowsPerPage)
-                  }
-                  customStyles={{
-                    rows: {
-                      style: {
-                        alignItems: "flex-start", // Aligns text to the top-left corner
-                      },
+                columns={tableColumns(currentPage, rowsPerPage)}
+                data={searchQuery.length > 0 ? filteredData : testimonial} // Show testimonial initially, filteredData only when searching
+                pagination
+                responsive
+                striped
+                noDataComponent="No Data Available" // Show when search returns nothing
+                onChangePage={(page) => setCurrentPage(page)}
+                onChangeRowsPerPage={(rowsPerPage) => setRowsPerPage(rowsPerPage)}
+                customStyles={{
+                  rows: {
+                    style: {
+                      alignItems: "flex-start",
                     },
-                    cells: {
-                      style: {
-                        textAlign: "left", // Ensures text is aligned to the left
-                      },
+                  },
+                  cells: {
+                    style: {
+                      textAlign: "left",
                     },
-                  }}
-                />
+                  },
+                }}
+              />
               ) : (
                 <Form onSubmit={handleSubmit}>
                   <Row>

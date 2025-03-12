@@ -520,26 +520,48 @@ const GalleryDetails = () => {
                   />
                 </div>
               ) : showTable ? (
+                // <DataTable
+                //   columns={tableColumns(currentPage, rowsPerPage)}
+                //   data={filteredData.length > 0 ? filteredData : team}
+                //   pagination
+                //   responsive
+                //   striped
+                //   noDataComponent="No Data Available"
+                //   onChangePage={(page) => setCurrentPage(page)}
+                //   onChangeRowsPerPage={(rowsPerPage) =>
+                //     setRowsPerPage(rowsPerPage)
+                //   }
+                //   customStyles={{
+                //     rows: {
+                //       style: {
+                //         alignItems: "flex-start", // Aligns text to the top-left corner
+                //       },
+                //     },
+                //     cells: {
+                //       style: {
+                //         textAlign: "left", // Ensures text is aligned to the left
+                //       },
+                //     },
+                //   }}
+                // />
                 <DataTable
                   columns={tableColumns(currentPage, rowsPerPage)}
-                  data={filteredData.length > 0 ? filteredData : team}
+                  data={searchQuery.length > 0 ? filteredData : team} // Show team initially, filteredData only when searching
                   pagination
                   responsive
                   striped
-                  noDataComponent="No Data Available"
+                  noDataComponent="No Data Available" // Show when search returns nothing
                   onChangePage={(page) => setCurrentPage(page)}
-                  onChangeRowsPerPage={(rowsPerPage) =>
-                    setRowsPerPage(rowsPerPage)
-                  }
+                  onChangeRowsPerPage={(rowsPerPage) => setRowsPerPage(rowsPerPage)}
                   customStyles={{
                     rows: {
                       style: {
-                        alignItems: "flex-start", // Aligns text to the top-left corner
+                        alignItems: "flex-start",
                       },
                     },
                     cells: {
                       style: {
-                        textAlign: "left", // Ensures text is aligned to the left
+                        textAlign: "left",
                       },
                     },
                   }}

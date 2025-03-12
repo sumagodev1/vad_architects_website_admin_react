@@ -507,14 +507,23 @@ const CarousalForm = () => {
           ) : (
             <DataTable
               columns={tableColumns}
-              data={filteredData.length > 0 ? filteredData.slice(0, rowsPerPage) : team.slice(0, rowsPerPage)}
+              data={
+                searchQuery.trim() && filteredData.length === 0
+                  ? [] // Show "No Data Available" when search returns no results
+                  : filteredData.length > 0
+                  ? filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+                  : team.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+              }
               pagination
               paginationServer
-              paginationTotalRows={totalRows}
+              paginationTotalRows={searchQuery.trim() ? filteredData.length : totalRows}
               paginationDefaultPage={currentPage}
               paginationPerPage={rowsPerPage}
               onChangePage={(page) => setCurrentPage(page)}
-              onChangeRowsPerPage={(newRowsPerPage) => setRowsPerPage(newRowsPerPage)}
+              onChangeRowsPerPage={(newRowsPerPage) => {
+                setRowsPerPage(newRowsPerPage);
+                setCurrentPage(1); // Reset to first page when changing rows per page
+              }}
               responsive
               striped
               noDataComponent="No Data Available"
