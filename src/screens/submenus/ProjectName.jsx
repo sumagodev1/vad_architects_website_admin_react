@@ -52,12 +52,12 @@ const ProjectName = () => {
       selector: (row, index) => (currentPage - 1) * rowsPerPage + index + 1,
     },
     {
-      name: <CustomHeader name="project category" />,
+      name: <CustomHeader name="Project category" />,
       cell: (row) => <span>{row.project_category}</span>,
     },
 
     {
-      name: <CustomHeader name="project name" />,
+      name: <CustomHeader name="Project name" />,
       cell: (row) => <span>{row.project_name}</span>,
     },
     {
@@ -237,6 +237,20 @@ const ProjectName = () => {
         setShowTable(true); // Switch back to table view after submission
       } catch (error) {
         console.error("Error handling form submission:", error);
+              if (error.response && error.response.data) {
+        if (
+          error.response.data.message ===
+          "A project with this name already exists in the selected category."
+        ) {
+          toast.error(
+            "This project name already exists in this category. Please choose another."
+          );
+        } else {
+          toast.error(error.response.data.message || "An error occurred");
+        }
+      } else {
+        toast.error("An error occurred while submitting data");
+      }
       } finally {
         setLoading(false); // Set loading to false
       }

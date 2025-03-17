@@ -415,7 +415,21 @@ const GalleryDetailsWithImages = () => {
         setShowTable(true);
       } catch (error) {
         console.error("Error handling form submission:", error);
-        toast.error(error);
+        // toast.error(error);
+        if (error.response && error.response.data) {
+          if (
+            error.response.data.message ===
+            "Gallery category already exists. Please choose another name."
+          ) {
+            toast.error(
+              "A gallery category with this name already exists. Please choose another."
+            );
+          } else {
+            toast.error(error.response.data.message || "An error occurred");
+          }
+        } else {
+          toast.error("An error occurred while submitting data");
+        }
       } finally {
         setLoading(false);
       }

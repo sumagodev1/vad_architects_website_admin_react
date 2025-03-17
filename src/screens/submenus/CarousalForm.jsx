@@ -423,7 +423,11 @@ const CarousalForm = () => {
     },
     {
       name: <CustomHeader name="Date" />,
-      selector: (row) => (row.createdAt)?.slice(0, 10),
+      selector: (row) =>
+        //  (row.createdAt)?.slice(0, 10),
+      row.createdAt
+      ? new Date(row.createdAt).toLocaleDateString("en-GB").replace(/\//g, "-")
+      : "N/A",
       key: "date",
     },
     {
@@ -534,36 +538,41 @@ const CarousalForm = () => {
       </Row>
 
         {/* Modal to view the selected record */}
-      <Modal show={showModal} onHide={handleCloseModal} centered  backdrop="static" keyboard={false}>
+      <Modal show={showModal} onHide={handleCloseModal} centered  backdrop="static" keyboard={false} size="lg">
         <Modal.Header closeButton className="modal-header-custom">
           <Modal.Title>Record Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedRecord && (
             <div className="row">
-              <div className="col-6 mt-2">
+              <div className="col-md-6 col-lg-6 col-sm-12 mt-2">
                 <div className="form-group">
                   <label><strong>Name:</strong></label>
                   <div className="form-control-readonly">{selectedRecord.name}</div>
                 </div>
               </div>
-              <div className="col-6 mt-2">
+              <div className="col-md-6 col-lg-6 col-sm-12 mt-2">
                 <div className="form-group">
                   <label><strong>Email:</strong></label>
                   <div className="form-control-readonly">{selectedRecord.email}</div>
                 </div>
               </div>
 
-              <div className="col-6 mt-2">
+              <div className="col-md-6 col-lg-6 col-sm-12 mt-2">
                 <div className="form-group">
-                  <label><strong>Mobile:</strong></label>
+                  <label><strong>Mobile Number:</strong></label>
                   <div className="form-control-readonly">{selectedRecord.mobile}</div>
                 </div>
               </div>
-              <div className="col-6 mt-2">
+              <div className="col-md-6 col-lg-6 col-sm-12 mt-2">
                 <div className="form-group">
                   <label><strong>Date:</strong></label>
-                  <div className="form-control-readonly">{selectedRecord.createdAt?.slice(0, 10)}</div>
+                  <div className="form-control-readonly">
+                    {/* {selectedRecord.createdAt?.slice(0, 10)} */}
+                    {selectedRecord.createdAt
+                    ? new Date(selectedRecord.createdAt).toLocaleDateString("en-GB").replace(/\//g, "-")
+                    : "N/A"}
+                    </div>
                 </div>
               </div>
 

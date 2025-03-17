@@ -222,6 +222,17 @@ const Category = () => {
         setShowTable(true); // Switch back to table view after submission
       } catch (error) {
         console.error("Error handling form submission:", error);
+        if (error.response && error.response.data) {
+          if (
+            error.response.data.message === "Category with this title already exists"
+          ) {
+            toast.error("Category already exists. Please enter another category.");
+          } else {
+            toast.error(error.response.data.message || "An error occurred");
+          }
+        } else {
+          toast.error("An error occurred while submitting data");
+        }
       } finally {
         setLoading(false); // Set loading to false
       }

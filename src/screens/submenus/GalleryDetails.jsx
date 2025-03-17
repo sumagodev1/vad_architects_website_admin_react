@@ -311,6 +311,17 @@ const GalleryDetails = () => {
         setShowTable(true); // Switch back to table view after submission
       } catch (error) {
         console.error("Error handling form submission:", error);
+        if (error.response && error.response.data) {
+          if (
+            error.response.data.message === "Gallery category already exists"
+          ) {
+            toast.error("This gallery category already exists. Please enter another gallery category.");
+          } else {
+            toast.error(error.response.data.message || "An error occurred");
+          }
+        } else {
+          toast.error("An error occurred while submitting data");
+        }
       } finally {
         setLoading(false); // Set loading to false
       }
@@ -582,7 +593,7 @@ const GalleryDetails = () => {
                         />
                       )}
                       <NewResuableForm
-                        label={"Upload project Image"}
+                        label={"Upload gallery image"}
                         placeholder={"Upload Image"}
                         name={"img"}
                         type={"file"}
@@ -594,7 +605,7 @@ const GalleryDetails = () => {
                     </Col>
                     <Col md={6} className="mt-2">
                       <NewResuableForm
-                        label="Project Category"
+                        label="Gallery category"
                         placeholder="Enter Project Category"
                         name="gallery_category"
                         type="text"

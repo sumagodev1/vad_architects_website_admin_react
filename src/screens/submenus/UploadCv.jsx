@@ -84,10 +84,18 @@ const UploadCv = () => {
     },
   };
 
+  // const exportData = () => {
+  //   const dataToExport = searchQuery.trim() ? filteredData : team;
+  //   handleExport(dataToExport, tableColumns, "CvList");
+  // };
+
   const exportData = () => {
     const dataToExport = searchQuery.trim() ? filteredData : team;
-    handleExport(dataToExport, tableColumns, "CvList");
+    // Check if we should include the "Docs" column
+    const modifiedColumns = tableColumns.filter(col => col.key !== "cv"); 
+    handleExport(dataToExport, modifiedColumns, "CvList");
   };
+  
 
   const handleDelete = async (id) => {
     confirmAlert({
@@ -169,9 +177,15 @@ const UploadCv = () => {
       width: "300px",
     },
     {
-      name: <CustomHeader name="Phone" />,
+      name: <CustomHeader name="Mobile Number" />,
       selector: (row) => row.phone,
       key: "phone",
+      width: "200px",
+    },
+    {
+      name: <CustomHeader name="Email" />,
+      selector: (row) => row.email,
+      key: "email",
       width: "200px",
     },
     {
@@ -229,7 +243,11 @@ const UploadCv = () => {
     },
     {
       name: <CustomHeader name="Date" />,
-      selector: (row) => row.createdAt?.slice(0, 10),
+      selector: (row) => 
+        // row.createdAt?.slice(0, 10),
+      row.createdAt
+      ? new Date(row.createdAt).toLocaleDateString("en-GB").replace(/\//g, "-")
+      : "N/A",
       key: "message",
     },
     {
@@ -346,29 +364,34 @@ const UploadCv = () => {
         <Modal.Body>
           {selectedRecord && (
             <div className="row">
-              <div className="col-6">
+              <div className="col-md-6 col-lg-6 col-sm-12">
                 <div className="form-group">
                   <label><strong>Name:</strong></label>
                   <div className="form-control-readonly">{selectedRecord.name}</div>
                 </div>
               </div>
-              <div className="col-6">
+              <div className="col-md-6 col-lg-6 col-sm-12">
                 <div className="form-group">
                   <label><strong>Email:</strong></label>
                   <div className="form-control-readonly">{selectedRecord.email}</div>
                 </div>
               </div>
 
-              <div className="col-6 mt-2">
+              <div className="col-md-6 col-lg-6 col-sm-12 mt-2">
                 <div className="form-group">
-                  <label><strong>Mobile:</strong></label>
+                  <label><strong>Mobile Number:</strong></label>
                   <div className="form-control-readonly">{selectedRecord.phone}</div>
                 </div>
               </div>
-              <div className="col-6 mt-2">
+              <div className="col-md-6 col-lg-6 col-sm-12 mt-2">
                 <div className="form-group">
                   <label><strong>Date:</strong></label>
-                  <div className="form-control-readonly">{selectedRecord.createdAt?.slice(0, 10)}</div>
+                  <div className="form-control-readonly">
+                    {/* {selectedRecord.createdAt?.slice(0, 10)} */}
+                    {selectedRecord.createdAt
+                    ? new Date(selectedRecord.createdAt).toLocaleDateString("en-GB").replace(/\//g, "-")
+                    : "N/A"}
+                    </div>
                 </div>
               </div>
 
