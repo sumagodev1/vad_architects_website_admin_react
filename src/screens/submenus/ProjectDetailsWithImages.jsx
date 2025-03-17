@@ -288,28 +288,28 @@ const ProjectDetailsWithImages = () => {
       isValid = false;
     }
 
-    if (!formData.project_location?.trim()) {
-      errors.project_location = "project location is required";
-      isValid = false;
-    }
+    // if (!formData.project_location?.trim()) {
+    //   errors.project_location = "project location is required";
+    //   isValid = false;
+    // }
 
-    if (!formData.project_total_tonnage?.trim()) {
-      errors.project_total_tonnage = "project total tonnage is required";
-      isValid = false;
-    }
-    if (!formData.project_year_of_completion) {
-      errors.project_year_of_completion =
-        "project year of completion is required";
-      isValid = false;
-    }
-    if (!formData.project_status?.trim()) {
-      errors.project_status = "project status is required";
-      isValid = false;
-    }
-    if (!formData.project_info?.trim()) {
-      errors.project_info = "project info is required";
-      isValid = false;
-    }
+    // if (!formData.project_total_tonnage?.trim()) {
+    //   errors.project_total_tonnage = "project total tonnage is required";
+    //   isValid = false;
+    // }
+    // if (!formData.project_year_of_completion) {
+    //   errors.project_year_of_completion =
+    //     "project year of completion is required";
+    //   isValid = false;
+    // }
+    // if (!formData.project_status?.trim()) {
+    //   errors.project_status = "project status is required";
+    //   isValid = false;
+    // }
+    // if (!formData.project_info?.trim()) {
+    //   errors.project_info = "project info is required";
+    //   isValid = false;
+    // }
 
     // else if (formData.desc.length > 1000) {
     //   errors.desc = "Description must be 1000 characters or less";
@@ -576,7 +576,7 @@ useEffect(() => {
 
     const fetchProjectname = async () => {
       try {
-        const response = await instance.get("projectName/get-projectName");
+        const response = await instance.get("projectDetails/find-projectDetails");
         console.log("categories:", response.data.responseData);
 
         setProjectname(
@@ -623,14 +623,14 @@ useEffect(() => {
       data.append("project_category", formData.project_category);
       data.append("project_name_id", formData.project_name_id);
       data.append("project_name", formData.project_name);
-      data.append("project_location", formData.project_location);
-      data.append("project_info", formData.project_info);
-      data.append(
-        "project_year_of_completion",
-        formData.project_year_of_completion
-      );
-      data.append("project_total_tonnage", formData.project_total_tonnage);
-      data.append("project_status", formData.project_status);
+      // data.append("project_location", formData.project_location);
+      // data.append("project_info", formData.project_info);
+      // data.append(
+      //   "project_year_of_completion",
+      //   formData.project_year_of_completion
+      // );
+      // data.append("project_total_tonnage", formData.project_total_tonnage);
+      // data.append("project_status", formData.project_status);
 
       // Check if formData.img is an array and contains files
       console.log(formData.img); // Verify formData.img contains files
@@ -683,7 +683,18 @@ useEffect(() => {
         setShowTable(true);
       } catch (error) {
         console.error("Error handling form submission:", error);
-        toast.error(error);
+        // toast.error(error);
+        if (error.response && error.response.data) {
+          if (
+            error.response.data.message === "Another project with this name already exists in this category"
+          ) {
+            toast.error("Project Name already exists for this category");
+          } else {
+            toast.error(error.response.data.message || "An error occurred");
+          }
+        } else {
+          toast.error("An error occurred while submitting data");
+        }
       } finally {
         setLoading(false);
       }
@@ -1076,6 +1087,7 @@ useEffect(() => {
                             handleChange("project_category", e.target.value)
                           }
                           isInvalid={errors.project_category}
+                          disabled={editMode} 
                           style={{ appearance: "auto", WebkitAppearance: "auto", MozAppearance: "auto" }} 
                         >
                           <option disabled value="">
@@ -1102,7 +1114,8 @@ useEffect(() => {
                           onChange={(e) =>
                             handleChange("project_name", e.target.value)
                           }
-                          disabled={!formData.project_category}
+                          // disabled={!formData.project_category}
+                          disabled={!formData.project_category || editMode}
                           isInvalid={errors.project_name}
                           style={{ appearance: "auto", WebkitAppearance: "auto", MozAppearance: "auto" }} 
                         >
@@ -1127,7 +1140,7 @@ useEffect(() => {
                       </Form.Group>
                     </Col>
 
-                    <Col md={6} className="mt-2">
+                    {/* <Col md={6} className="mt-2">
                       <Form.Group controlId="projectLocation">
                         <Form.Label>Project Location</Form.Label>
                         <Form.Control
@@ -1218,7 +1231,7 @@ useEffect(() => {
                           {errors.project_info}
                         </Form.Control.Feedback>
                       </Form.Group>
-                    </Col>
+                    </Col> */}
 
                     <Col md={12} className="mt-3">
                       {imagePreview && imagePreview.length > 0 && (

@@ -948,6 +948,7 @@ const GalleryDetailsWithImages = () => {
                             handleChange("gallery_category", e.target.value)
                           }
                           isInvalid={errors.gallery_category}
+                          style={{ appearance: "auto", WebkitAppearance: "auto", MozAppearance: "auto" }}
                         >
                           <option disabled value="">
                             Choose Category

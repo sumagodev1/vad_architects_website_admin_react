@@ -216,10 +216,24 @@ const ProjectDetails = () => {
       errors.project_location = "project location is required";
       isValid = false;
     }
-    // else if (formData.desc.length > 1000) {
-    //   errors.desc = "Description must be 1000 characters or less";
-    //   isValid = false;
-    // }
+
+    if (!formData.project_total_tonnage?.trim()) {
+      errors.project_total_tonnage = "project total tonnage is required";
+      isValid = false;
+    }
+    if (!formData.project_year_of_completion) {
+      errors.project_year_of_completion =
+        "project year of completion is required";
+      isValid = false;
+    }
+    if (!formData.project_status?.trim()) {
+      errors.project_status = "project status is required";
+      isValid = false;
+    }
+    if (!formData.project_info?.trim()) {
+      errors.project_info = "project info is required";
+      isValid = false;
+    }
 
     setErrors(errors);
     return isValid;
@@ -269,45 +283,92 @@ useEffect(() => {
   }
 }, [formData.project_category, projectcategory, projectname]);
 
+  // const handleChange = async (name, value) => {
+  //   if (name === "img" && value instanceof File) {
+  //     try {
+  //       await validateImageSize(value);
+  //       setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  //       setErrors((prevErrors) => ({ ...prevErrors, img: "" }));
+  //     } catch (error) {
+  //       setErrors((prevErrors) => ({ ...prevErrors, img: error }));
+  //       setImagePreview("");
+  //     }
+  //   } else if (name === "project_category") {
+  //        // Find the categoryId based on selected category title
+  //     const categoryId = projectcategory.find((c) => c.title === value)?.id;
+      
+  //     // Set the selected category and clear the project name field
+  //     setFormData((prevFormData) => ({
+  //       ...prevFormData,
+  //       project_category: value,
+  //       project_category_id: categoryId,
+  //       project_name: "", // Clear the project name when category is changed
+  //     }));
+  
+  //     // Fetch project names for the selected category
+  //     const filteredNames = projectname.filter(
+  //       (project) => project.project_category_id === categoryId
+  //     );
+  //     setFilteredProjectNames(filteredNames); // Update the filtered project names list
+  //     } 
+  //     else if (name === "project_name") {
+  //       const projectId = projectname.find(p => p.project_name === value)?.id;
+  //       setFormData((prevFormData) => ({
+  //         ...prevFormData,
+  //         project_name: value,
+  //         project_name_id: projectId
+  //       }));
+  //     } 
+  //     else {
+  //       setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  //       setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  //     }
+  // };
+
   const handleChange = async (name, value) => {
     if (name === "img" && value instanceof File) {
-      try {
-        await validateImageSize(value);
-        setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-        setErrors((prevErrors) => ({ ...prevErrors, img: "" }));
-      } catch (error) {
-        setErrors((prevErrors) => ({ ...prevErrors, img: error }));
-        setImagePreview("");
-      }
+        try {
+            await validateImageSize(value);
+            setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+            setErrors((prevErrors) => ({ ...prevErrors, img: "" }));
+        } catch (error) {
+            setErrors((prevErrors) => ({ ...prevErrors, img: error }));
+            setImagePreview("");
+        }
     } else if (name === "project_category") {
-         // Find the categoryId based on selected category title
-      const categoryId = projectcategory.find((c) => c.title === value)?.id;
-      
-      // Set the selected category and clear the project name field
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        project_category: value,
-        project_category_id: categoryId,
-        project_name: "", // Clear the project name when category is changed
-      }));
-  
-      // Fetch project names for the selected category
-      const filteredNames = projectname.filter(
-        (project) => project.project_category_id === categoryId
-      );
-      setFilteredProjectNames(filteredNames); // Update the filtered project names list
-      } else if (name === "project_name") {
-        const projectId = projectname.find(p => p.project_name === value)?.id;
+        const categoryId = projectcategory.find((c) => c.title === value)?.id;
         setFormData((prevFormData) => ({
-          ...prevFormData,
-          project_name: value,
-          project_name_id: projectId
+            ...prevFormData,
+            project_category: value,
+            project_category_id: categoryId,
+            project_name: "", // Clear project name when category changes
         }));
-      } else {
+    } else {
+
+
+            // Restrict project_year_of_completion to only numbers
+    if (name === "project_year_of_completion" && !/^\d*$/.test(value)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "Only numbers are allowed.",
+      }));
+      return; // Prevent updating state
+    }
+
+    if (name === "project_total_tonnage" && !/^\d*$/.test(value)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "Only numbers are allowed.",
+      }));
+      return; // Prevent updating state
+    }
+      
         setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
         setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-      }
-  };
+    }
+
+
+};
   
 
   useEffect(() => {
@@ -347,9 +408,16 @@ useEffect(() => {
           // Add categoryId and projectId explicitly
     data.append("project_category_id", formData.project_category_id); 
     data.append("project_category", formData.project_category); 
-    data.append("project_name_id", formData.project_name_id); 
+    // data.append("project_name_id", formData.project_name_id); 
     data.append("project_name", formData.project_name);        
     data.append("project_location", formData.project_location);
+    data.append("project_info", formData.project_info);
+    data.append(
+      "project_year_of_completion",
+      formData.project_year_of_completion
+    );
+    data.append("project_total_tonnage", formData.project_total_tonnage);
+    data.append("project_status", formData.project_status);
     
     // Handle file (image)
     if (formData.img instanceof File) {
@@ -394,6 +462,17 @@ useEffect(() => {
         setShowTable(true); // Switch back to table view after submission
       } catch (error) {
         console.error("Error handling form submission:", error);
+        if (error.response && error.response.data) {
+          if (
+            error.response.data.message === "Another project with this name already exists in this category"
+          ) {
+            toast.error("Project Name already exists for this category");
+          } else {
+            toast.error(error.response.data.message || "An error occurred");
+          }
+        } else {
+          toast.error("An error occurred while submitting data");
+        }
       } finally {
         setLoading(false); // Set loading to false
       }
@@ -670,6 +749,19 @@ useEffect(() => {
                     </Col>
 
                     <Col md={6} className="mt-2">
+                      <Form.Group controlId="projectName">
+                          <Form.Label>Project Name</Form.Label>
+                          <Form.Control
+                              type="text"
+                              value={formData.project_name || ""} // Allow manual input
+                              onChange={(e) => handleChange("project_name", e.target.value)}
+                              placeholder="Enter Project Name"
+                          />
+                          <p className="text-danger">{errors.project_name}</p>
+                      </Form.Group>
+                  </Col>
+
+                    {/* <Col md={6} className="mt-2">
                         <Form.Group controlId="projectName">
                             <Form.Label>Project Name</Form.Label>
                             <Form.Select
@@ -692,7 +784,7 @@ useEffect(() => {
                             </Form.Select>
                             <p className="text-danger">{errors.project_name}</p>
                         </Form.Group>
-                    </Col>
+                    </Col> */}
 
 
                     {/* <Col md={6} className="mt-2">
@@ -721,6 +813,84 @@ useEffect(() => {
                         error={errors.project_location}
                         // charLimit={1000}
                       />
+                    </Col>
+
+                    <Col md={6} className="mt-2">
+                      <Form.Group controlId="projectTotalTonnage">
+                        <Form.Label>Project Total Tonnage</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="project_total_tonnage"
+                          value={formData.project_total_tonnage || ""}
+                          onChange={(e) =>
+                            handleChange(
+                              "project_total_tonnage",
+                              e.target.value
+                            )
+                          }
+                          isInvalid={errors.project_total_tonnage}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.project_total_tonnage}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={6} className="mt-2">
+                      <Form.Group controlId="projectYearOfCompletion">
+                        <Form.Label>Project Completion Year</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="project_year_of_completion"
+                          value={formData.project_year_of_completion || ""}
+                          onChange={(e) =>
+                            handleChange(
+                              "project_year_of_completion",
+                              e.target.value
+                            )
+                          }
+                          isInvalid={errors.project_year_of_completion}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.project_year_of_completion}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={6} className="mt-2">
+                      <Form.Group controlId="projectStatus">
+                        <Form.Label>Project Status</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="project_status"
+                          value={formData.project_status || ""}
+                          onChange={(e) =>
+                            handleChange("project_status", e.target.value)
+                          }
+                          isInvalid={errors.project_status}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.project_status}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={6} className="mt-2">
+                      <Form.Group controlId="projectInfo">
+                        <Form.Label>Project Information</Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          name="project_info"
+                          value={formData.project_info || ""}
+                          onChange={(e) =>
+                            handleChange("project_info", e.target.value)
+                          }
+                          isInvalid={errors.project_info}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.project_info}
+                        </Form.Control.Feedback>
+                      </Form.Group>
                     </Col>
 
                     <Col md={12} className="mt-4">

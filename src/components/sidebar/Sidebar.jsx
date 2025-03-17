@@ -200,11 +200,11 @@ const SidebarMenu = [
         url: "/category",
         icon: <RiFileListLine style={{ color: "black" }} size={24} />,
       },
-      {
-        subMenus: "Project Master",
-        url: "/projectName",
-        icon: <RiFileListLine style={{ color: "black" }} size={24} />,
-      },
+      // {
+      //   subMenus: "Project Master",
+      //   url: "/projectName",
+      //   icon: <RiFileListLine style={{ color: "black" }} size={24} />,
+      // },
       {
         subMenus: "Project Details Master",
         url: "/projectDetails",

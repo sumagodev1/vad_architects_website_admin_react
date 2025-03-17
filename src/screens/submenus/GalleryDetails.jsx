@@ -257,28 +257,118 @@ const GalleryDetails = () => {
   
   
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   // console.log("Submitting form with data:", formData);
+  //   if (validateForm(formData)) {
+  //     setLoading(true);
+  //     const accessToken = localStorage.getItem("accessToken"); // Retrieve access token
+  //     const data = new FormData();
+
+  //         // Add categoryId and projectId explicitly
+  //   data.append("gallery_category", formData.gallery_category); 
+    
+  //   // Handle file (image)
+  //   if (formData.img instanceof File) {
+  //     data.append("img", formData.img);
+  //   }
+
+  //   // console.log("Form data being sent:", [...data.entries()]);
+
+  //   //   console.log("Form data being sent:", [...data.entries()]);
+
+  //     try {
+  //       if (editMode) {
+  //         await instance.put(
+  //           `galleryDetails/update-galleryDetails/${editingId}`,
+  //           data,
+  //           {
+  //             headers: {
+  //               Authorization: "Bearer " + accessToken,
+  //               "Content-Type": "multipart/form-data",
+  //             },
+  //           }
+  //         );
+  //         toast.success("Data Updated Successfully");
+  //         const updatedTeam = team.map((member) =>
+  //           member.id === editingId ? formData : member
+  //         );
+  //         setTeam(updatedTeam);
+  //       } else {
+  //         await instance.post("galleryDetails/create-galleryDetails", data, {
+  //           headers: {
+  //             Authorization: "Bearer " + accessToken,
+  //             "Content-Type": "multipart/form-data",
+  //           },
+  //         });
+  //         toast.success("Data Submitted Successfully");
+  //       }
+  //       fetchTeam();
+
+  //       setEditMode(false);
+  //       setFormData({});
+  //       setImagePreview("");
+  //       setShowTable(true); // Switch back to table view after submission
+  //     } catch (error) {
+  //       console.error("Error handling form submission:", error);
+  //       if (error.response && error.response.data) {
+  //         if (
+  //           error.response.data.message === "Gallery category already exists when update"
+  //         ) {
+  //           toast.error("This gallery category already exists. Please enter another gallery category.");
+  //         } else {
+  //           toast.error(error.response.data.message || "An error occurred");
+  //         }
+  //       } else {
+  //         toast.error("An error occurred while submitting data");
+  //       }
+  //     } finally {
+  //       setLoading(false); // Set loading to false
+  //     }
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("Submitting form with data:", formData);
+    
+    // Validate form data
     if (validateForm(formData)) {
       setLoading(true);
       const accessToken = localStorage.getItem("accessToken"); // Retrieve access token
       const data = new FormData();
-
-          // Add categoryId and projectId explicitly
-    data.append("gallery_category", formData.gallery_category); 
-    
-    // Handle file (image)
-    if (formData.img instanceof File) {
-      data.append("img", formData.img);
-    }
-
-    // console.log("Form data being sent:", [...data.entries()]);
-
-    //   console.log("Form data being sent:", [...data.entries()]);
-
+  
+      // Add category to form data
+      data.append("gallery_category", formData.gallery_category);
+  
+      // Handle file (image)
+      if (formData.img instanceof File) {
+        data.append("img", formData.img);
+      }
+  
+      // Function to check if gallery category exists
+      const checkCategoryExists = async (category) => {
+        try {
+          const response = await instance.get(`/galleryDetails/check-category/${category}`);
+          console.log("Check response:", response.data); // Log the response
+          return response.data.exists; // Assuming your backend sends { exists: true/false }
+        } catch (error) {
+          console.error('Error checking category:', error);
+          return false;
+        }
+      };
+  
       try {
+        // Check if category exists before submission
+        const categoryExists = await checkCategoryExists(formData.gallery_category);
+        console.log('Category exists:', categoryExists); // Log result
+  
+        if (categoryExists) {
+          toast.error("This gallery category already exists. Please enter another gallery category.");
+          return; // Stop the form submission
+        }
+  
         if (editMode) {
+          // Handle update
           await instance.put(
             `galleryDetails/update-galleryDetails/${editingId}`,
             data,
@@ -290,11 +380,13 @@ const GalleryDetails = () => {
             }
           );
           toast.success("Data Updated Successfully");
+  
           const updatedTeam = team.map((member) =>
             member.id === editingId ? formData : member
           );
           setTeam(updatedTeam);
         } else {
+          // Handle creation
           await instance.post("galleryDetails/create-galleryDetails", data, {
             headers: {
               Authorization: "Bearer " + accessToken,
@@ -303,8 +395,9 @@ const GalleryDetails = () => {
           });
           toast.success("Data Submitted Successfully");
         }
+  
         fetchTeam();
-
+  
         setEditMode(false);
         setFormData({});
         setImagePreview("");
@@ -313,7 +406,7 @@ const GalleryDetails = () => {
         console.error("Error handling form submission:", error);
         if (error.response && error.response.data) {
           if (
-            error.response.data.message === "Gallery category already exists"
+            error.response.data.message === "Gallery category already exists when update"
           ) {
             toast.error("This gallery category already exists. Please enter another gallery category.");
           } else {
@@ -323,10 +416,11 @@ const GalleryDetails = () => {
           toast.error("An error occurred while submitting data");
         }
       } finally {
-        setLoading(false); // Set loading to false
+        setLoading(false); // Set loading to false after submission
       }
     }
   };
+  
 
   const handleDelete = async (id) => {
     confirmAlert({
