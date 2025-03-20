@@ -896,7 +896,7 @@ const GalleryDetailsWithImages = () => {
                       )}
 
                       <Form.Group controlId="gallery_images">
-                        <Form.Label>Upload multiple gallery Images <small className="text-danger">(Image must be 1MB or less)</small></Form.Label>
+                        <Form.Label>Upload multiple gallery Images<span className="text-danger">*</span> <small className="text-danger">(Image must be 1MB or less)</small></Form.Label>
                         <Form.Control
                           type="file"
                           name="gallery_images"
@@ -940,7 +940,7 @@ const GalleryDetailsWithImages = () => {
                     </Col>
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="galleryCategory">
-                        <Form.Label>gallery Category</Form.Label>
+                        <Form.Label>gallery Category<span className="text-danger">*</span></Form.Label>
                         <Form.Control
                           as="select"
                           value={formData.gallery_category || ""}
@@ -948,6 +948,7 @@ const GalleryDetailsWithImages = () => {
                             handleChange("gallery_category", e.target.value)
                           }
                           isInvalid={errors.gallery_category}
+                          disabled={editMode} 
                           style={{ appearance: "auto", WebkitAppearance: "auto", MozAppearance: "auto" }}
                         >
                           <option disabled value="">

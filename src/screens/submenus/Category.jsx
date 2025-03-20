@@ -511,7 +511,8 @@ const Category = () => {
                   <Row>
                     <Col md={6}>
                       <NewResuableForm
-                        label="Title"
+                        // label="Title"
+                        label={<span>Title<span className="text-danger">*</span></span>}
                         placeholder="Enter Title"
                         name="title"
                         type="text"

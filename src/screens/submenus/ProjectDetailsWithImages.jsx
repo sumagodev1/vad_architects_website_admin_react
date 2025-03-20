@@ -1079,7 +1079,7 @@ useEffect(() => {
                   <Row>
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="projectCategory">
-                        <Form.Label>Project Category</Form.Label>
+                        <Form.Label>Project Category<span className="text-danger">*</span></Form.Label>
                         <Form.Control
                           as="select"
                           value={formData.project_category || ""}
@@ -1107,7 +1107,7 @@ useEffect(() => {
 
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="projectName">
-                        <Form.Label>Project Name</Form.Label>
+                        <Form.Label>Project Name<span className="text-danger">*</span></Form.Label>
                         <Form.Control
                           as="select"
                           value={formData.project_name || ""}
@@ -1272,7 +1272,7 @@ useEffect(() => {
                       </Col>
 
                       <Form.Group controlId="project_images">
-                        <Form.Label>Upload multiple project Images <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Label>Upload multiple project Images<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
                         <Form.Control
                           type="file"
                           name="project_images"

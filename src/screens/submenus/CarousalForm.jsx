@@ -295,7 +295,7 @@ const CarousalForm = () => {
       setTotalRows(response.data.totalCount || reversedData.length);
     } catch (error) {
       console.error("Error fetching team data:", error);
-      toast.error("Error fetching team data");
+      // toast.error("Error fetching team data");
     } finally {
       setLoading(false);
     }
@@ -478,6 +478,16 @@ const CarousalForm = () => {
     setSelectedRecord(null); // Reset the selected record
     setTooltipKey(prevKey => prevKey + 1); // Trigger a re-render of tooltips
   };
+
+    // Pagination settings
+    const handlePageChange = (page) => {
+      setCurrentPage(page);
+    };
+  
+    const handleRowsPerPageChange = (e) => {
+      setRowsPerPage(parseInt(e.target.value, 10));
+      setCurrentPage(1);
+    };
   
 
   return (
@@ -523,6 +533,7 @@ const CarousalForm = () => {
               paginationTotalRows={searchQuery.trim() ? filteredData.length : totalRows}
               paginationDefaultPage={currentPage}
               paginationPerPage={rowsPerPage}
+              paginationRowsPerPageOptions={[10, 25, 50, 75, 100]}
               onChangePage={(page) => setCurrentPage(page)}
               onChangeRowsPerPage={(newRowsPerPage) => {
                 setRowsPerPage(newRowsPerPage);

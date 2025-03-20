@@ -687,7 +687,8 @@ const GalleryDetails = () => {
                         />
                       )}
                       <NewResuableForm
-                        label={"Upload gallery thumbnail image"}
+                        // label={"Upload gallery thumbnail image"}
+                        label={<span>Upload gallery thumbnail image<span className="text-danger">*</span></span>}
                         placeholder={"Upload Image"}
                         name={"img"}
                         type={"file"}
@@ -699,7 +700,8 @@ const GalleryDetails = () => {
                     </Col>
                     <Col md={6} className="mt-2">
                       <NewResuableForm
-                        label="Gallery category"
+                        // label="Gallery category"
+                        label={<span>Gallery category<span className="text-danger">*</span></span>}
                         placeholder="Enter Project Category"
                         name="gallery_category"
                         type="text"

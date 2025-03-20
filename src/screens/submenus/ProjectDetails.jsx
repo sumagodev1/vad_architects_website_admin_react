@@ -734,7 +734,7 @@ useEffect(() => {
 
                     <Col md={6} className="mt-2">
                         <Form.Group controlId="projectCategory">
-                        <Form.Label>Project Category</Form.Label>
+                        <Form.Label>Project Category<span className="text-danger">*</span></Form.Label>
                         <Form.Select
                             value={formData.project_category || ""} // Set selected option for edit mode
                             onChange={(e) => handleChange("project_category", e.target.value)}
@@ -750,7 +750,7 @@ useEffect(() => {
 
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="projectName">
-                          <Form.Label>Project Name</Form.Label>
+                          <Form.Label>Project Name<span className="text-danger">*</span></Form.Label>
                           <Form.Control
                               type="text"
                               value={formData.project_name || ""} // Allow manual input
@@ -804,7 +804,8 @@ useEffect(() => {
                     </Col> */}
                     <Col md={6} className="mt-2">
                       <NewResuableForm
-                        label="Project Location"
+                        // label="Project Location"
+                        label={<span>Project Location<span className="text-danger">*</span></span>}
                         placeholder="Enter Project Location"
                         name="project_location"
                         type="text"
@@ -817,7 +818,7 @@ useEffect(() => {
 
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="projectTotalTonnage">
-                        <Form.Label>Project Total Tonnage</Form.Label>
+                        <Form.Label>Project Total Tonnage<span className="text-danger">*</span></Form.Label>
                         <Form.Control
                           type="text"
                           name="project_total_tonnage"
@@ -838,7 +839,7 @@ useEffect(() => {
 
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="projectYearOfCompletion">
-                        <Form.Label>Project Completion Year</Form.Label>
+                        <Form.Label>Project Completion Year<span className="text-danger">*</span></Form.Label>
                         <Form.Control
                           type="text"
                           name="project_year_of_completion"
@@ -859,7 +860,7 @@ useEffect(() => {
 
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="projectStatus">
-                        <Form.Label>Project Status</Form.Label>
+                        <Form.Label>Project Status<span className="text-danger">*</span></Form.Label>
                         <Form.Control
                           type="text"
                           name="project_status"
@@ -877,7 +878,7 @@ useEffect(() => {
 
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="projectInfo">
-                        <Form.Label>Project Information</Form.Label>
+                        <Form.Label>Project Information<span className="text-danger">*</span></Form.Label>
                         <Form.Control
                           as="textarea"
                           name="project_info"
@@ -906,7 +907,8 @@ useEffect(() => {
                         />
                       )}
                       <NewResuableForm
-                        label={"Upload project thumbnail Image"}
+                        // label={"Upload project thumbnail Image"}
+                        label={<span>Upload project thumbnail Image<span className="text-danger">*</span></span>}
                         placeholder={"Upload Image"}
                         name={"img"}
                         type={"file"}

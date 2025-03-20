@@ -160,7 +160,8 @@ const Login = () => {
                   <div className="mb-4 d-flex justify-content-center">
                     <ReCAPTCHA
                       ref={captchaRef}
-                          sitekey="6Le657EpAAAAADHl0EnUi-58y19XOcORV9dehjAz"
+                          // sitekey="6Le657EpAAAAADHl0EnUi-58y19XOcORV9dehjAz"
+                          sitekey = "6LeAZfoqAAAAAMc5CwBV3EdVbedy9IhxloDVUFNm"
 
                           // sitekey="6LcvPesqAAAAADOOYwjQlAP7YuXckifnTPJ9rvVS"
                           // secretkey="6LcvPesqAAAAAEasHj8-Rc9jAH8znHjyfD_6dgAO"

@@ -58,7 +58,7 @@ const UploadCv = () => {
       setData(reversedData);
     } catch (error) {
       console.error("Error fetching team data:", error);
-      toast.error("Error fetching team data");
+      // toast.error("Error fetching team data");
     } finally {
       setLoading(false);
     }
