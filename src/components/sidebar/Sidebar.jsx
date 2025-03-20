@@ -21,6 +21,12 @@ import "./Sidebar.scss";
 import { SidebarContext } from "../../context/SidebarContext";
 import { TitleContext } from "../../context/TitleContext";
 import { IoIosOptions, IoIosPeople } from "react-icons/io";
+
+import cv from './icons/cv.png'
+import gallery from './icons/gallery.png'
+import project from './icons/project.png'
+import contact from './icons/contact.png'
+
 // Sidebar menu structure
 const SidebarMenu = [
   {
@@ -193,10 +199,11 @@ const SidebarMenu = [
   {
     menu: "Project Master",
     url: "/projectmaster",
-    mainIcon: <RiTeamFill size={24} />,
+    // mainIcon: <RiTeamFill size={24} />,
+    mainIcon: <img src={project} alt="upload-icon" style={{ color: "black" }} className="img-fluid" size={24} />,
     subMenu: [
       {
-        subMenus: "Category Master",
+        subMenus: "Project Category Master",
         url: "/category",
         icon: <RiFileListLine style={{ color: "black" }} size={24} />,
       },
@@ -213,7 +220,8 @@ const SidebarMenu = [
       {
         subMenus: "Project Images Master",
         url: "/projectDetailsWithImages",
-        icon: <RiFileListLine style={{ color: "black" }} size={24} />,
+        // icon: <RiFileListLine style={{ color: "black" }} size={24} />,
+        icon: <img src={gallery} alt="upload-icon" style={{ color: "black" }} className="img-fluid" size={24} />,
       },
 
     ],
@@ -222,17 +230,19 @@ const SidebarMenu = [
   {
     menu: "Gallery Master",
     url: "/gallerymaster",
-    mainIcon: <RiTeamFill size={24} />,
+    // mainIcon: <RiTeamFill size={24} />,
+    mainIcon: <img src={gallery} alt="upload-icon" style={{ color: "black" }} className="img-fluid" size={24} />,
     subMenu: [
       {
-        subMenus: "Gallery Details Master",
+        subMenus: "Gallery Category Master",
         url: "/galleryDetails",
         icon: <RiFileListLine style={{ color: "black" }} size={24} />,
       },
       {
         subMenus: "Gallery Images Master",
         url: "/galleryDetailsWithImages",
-        icon: <RiFileListLine style={{ color: "black" }} size={24} />,
+        // icon: <RiFileListLine style={{ color: "black" }} size={24} />,
+        icon: <img src={gallery} alt="upload-icon" style={{ color: "black" }} className="img-fluid" size={24} />,
       },
     ],
   },
@@ -241,13 +251,15 @@ const SidebarMenu = [
   {
     menu: "Cv List",
     url: "/uploadcv",
-    mainIcon: <FiUploadCloud style={{ color: "black" }} size={24} />,
+    // mainIcon: <FiUploadCloud style={{ color: "black" }} size={24} />,
+    mainIcon: <img src={cv} alt="upload-icon" style={{ color: "black" }} className="img-fluid" size={24} />,
     subMenu: [],
   },
   {
     menu: "Contact Us",
     url: "/carousalform",
-    mainIcon: <RiFileListLine style={{ color: "black" }} size={24} />,
+    // mainIcon: <RiFileListLine style={{ color: "black" }} size={24} />,
+    mainIcon: <img src={contact} alt="upload-icon" style={{ color: "black" }} className="img-fluid" size={24} />,
     subMenu: [],
   },
   {

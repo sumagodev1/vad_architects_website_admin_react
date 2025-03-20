@@ -906,7 +906,7 @@ useEffect(() => {
                         />
                       )}
                       <NewResuableForm
-                        label={"Upload project Image"}
+                        label={"Upload project thumbnail Image"}
                         placeholder={"Upload Image"}
                         name={"img"}
                         type={"file"}

@@ -98,7 +98,7 @@ const Carousal = () => {
               <FaEdit />
             </Button>
           </OverlayTrigger>
-          <OverlayTrigger
+          {/* <OverlayTrigger
             placement="top"
             overlay={<Tooltip id="delete-tooltip">Delete</Tooltip>}
           >
@@ -109,8 +109,8 @@ const Carousal = () => {
             >
               <FaTrash />
             </Button>
-          </OverlayTrigger>
-          <OverlayTrigger
+          </OverlayTrigger> */}
+          {/* <OverlayTrigger
             placement="top"
             overlay={<Tooltip id="visibility-tooltip">{eyeVisibilityById[row.id] ? 'Hide' : 'Show'}</Tooltip>}
           >
@@ -125,7 +125,7 @@ const Carousal = () => {
             >
               {eyeVisibilityById[row.id] ? <FaEyeSlash /> : <FaEye />}
             </Button>
-          </OverlayTrigger>
+          </OverlayTrigger> */}
         </div>
       ),
     },
@@ -524,13 +524,13 @@ const Carousal = () => {
                 {showTable ? (
                   <Col className="d-flex justify-content-end align-items-center">
 
-                    <Button
+                    {/* <Button
                       variant="outline-success"
                       onClick={handleAdd}
                       className="ms-2 mb-3"
                     >
                       Add
-                    </Button>
+                    </Button> */}
                   </Col>
                 ) : (
                   <Col className="d-flex justify-content-end align-items-center">
@@ -574,7 +574,8 @@ const Carousal = () => {
                     <Col md={12}>
                       {renderPreview()}
                       <NewResuableForm
-                        label={"Upload Home Sliding Media"}
+                        // label={"Upload Home Sliding Media"}
+                        label={<span>Upload Home Sliding Media<span className="text-danger">*</span></span>}
                         placeholder={"Upload Media"}
                         name={"img"}
                         type={"file"}
@@ -590,8 +591,8 @@ const Carousal = () => {
                       />
                     </Col>
                     <Col md={4}>
-                      <Form.Group controlId="formView">
-                        <Form.Label>View</Form.Label>
+                      <Form.Group controlId="formView" className="mt-2">
+                        <Form.Label>View<span className="text-danger">*</span></Form.Label>
                         <Form.Control
                           as="select"
                           name="view"

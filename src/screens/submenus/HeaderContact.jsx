@@ -98,35 +98,76 @@ const HeaderContact = () => {
   const validateForm = (formData) => {
     let errors = {};
     let isValid = true;
-
+  
+    // Indian number must start with +91 and followed by 10 digits starting with 9, 8, 7, or 6
+    const indianNumberRegex = /^\+91[9876]\d{9}$/;
+  
+    // US number must start with +1 and be exactly 10 digits long
+    const usNumberRegex = /^\+1\d{10}$/;
+  
+    // Validate Phone 1
     if (!formData.phone1?.trim()) {
-      errors.phone1 = "Mobile number is required";
+      errors.phone1 = "Phone number is required";
       isValid = false;
-    } else if (!/^\d+$/.test(formData.phone1)) {
-      errors.phone1 = "Mobile number must contain only digits";
-      isValid = false;
-    } else if (formData.phone1.length !== 10) {
-      errors.phone1 = "Mobile number must be exactly 10 digits";
+    } else if (!indianNumberRegex.test(formData.phone1) && !usNumberRegex.test(formData.phone1)) {
+      errors.phone1 = "Phone 1 must be a valid Indian (+91) or US (+1) number";
       isValid = false;
     }
-
+  
+    // Validate Phone 2
     if (!formData.phone2?.trim()) {
-      errors.phone2 = "Mobile number is required";
+      errors.phone2 = "Phone number is required";
       isValid = false;
-    } else if (!/^\d+$/.test(formData.phone2)) {
-      errors.phone2 = "Mobile number must contain only digits";
-      isValid = false;
-    } else if (formData.phone2.length !== 10) {
-      errors.phone2 = "Mobile number must be exactly 10 digits";
+    } else if (!indianNumberRegex.test(formData.phone2) && !usNumberRegex.test(formData.phone2)) {
+      errors.phone2 = "Phone 2 must be a valid Indian (+91) or US (+1) number";
       isValid = false;
     }
-
+  
     setErrors(errors);
     return isValid;
-  };
+  };  
+  
+
+  // const validateForm = (formData) => {
+  //   let errors = {};
+  //   let isValid = true;
+
+  //   if (!formData.phone1?.trim()) {
+  //     errors.phone1 = "Mobile number is required";
+  //     isValid = false;
+  //   } else if (!/^\d+$/.test(formData.phone1)) {
+  //     errors.phone1 = "Mobile number must contain only digits";
+  //     isValid = false;
+  //   } else if (formData.phone1.length !== 10) {
+  //     errors.phone1 = "Mobile number must be exactly 10 digits";
+  //     isValid = false;
+  //   }
+
+  //   if (!formData.phone2?.trim()) {
+  //     errors.phone2 = "Mobile number is required";
+  //     isValid = false;
+  //   } else if (!/^\d+$/.test(formData.phone2)) {
+  //     errors.phone2 = "Mobile number must contain only digits";
+  //     isValid = false;
+  //   } else if (formData.phone2.length !== 10) {
+  //     errors.phone2 = "Mobile number must be exactly 10 digits";
+  //     isValid = false;
+  //   }
+
+  //   setErrors(errors);
+  //   return isValid;
+  // };
 
   const handleChange = (name, value) => {
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+
+    const sanitizedValue = value.replace(/[^0-9+]/g, "");
+
+    // Ensure + appears only at the start
+    if (sanitizedValue.length > 0 && sanitizedValue[0] !== "+") {
+      return; // Ignore input if + is not at the start
+    }
+
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: sanitizedValue }));
     if (errors[name]) {
       setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
     }
@@ -236,7 +277,7 @@ const HeaderContact = () => {
                   <Row>
                     <Col md={6}>
                       <NewResuableForm
-                        label={"Phone 1"}
+                        label={<span>Phone 1 (Enter US number)<span className="text-danger">*</span></span>}
                         placeholder={"Enter first phone number"}
                         type={"text"}
                         name={"phone1"}
@@ -247,7 +288,7 @@ const HeaderContact = () => {
                     </Col>
                     <Col md={6}>
                       <NewResuableForm
-                        label={"Phone 2"}
+                        label={<span>Phone 2 (Enter Indian number)<span className="text-danger">*</span></span>}
                         placeholder={"Enter second phone number"}
                         type={"text"}
                         name={"phone2"}

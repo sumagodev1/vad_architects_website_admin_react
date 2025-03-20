@@ -89,23 +89,23 @@ const BlogDetails = () => {
         </span>
       ),
     },
-    {
-      name: <CustomHeader name="Long Description" />,
-      cell: (row) => (
-        <span
-          style={{
-            overflow: "hidden",
-            WebkitLineClamp: 4,
-            WebkitBoxOrient: "vertical",
-            display: "-webkit-box",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {row.longDesc}
-        </span>
-      ),
-      width: "auto",
-    },
+    // {
+    //   name: <CustomHeader name="Long Description" />,
+    //   cell: (row) => (
+    //     <span
+    //       style={{
+    //         overflow: "hidden",
+    //         WebkitLineClamp: 4,
+    //         WebkitBoxOrient: "vertical",
+    //         display: "-webkit-box",
+    //         textOverflow: "ellipsis",
+    //       }}
+    //     >
+    //       {row.longDesc}
+    //     </span>
+    //   ),
+    //   width: "auto",
+    // },
     {
       name: <CustomHeader name="Image" />,
       cell: (row) => (
@@ -116,6 +116,15 @@ const BlogDetails = () => {
         />
       ),
       width: "150px",
+    },
+    {
+      name: <CustomHeader name="Date" />,
+      selector: (row) =>
+        //  (row.createdAt)?.slice(0, 10),
+      row.createdAt
+      ? new Date(row.createdAt).toLocaleDateString("en-GB").replace(/\//g, "-")
+      : "N/A",
+      key: "date",
     },
     {
       name: <CustomHeader name="Actions" />,
@@ -657,7 +666,8 @@ const BlogDetails = () => {
                       />
                     )}
                     <NewResuableForm
-                      label={"Upload Blog Image"}
+                      // label={"Upload Blog Image"}
+                      label={<span>Upload Blog Image<span className="text-danger">*</span></span>}
                       placeholder={"Upload Image"}
                       name={"img"}
                       type={"file"}
@@ -668,9 +678,10 @@ const BlogDetails = () => {
                     />
                   
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className="mt-2">
                     <NewResuableForm
-                      label={"Title"}
+                      // label={"Title"}
+                      label={<span>Title<span className="text-danger">*</span></span>}
                       placeholder={"Enter Title"}
                       name={"title"}
                       type={"text"}
@@ -680,9 +691,10 @@ const BlogDetails = () => {
                     />
           
                   </Col>
-                  <Col md={12}>
+                  <Col md={12} className="mt-2">
                     <NewResuableForm
-                      label={"Short Description "}
+                      // label={"Short Description "}
+                      label={<span>Short Description<span className="text-danger">*</span></span>}
                       placeholder={"Short Description "}
                       name={"shortDesc"}
                       type={"text"}
@@ -693,9 +705,10 @@ const BlogDetails = () => {
                     />
             
                   </Col>
-                  <Col md={12}>
+                  <Col md={12} className="mt-2">
                     <NewResuableForm
-                      label={"Long Description "}
+                      // label={"Long Description "}
+                      label={<span>Long Description<span className="text-danger">*</span></span>}
                       placeholder={"Long Description "}
                       name={"longDesc"}
                       type={"text"}

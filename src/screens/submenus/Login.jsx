@@ -1,8 +1,4 @@
-
-
-////sos final
-
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Form, Button, Container, Row, Col, Card, Image, InputGroup } from "react-bootstrap";
 import instance from "../../api/AxiosInstance";
 import { toast } from "react-toastify";
@@ -11,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import logo from "../../assets/images/logo.png";
 import { ThreeDots } from 'react-loader-spinner';
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,6 +16,9 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  const [recaptchaValue, setRecaptchaValue] = useState(null);
+  const captchaRef = useRef(null);
 
   const validateForm = () => {
     let errors = {};
@@ -37,8 +37,17 @@ const Login = () => {
       isValid = false;
     }
 
+    if (!recaptchaValue) {
+      errors.recaptcha = "Please complete the CAPTCHA";
+      isValid = false;
+    }
+
     setErrors(errors);
     return isValid;
+  };
+
+  const handleRecaptchaChange = (value) => {
+    setRecaptchaValue(value);
   };
 
   const handleSubmit = async (e) => {
@@ -146,6 +155,22 @@ const Login = () => {
                       <span className="text-danger">{errors.password}</span>
                     )}
                   </Form.Group>
+
+                  {/* ReCAPTCHA Section */}
+                  <div className="mb-4 d-flex justify-content-center">
+                    <ReCAPTCHA
+                      ref={captchaRef}
+                          sitekey="6Le657EpAAAAADHl0EnUi-58y19XOcORV9dehjAz"
+
+                          // sitekey="6LcvPesqAAAAADOOYwjQlAP7YuXckifnTPJ9rvVS"
+                          // secretkey="6LcvPesqAAAAAEasHj8-Rc9jAH8znHjyfD_6dgAO"
+
+                          // sitekey = "6LckIvEqAAAAAPdy1kCNcZ-VEnwUf6zcJAw1zjK8"
+                          // secretkey = "6LckIvEqAAAAAJokDpuRBhmJLdCAz2Y3wHkjQhuU"
+                      onChange={handleRecaptchaChange}
+                    />
+                  </div>
+                  {errors.recaptcha && <small className="text-danger d-flex justify-content-center">{errors.recaptcha}</small>}
 
                   <Row className="justify-content-center">
                     <Col xs="auto">

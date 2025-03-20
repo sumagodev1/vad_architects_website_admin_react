@@ -687,7 +687,7 @@ const GalleryDetails = () => {
                         />
                       )}
                       <NewResuableForm
-                        label={"Upload gallery image"}
+                        label={"Upload gallery thumbnail image"}
                         placeholder={"Upload Image"}
                         name={"img"}
                         type={"file"}

@@ -557,7 +557,8 @@ const Infrastructure = () => {
                       />
                     )}
                     <NewResuableForm
-                      label={"Upload Infrastructure Image"}
+                      // label={"Upload Infrastructure Image"}
+                      label={<span>Upload Infrastructure Image<span className="text-danger">*</span></span>}
                       placeholder={"Upload Image"}
                       name={"img"}
                       type={"file"}
@@ -567,9 +568,10 @@ const Infrastructure = () => {
                       imageDimensiion="Image must be 338x220 pixels"
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className="mt-2">
                     <NewResuableForm
-                      label="Title"
+                      // label="Title"
+                      label={<span>Title<span className="text-danger">*</span></span>}
                       placeholder="Enter Title"
                       name="title"
                       type="text"
@@ -578,9 +580,10 @@ const Infrastructure = () => {
                       error={errors.title}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className="mt-2">
                     <NewResuableForm
-                      label="Sub Title"
+                      // label="Sub Title"
+                      label={<span>Sub Title<span className="text-danger">*</span></span>}
                       placeholder="Enter Sub Title"
                       name="subtitle"
                       type="text"
@@ -589,9 +592,10 @@ const Infrastructure = () => {
                       error={errors.subtitle}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className="mt-2">
                     <NewResuableForm
-                      label="Description"
+                      // label="Description"
+                      label={<span>Description<span className="text-danger">*</span></span>}
                       placeholder="Enter description"
                       name="desc"
                       type="text"

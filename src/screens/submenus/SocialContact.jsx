@@ -256,7 +256,7 @@ const SocialContact = () => {
                   <Row>
                     <Col md={6}>
                       <NewResuableForm
-                        label={"Facebook"}
+                        label={<span>Facebook<span className="text-danger">*</span></span>}
                         placeholder={"Enter facebook Link"}
                         type={"text"}
                         name={"facebook"}
@@ -267,7 +267,8 @@ const SocialContact = () => {
                     </Col>
                     <Col md={6}>
                       <NewResuableForm
-                        label={"Instagram"}
+                        // label={"Instagram"}
+                        label={<span>Instagram<span className="text-danger">*</span></span>}
                         placeholder={"Enter Instagram Link"}
                         type={"text"}
                         name={"instagram"}
@@ -278,7 +279,8 @@ const SocialContact = () => {
                     </Col>
                     <Col md={6}>
                       <NewResuableForm
-                        label={"Email Id"}
+                        // label={"Email Id"}
+                        label={<span>Email Id<span className="text-danger">*</span></span>}
                         placeholder={"Enter Email Id "}
                         type={"text"}
                         name={"email"}
@@ -289,7 +291,8 @@ const SocialContact = () => {
                     </Col>
                     <Col md={6}>
                       <NewResuableForm
-                        label={"Whatsapp"}
+                        // label={"Whatsapp"}
+                        label={<span>Whatsapp Number<span className="text-danger">*</span></span>}
                         placeholder={"Enter Whatsapp Number "}
                         type={"text"}
                         name={"whatsapp"}
@@ -300,7 +303,8 @@ const SocialContact = () => {
                     </Col>
                     <Col md={6}>
                       <NewResuableForm
-                        label={"LinkedIn"}
+                        // label={"LinkedIn"}
+                        label={<span>LinkedIn<span className="text-danger">*</span></span>}
                         placeholder={"Enter LinkedIn Link "}
                         type={"text"}
                         name={"linkedin"}
@@ -311,7 +315,8 @@ const SocialContact = () => {
                     </Col>
                     <Col md={6}>
                       <NewResuableForm
-                        label={"Twitter"}
+                        // label={"Twitter"}
+                        label={<span>Twitter<span className="text-danger">*</span></span>}
                         placeholder={"Enter Twitter Link "}
                         type={"text"}
                         name={"twitter"}

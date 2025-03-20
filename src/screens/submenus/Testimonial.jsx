@@ -208,30 +208,44 @@ const Testimonial = () => {
     let errors = {};
     let isValid = true;
 
-    if (formData.img && formData.img instanceof File && !validateImageSize(formData.img)) {
+    // if (formData.img && formData.img instanceof File && !validateImageSize(formData.img)) {
+    //   errors.img = "Image must be 400x400 pixels";
+    //   isValid = false;
+    // }
+
+    if (!formData.img) {
+      errors.img = "Image is required";
+      isValid = false;
+    } else if (formData.img instanceof File && !validateImageSize(formData.img)) {
       errors.img = "Image must be 400x400 pixels";
       isValid = false;
     }
+
     if (!formData.name?.trim()) {
       errors.name = "Name is required";
       isValid = false;
     }
     if (!formData.review?.trim()) {
-      errors.desc = "Review is required";
+      errors.review = "Review is required";
       isValid = false;
     }
     if (!formData.experience) {
-      errors.desc = "Experience is required";
+      errors.experience = "Experience is required";
       isValid = false;
     }
     if (!formData.star) {
-      errors.desc = "Star is required";
+      errors.star = "Star is required";
+      isValid = false;
+    }
+
+    if (!formData.company_Name) {
+      errors.company_Name = "Company name is required";
       isValid = false;
     }
     // else if (formData.desc.length > 1000) {
     //   errors.desc = "Description must be 1000 characters or less";
     //   isValid = false;
-    // }
+    // } 
 
     setErrors(errors);
     return isValid;
@@ -639,7 +653,8 @@ const Testimonial = () => {
                         />
                       )}
                       <NewResuableForm
-                        label={"Upload Testimonials Image"}
+                        // label={"Upload Testimonials Image"}
+                        label={<span>Upload Testimonials Image<span className="text-danger">*</span></span>}
                         placeholder={"Upload Image"}
                         name={"img"}
                         type={"file"}
@@ -649,9 +664,10 @@ const Testimonial = () => {
                         imageDimensiion="Image must be 400x400 pixels"
                       />
                     </Col>
-                    <Col md={6}>
+                    <Col md={6} className="mt-2">
                       <NewResuableForm
-                        label="Name"
+                        // label="Name"
+                        label={<span>Name<span className="text-danger">*</span></span>}
                         placeholder="Enter Name"
                         name="name"
                         type="text"
@@ -660,9 +676,10 @@ const Testimonial = () => {
                         error={errors.name}
                       />
                     </Col>
-                    <Col md={6}>
+                    <Col md={6} className="mt-2">
                       <NewResuableForm
-                        label="Company Name"
+                        // label="Company Name"
+                        label={<span>Company Name<span className="text-danger">*</span></span>}
                         placeholder="Enter Company Name"
                         name="company_Name"
                         type="text"
@@ -671,9 +688,10 @@ const Testimonial = () => {
                         error={errors.company_Name}
                       />
                     </Col>
-                    <Col md={6}>
+                    <Col md={6} className="mt-2">
                       <NewResuableForm
-                        label="Experience"
+                        // label="Experience"
+                        label={<span>Experience<span className="text-danger">*</span></span>}
                         placeholder="Enter Experience"
                         name="experience"
                         type="text"
@@ -682,9 +700,10 @@ const Testimonial = () => {
                         error={errors.experience}
                       />
                     </Col>
-                    <Col md={6}>
+                    <Col md={6} className="mt-2">
                       <NewResuableForm
-                        label="Star"
+                        // label="Star"
+                        label={<span>Star<span className="text-danger">*</span></span>}
                         placeholder="Enter Star"
                         name="star"
                         type="text"
@@ -693,9 +712,10 @@ const Testimonial = () => {
                         error={errors.star}
                       />
                     </Col>
-                    <Col md={12}>
+                    <Col md={12} className="mt-2">
                       <NewResuableForm
-                        label="Review"
+                        // label="Review"
+                        label={<span>Review<span className="text-danger">*</span></span>}
                         placeholder="Enter Review"
                         name="review"
                         type="text"

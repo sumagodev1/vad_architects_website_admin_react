@@ -571,7 +571,8 @@ const OurTeam = () => {
                       />
                     )}
                     <NewResuableForm
-                      label={"Upload photo"}
+                      // label={"Upload photo"}
+                      label={<span>Upload photo<span className="text-danger">*</span></span>}
                       placeholder={"Upload Image"}
                       name={"img"}
                       type={"file"}
@@ -581,9 +582,10 @@ const OurTeam = () => {
                       imageDimensiion="Image must be 443*435 pixels" 
                     />
                     </Col>
-                    <Col md={6}>
+                    <Col md={6} className="mt-2">
                     <NewResuableForm
-                      label={"Name"}
+                      // label={"Name"}
+                      label={<span>Name<span className="text-danger">*</span></span>}
                       placeholder={"Enter Name"}
                       name={"name"}
                       type={"text"}
@@ -592,9 +594,10 @@ const OurTeam = () => {
                       error={errors.name}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className="mt-2">
                     <NewResuableForm
-                      label={"Designation "}
+                      // label={"Designation"}
+                      label={<span>Designation<span className="text-danger">*</span></span>}
                       placeholder={"Enter Designation"}
                       name={"designation"}
                       type={"text"}
@@ -603,9 +606,10 @@ const OurTeam = () => {
                       error={errors.designation}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className="mt-2">
                     <NewResuableForm
-                      label={"Description "}
+                      // label={"Description "}
+                      label={<span>Description<span className="text-danger">*</span></span>}
                       placeholder={"Enter Description "}
                       name={"description"}
                       type={"text"}
@@ -615,9 +619,10 @@ const OurTeam = () => {
                       error={errors.description}
                     />
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className="mt-2">
                     <NewResuableForm
-                      label={"Position Number"}
+                      // label={"Position Number"}
+                      label={<span>Position Number<span className="text-danger">*</span></span>}
                       placeholder={"Enter Position Number "}
                       name={"position_no"}
                       type={"number"}
