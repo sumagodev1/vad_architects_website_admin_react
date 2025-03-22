@@ -17,7 +17,7 @@ import SearchInput from "../../components/search/SearchInput";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import instance from "../../api/AxiosInstance";
-import { FaEdit, FaTrash, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { ThreeDots } from "react-loader-spinner";
@@ -147,7 +147,8 @@ const ProjectDetailsWithImages = () => {
             overlay={<Tooltip id="edit-tooltip">Edit</Tooltip>}
           >
             <Button className="ms-1" onClick={() => toggleEdit(row.id)}>
-              <FaEdit />
+              {/* <FaEdit /> */}
+              <FaPlus />
             </Button>
           </OverlayTrigger>
           <OverlayTrigger

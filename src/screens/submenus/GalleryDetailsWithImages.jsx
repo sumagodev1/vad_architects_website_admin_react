@@ -17,7 +17,7 @@ import SearchInput from "../../components/search/SearchInput";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import instance from "../../api/AxiosInstance";
-import { FaEdit, FaTrash, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { ThreeDots } from "react-loader-spinner";
@@ -56,31 +56,37 @@ const GalleryDetailsWithImages = () => {
     {
       name: <CustomHeader name="Sr. No." />,
       selector: (row, index) => (currentPage - 1) * rowsPerPage + index + 1,
+      width:'95px',
     },
-
+  
     {
-      name: <CustomHeader name="Gallery Category" />,
+      name: <CustomHeader name="Category" />,
       cell: (row) => <span>{row.gallery_category}</span>,
+      width:'120px',
     },
     {
       name: <CustomHeader name="Images" />,
       cell: (row) => {
-        const images = JSON.parse(row.gallery_images); // Parse the JSON string into an array
-
-        // Check if images array exists and is not empty
+        const images = JSON.parse(row.gallery_images);
+  
         if (images && images.length > 0) {
           return (
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                maxHeight: "250px", // Set fixed height for the image container
+                overflowY: "auto", // Enable vertical scrolling only for images
+              }}
+            >
               {images.map((image, index) => (
-                <>
-                  {" "}
+                <div key={index} style={{ position: "relative" }}>
                   <img
-                    key={index}
-                    src={`${baseURL}${image}`} // Access each image
+                    src={`${baseURL}${image}`}
                     alt={`galleryImage-${index}`}
                     style={{
-                      width: "100px",
-                      height: "auto",
+                      width: "70px",
+                      height: "70px",
                       marginRight: "5px",
                       marginBottom: "5px",
                     }}
@@ -92,6 +98,9 @@ const GalleryDetailsWithImages = () => {
                     <Button
                       className="p-0"
                       style={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
                         backgroundColor: "red",
                         color: "white",
                         borderColor: "red",
@@ -99,44 +108,34 @@ const GalleryDetailsWithImages = () => {
                         width: "20px",
                         fontSize: "10px",
                       }}
-                      onClick={() => handleDelete2(row.id, image)} 
+                      onClick={() => handleDelete2(row.id, image)}
                     >
                       <FaTrash />
                     </Button>
                   </OverlayTrigger>
-                </>
+                </div>
               ))}
             </div>
           );
         } else {
-          return <span>No Images Available</span>; // Fallback if no images exist
+          return <span>No Images Available</span>;
         }
       },
     },
-
+  
     {
       name: <CustomHeader name="Actions" />,
       cell: (row) => (
         <div className="d-flex">
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip id="edit-tooltip">Edit</Tooltip>}
-          >
+          <OverlayTrigger placement="top" overlay={<Tooltip id="edit-tooltip">Edit</Tooltip>}>
             <Button className="ms-1" onClick={() => toggleEdit(row.id)}>
-              <FaEdit />
+              <FaPlus />
             </Button>
           </OverlayTrigger>
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip id="delete-tooltip">Delete</Tooltip>}
-          >
+          <OverlayTrigger placement="top" overlay={<Tooltip id="delete-tooltip">Delete</Tooltip>}>
             <Button
               className="ms-1"
-              style={{
-                backgroundColor: "red",
-                color: "white",
-                borderColor: "red",
-              }}
+              style={{ backgroundColor: "red", color: "white", borderColor: "red" }}
               onClick={() => handleDelete(row.id)}
             >
               <FaTrash />
@@ -164,8 +163,125 @@ const GalleryDetailsWithImages = () => {
           </OverlayTrigger>
         </div>
       ),
+      style: { flex: "none" },
     },
-  ];
+  ];  
+
+  // const tableColumns = (currentPage, rowsPerPage) => [
+  //   {
+  //     name: <CustomHeader name="Sr. No." />,
+  //     selector: (row, index) => (currentPage - 1) * rowsPerPage + index + 1,
+  //   },
+
+  //   {
+  //     name: <CustomHeader name="Gallery Category" />,
+  //     cell: (row) => <span>{row.gallery_category}</span>,
+  //   },
+  //   {
+  //     name: <CustomHeader name="Images" />,
+  //     cell: (row) => {
+  //       const images = JSON.parse(row.gallery_images); // Parse the JSON string into an array
+
+  //       // Check if images array exists and is not empty
+  //       if (images && images.length > 0) {
+  //         return (
+  //           <div style={{ display: "flex", flexWrap: "wrap" }}>
+  //             {images.map((image, index) => (
+  //               <>
+  //                 {" "}
+  //                 <img
+  //                   key={index}
+  //                   src={`${baseURL}${image}`} // Access each image
+  //                   alt={`galleryImage-${index}`}
+  //                   style={{
+  //                     width: "100px",
+  //                     height: "auto",
+  //                     marginRight: "5px",
+  //                     marginBottom: "5px",
+  //                   }}
+  //                 />
+  //                 <OverlayTrigger
+  //                   placement="top"
+  //                   overlay={<Tooltip id="delete-tooltip">Delete</Tooltip>}
+  //                 >
+  //                   <Button
+  //                     className="p-0"
+  //                     style={{
+  //                       backgroundColor: "red",
+  //                       color: "white",
+  //                       borderColor: "red",
+  //                       height: "20px",
+  //                       width: "20px",
+  //                       fontSize: "10px",
+  //                     }}
+  //                     onClick={() => handleDelete2(row.id, image)} 
+  //                   >
+  //                     <FaTrash />
+  //                   </Button>
+  //                 </OverlayTrigger>
+  //               </>
+  //             ))}
+  //           </div>
+  //         );
+  //       } else {
+  //         return <span>No Images Available</span>; // Fallback if no images exist
+  //       }
+  //     },
+  //   },
+
+  //   {
+  //     name: <CustomHeader name="Actions" />,
+  //     cell: (row) => (
+  //       <div className="d-flex">
+  //         <OverlayTrigger
+  //           placement="top"
+  //           overlay={<Tooltip id="edit-tooltip">Edit</Tooltip>}
+  //         >
+  //           <Button className="ms-1" onClick={() => toggleEdit(row.id)}>
+  //             {/* <FaEdit /> */}
+  //             <FaPlus />
+  //           </Button>
+  //         </OverlayTrigger>
+  //         <OverlayTrigger
+  //           placement="top"
+  //           overlay={<Tooltip id="delete-tooltip">Delete</Tooltip>}
+  //         >
+  //           <Button
+  //             className="ms-1"
+  //             style={{
+  //               backgroundColor: "red",
+  //               color: "white",
+  //               borderColor: "red",
+  //             }}
+  //             onClick={() => handleDelete(row.id)}
+  //           >
+  //             <FaTrash />
+  //           </Button>
+  //         </OverlayTrigger>
+  //         <OverlayTrigger
+  //           placement="top"
+  //           overlay={
+  //             <Tooltip id="visibility-tooltip">
+  //               {eyeVisibilityById[row.id] ? "Hide" : "Show"}
+  //             </Tooltip>
+  //           }
+  //         >
+  //           <Button
+  //             className="ms-1"
+  //             style={{
+  //               backgroundColor: eyeVisibilityById[row.id] ? "red" : "green",
+  //               borderColor: eyeVisibilityById[row.id] ? "red" : "green",
+  //               color: "white",
+  //             }}
+  //             onClick={() => handleIsActive(row.id, !eyeVisibilityById[row.id])}
+  //           >
+  //             {eyeVisibilityById[row.id] ? <FaEyeSlash /> : <FaEye />}
+  //           </Button>
+  //         </OverlayTrigger>
+  //       </div>
+  //     ),
+  //   },
+  // ];
 
   useEffect(() => {
     fetchTeam();

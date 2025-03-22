@@ -1,9 +1,3 @@
-
-
-/////final
-
-///////sos
-////v1 datatable added
 import React, { useState, useEffect } from "react";
 import {
   Container,
@@ -29,6 +23,9 @@ import { ThreeDots  } from 'react-loader-spinner';
 import { Tooltip, OverlayTrigger,  } from 'react-bootstrap';
 import "../../App.scss";
 const BlogDetails = () => {
+
+  const baseURL = instance.defaults.baseURL;
+
   const { searchQuery, handleSearch, handleExport, setData, filteredData } =
     useSearchExport();
 
@@ -39,6 +36,7 @@ const BlogDetails = () => {
   const [formData, setFormData] = useState({});
   const [eyeVisibilityById, setEyeVisibilityById] = useState({});
   const [imagePreview, setImagePreview] = useState("");
+  const [imagePreview2, setImagePreview2] = useState("");
   const [showTable, setShowTable] = useState(true); // New state for toggling form and table view
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -199,6 +197,20 @@ const BlogDetails = () => {
     }
   }, [formData.img]);
 
+  useEffect(() => {
+    if (formData.img2 && formData.img2 instanceof File) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview2(reader.result);
+      };
+      reader.readAsDataURL(formData.img2);
+    } else if (formData.img2 && typeof formData.img2 === "string") {
+      setImagePreview2(`${baseURL}${formData.img2}`);
+    } else {
+      setImagePreview2("");
+    }
+  }, [formData.img2]);
+
   const fetchTeam = async () => {
     setLoading(true);
     const accessToken = localStorage.getItem("accessToken"); // Retrieve access token
@@ -234,6 +246,14 @@ const BlogDetails = () => {
       isValid = false;
     }
 
+    if (!formData.img2) {
+      errors.img2 = "Image is required with 1400x495 pixels";
+      isValid = false;
+    } else if (formData.img2 instanceof File && !validateImageSize(formData.img2)) {
+      errors.img2 = "Image is not 1400x495 pixels";
+      isValid = false;
+    }
+
     if (!formData.title?.trim()) {
       errors.title = "Title is required";
       isValid = false;
@@ -266,6 +286,21 @@ const BlogDetails = () => {
     });
   };
 
+  const validateImageSize2 = (file) => {
+    return new Promise((resolve, reject) => {
+      const img2 = new Image();
+      img2.onload = () => {
+        if (img2.width === 1400 && img2.height === 495) {
+          resolve();
+        } else {
+          reject("Image must be 1400x495 pixels");
+        }
+      };
+      img2.onerror = () => reject("Error loading image");
+      img2.src = URL.createObjectURL(file);
+    });
+  };
+
   const handleChange = async (name, value) => {
     if (name === "img" && value instanceof File) {
       try {
@@ -276,10 +311,49 @@ const BlogDetails = () => {
         setErrors((prevErrors) => ({ ...prevErrors, img: error }));
         setImagePreview("");
       }
+    } else if (name === "img2" && value instanceof File) {
+      try {
+        await validateImageSize2(value);
+        setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+        setErrors((prevErrors) => ({ ...prevErrors, img2: "" }));
+      } catch (error) {
+        setErrors((prevErrors) => ({ ...prevErrors, img2: error }));
+        setImagePreview2(""); // Ensure imagePreview2 is cleared in case of error
+      }
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
+  
+
+  // const handleChange = async (name, value) => {
+  //   if (name === "img" && value instanceof File) {
+  //     try {
+  //       await validateImageSize(value);
+  //       setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  //       setErrors((prevErrors) => ({ ...prevErrors, img: "" }));
+  //     } catch (error) {
+  //       setErrors((prevErrors) => ({ ...prevErrors, img: error }));
+  //       setImagePreview("");
+  //     }
+  //   } else {
+  //     setFormData({ ...formData, [name]: value });
+  //   }
+
+  //   if (name === "img2" && value instanceof File) {
+  //     try {
+  //       await validateImageSize2(value);
+  //       setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  //       setErrors((prevErrors) => ({ ...prevErrors, img2: "" }));
+  //     } catch (error) {
+  //       setErrors((prevErrors) => ({ ...prevErrors, img2: error }));
+  //       setImagePreview2("");
+  //     }
+  //   } else {
+  //     setFormData({ ...formData, [name]: value });
+  //   }
+
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -667,7 +741,7 @@ const BlogDetails = () => {
                     )}
                     <NewResuableForm
                       // label={"Upload Blog Image"}
-                      label={<span>Upload Blog Image<span className="text-danger">*</span></span>}
+                      label={<span>Upload Blog thumbnail Image<span className="text-danger">*</span></span>}
                       placeholder={"Upload Image"}
                       name={"img"}
                       type={"file"}
@@ -675,6 +749,31 @@ const BlogDetails = () => {
                       initialData={formData}
                       error={errors.img}
                       imageDimensiion="Image must be 700*645 pixels" 
+                    />
+                  
+                  </Col>
+                  <Col md={12} className="mt-2">
+                    {imagePreview2 && (
+                      <img
+                        src={imagePreview2}
+                        alt="Selected Preview"
+                        style={{
+                          width: "100px",
+                          height: "auto",
+                          marginBottom: "10px",
+                        }}
+                      />
+                    )}
+                    <NewResuableForm
+                      // label={"Upload Blog Image"}
+                      label={<span>Upload Blog Image<span className="text-danger">*</span></span>}
+                      placeholder={"Upload Image"}
+                      name={"img2"}
+                      type={"file"}
+                      onChange={handleChange}
+                      initialData={formData}
+                      error={errors.img2}
+                      imageDimensiion="Image must be 1400*495 pixels" 
                     />
                   
                   </Col>

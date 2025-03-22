@@ -56,6 +56,7 @@ import ProjectDetails from "./screens/submenus/ProjectDetails";
 import ProjectDetailsWithImages from "./screens/submenus/ProjectDetailsWithImages"
 import GalleryDetails from "./screens/submenus/GalleryDetails"
 import GalleryDetailsWithImages from "./screens/submenus/GalleryDetailsWithImages"
+import ChangePassword from "./screens/submenus/ChangePassword";
 
 function App() {
   return (
@@ -234,6 +235,10 @@ function App() {
           <Route
             path="/GalleryDetailsWithImages"
             element={<ProtectedRoutes Component={GalleryDetailsWithImages}/>}
+          />
+          <Route
+            path="/ChangePassword"
+            element={<ProtectedRoutes Component={ChangePassword}/>}
           />
 
         </Route>

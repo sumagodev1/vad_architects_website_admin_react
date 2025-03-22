@@ -9,7 +9,7 @@ import {
   MdLogout,
   MdOutlinePermContactCalendar,
 } from "react-icons/md";
-import { RiTeamFill, RiContactsBookLine, RiFileListLine } from "react-icons/ri";
+import { RiTeamFill, RiContactsBookLine, RiFileListLine, RiLockLine } from "react-icons/ri";
 import { FiUsers, FiList, FiFileText, FiUploadCloud } from "react-icons/fi";
 import {
   AiOutlineAppstoreAdd,
@@ -260,6 +260,12 @@ const SidebarMenu = [
     url: "/carousalform",
     // mainIcon: <RiFileListLine style={{ color: "black" }} size={24} />,
     mainIcon: <img src={contact} alt="upload-icon" style={{ color: "black" }} className="img-fluid" size={24} />,
+    subMenu: [],
+  },
+  {
+    menu: "Change Password",
+    url: "/changepassword",
+    mainIcon: <RiLockLine style={{ color: "black" }} size={24} />,
     subMenu: [],
   },
   {

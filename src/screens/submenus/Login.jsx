@@ -8,6 +8,7 @@ import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import logo from "../../assets/images/logo.png";
 import { ThreeDots } from 'react-loader-spinner';
 import ReCAPTCHA from "react-google-recaptcha";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -54,35 +55,110 @@ const Login = () => {
     e.preventDefault();
 
     if (validateForm()) {
-      setLoading(true);
-      try {
-        const response = await instance.post(
-          "/auth/login",
-          { email, password },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        setLoading(true);
 
-        if (response.data.result) {
-          const { token } = response.data.responseData;
-          localStorage.setItem("accessToken", token);
-
-          toast.success("Login successful");
-          navigate("/headercontact");
-        } else {
-          toast.error("Login failed");
+        if (!recaptchaValue) {
+            alert("Please complete the CAPTCHA");
+            setLoading(false);
+            return;
         }
-      } catch (error) {
-        console.error("Error handling form submission:", error);
-        toast.error("Login failed please enter correct email id & password");
-      } finally {
-        setLoading(false);
-      }
+
+        try {
+            // Verify CAPTCHA with the server
+            const captchaResponse = await instance.post(
+                "auth/verify-captcha",
+                { captcha: recaptchaValue },
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+            if (!captchaResponse.data.success) {
+                alert("CAPTCHA verification failed. Please try again.");
+                setLoading(false);
+                return;
+            }
+
+           // toast.success("CAPTCHA verification successful.");
+
+            // Proceed with login
+            const loginResponse = await instance.post(
+                "/auth/login",
+                { email, password },
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+            if (loginResponse.data.result) {
+                const { token } = loginResponse.data.responseData;
+                localStorage.setItem("accessToken", token);
+
+                toast.success("Login successful");
+                navigate("/headercontact");
+            } else {
+                toast.error("Login failed");
+            }
+        } catch (error) {
+            console.error("Error handling form submission:", error);
+            toast.error("Login failed, please enter correct email ID & password");
+        } finally {
+            setLoading(false);
+        }
     }
-  };
+};
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (validateForm()) {
+  //     setLoading(true);
+
+  //     e.preventDefault();
+
+  //     if (!recaptchaValue) {
+  //         alert("Please complete the CAPTCHA");
+  //         return;
+  //     }
+
+  //     const response = await fetch("http://localhost:8000/auth/verify-captcha", {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({ captcha: recaptchaValue }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (data.success) { 
+  //       alert("CAPTCHA verification Sucess.");
+  //     } else {
+  //         alert("CAPTCHA verification failed. Please try again.");
+  //         return;
+  //     }
+  //     try {
+  //       const response = await instance.post(
+  //         "/auth/login",
+  //         { email, password },
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //         }
+  //       );
+
+  //       if (response.data.result) {
+  //         const { token } = response.data.responseData;
+  //         localStorage.setItem("accessToken", token);
+
+  //         toast.success("Login successful");
+  //         navigate("/headercontact");
+  //       } else {
+  //         toast.error("Login failed");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error handling form submission:", error);
+  //       toast.error("Login failed please enter correct email id & password");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  // };
 
   return (
     <Container className="d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">

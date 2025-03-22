@@ -83,7 +83,8 @@ const AreaTop = ({ buttonValue, tableView }) => {
     "/projectDetails",
     "/projectDetailsWithImages",
     "/galleryDetails",
-    "/galleryDetailsWithImages"
+    "/galleryDetailsWithImages",
+    "/changepassword"
   ];
   const isHiddenPath = hiddenPaths.includes(location.pathname);
 
@@ -156,6 +157,8 @@ const AreaTop = ({ buttonValue, tableView }) => {
       setHeader("Gallery Details");
     }else if (window.location.pathname == "/galleryDetailsWithImages") {
       setHeader("Gallery Details With Images");
+    }else if (window.location.pathname == "/changepassword") {
+      setHeader("Change Password");
     }
 
   }, [window.location.pathname]);
