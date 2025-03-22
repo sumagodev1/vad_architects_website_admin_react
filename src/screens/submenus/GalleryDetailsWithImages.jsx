@@ -52,6 +52,12 @@ const GalleryDetailsWithImages = () => {
     </div>
   );
 
+  const CustomHeader2 = ({ name }) => (
+    <div style={{ fontWeight: "bold", color: "black", fontSize: "16px", marginLeft:"auto" }}>
+      {name}
+    </div>
+  );
+
   const tableColumns = (currentPage, rowsPerPage) => [
     {
       name: <CustomHeader name="Sr. No." />,
@@ -124,9 +130,9 @@ const GalleryDetailsWithImages = () => {
     },
   
     {
-      name: <CustomHeader name="Actions" />,
+      name: <CustomHeader2 name="Actions" />,
       cell: (row) => (
-        <div className="d-flex">
+        <div className="d-flex" >
           <OverlayTrigger placement="top" overlay={<Tooltip id="edit-tooltip">Edit</Tooltip>}>
             <Button className="ms-1" onClick={() => toggleEdit(row.id)}>
               <FaPlus />
@@ -162,6 +168,7 @@ const GalleryDetailsWithImages = () => {
             </Button>
           </OverlayTrigger>
         </div>
+        
       ),
       style: { flex: "none" },
     },

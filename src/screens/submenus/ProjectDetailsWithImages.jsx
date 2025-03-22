@@ -52,19 +52,29 @@ const ProjectDetailsWithImages = () => {
     </div>
   );
 
+  const CustomHeader2 = ({ name }) => (
+    <div style={{ fontWeight: "bold", color: "black", fontSize: "16px", marginLeft:"auto" }}>
+      {name}
+    </div>
+  );
+
+
   const tableColumns = (currentPage, rowsPerPage) => [
     {
       name: <CustomHeader name="Sr. No." />,
       selector: (row, index) => (currentPage - 1) * rowsPerPage + index + 1,
+      width:'95px',
     },
 
     {
-      name: <CustomHeader name="Project Category" />,
+      name: <CustomHeader name="Category" />,
       cell: (row) => <span>{row.project_category}</span>,
+      width:'120px',
     },
     {
-      name: <CustomHeader name="Project Name" />,
+      name: <CustomHeader name="Name" />,
       cell: (row) => <span>{row.project_name}</span>,
+      width:'120px',
     },
     // {
     //   name: <CustomHeader name="Project Location" />,
@@ -94,7 +104,12 @@ const ProjectDetailsWithImages = () => {
         // Check if images array exists and is not empty
         if (images && images.length > 0) {
           return (
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
+            <div               style={{
+              display: "flex",
+              flexWrap: "wrap",
+              maxHeight: "250px", // Set fixed height for the image container
+              overflowY: "auto", // Enable vertical scrolling only for images
+            }}>
               {images.map((image, index) => (
                 <>
                   {" "}
@@ -103,8 +118,8 @@ const ProjectDetailsWithImages = () => {
                     src={`${baseURL}${image}`} // Access each image
                     alt={`ProjectImage-${index}`}
                     style={{
-                      width: "100px",
-                      height: "auto",
+                      width: "70px",
+                      height: "70px",
                       marginRight: "5px",
                       marginBottom: "5px",
                     }}
@@ -139,7 +154,7 @@ const ProjectDetailsWithImages = () => {
     },
 
     {
-      name: <CustomHeader name="Actions" />,
+      name: <CustomHeader2 name="Actions" />,
       cell: (row) => (
         <div className="d-flex">
           <OverlayTrigger
@@ -189,6 +204,7 @@ const ProjectDetailsWithImages = () => {
           </OverlayTrigger>
         </div>
       ),
+      style: { flex: "none" },
     },
   ];
 
