@@ -17,7 +17,7 @@ import SearchInput from "../../components/search/SearchInput";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import instance from "../../api/AxiosInstance";
-import { FaEdit, FaTrash, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
+import { FaEdit, FaTrash, FaEye, FaEyeSlash, FaPlus, FaTrashAlt } from "react-icons/fa";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { ThreeDots } from "react-loader-spinner";
@@ -561,32 +561,50 @@ const GalleryDetailsWithImages = () => {
 
   const handleDelete = async (id) => {
     confirmAlert({
-      title: "Confirm to delete",
-      message: "Are you sure you want to delete this data?",
       customUI: ({ onClose }) => (
         <div
           style={{
-            textAlign: "left",
-            padding: "20px",
+            textAlign: "center",
+            padding: "25px",
             backgroundColor: "white",
-            borderRadius: "8px",
-            boxShadow: "0 4px 8px rgba(5, 5, 5, 0.2)",
-            maxWidth: "400px",
+            borderRadius: "10px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+            maxWidth: "420px",
             margin: "0 auto",
           }}
         >
-          <h2>Confirm to delete</h2>
-          <p>Are you sure you want to delete this data?</p>
+          <FaTrashAlt size={50} color="red" />
+          <h2 style={{ marginTop: "15px", fontWeight: "bold" }}>Are you sure?</h2>
+          <p style={{ fontSize: "16px", color: "#555" }}>
+            Do you really want to delete this record? This action cannot be undone.
+          </p>
           <div
             style={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "center",
               marginTop: "20px",
+              gap: "10px",
             }}
           >
             <button
-              style={{ marginRight: "10px" }}
-              className="btn btn-primary"
+              style={{
+                backgroundColor: "#ccc",
+                color: "#333",
+                padding: "10px 20px",
+                border: "none",
+                borderRadius: "5px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                transition: "background 0.3s",
+              }}
+              onClick={onClose}
+              onMouseOver={(e) => (e.target.style.backgroundColor = "#bbb")}
+              onMouseOut={(e) => (e.target.style.backgroundColor = "#ccc")}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn btn-danger"
               onClick={async () => {
                 setLoading(true);
                 const accessToken = localStorage.getItem("accessToken");
@@ -611,16 +629,14 @@ const GalleryDetailsWithImages = () => {
                 onClose();
               }}
             >
-              Yes
-            </button>
-            <button className="btn btn-secondary" onClick={() => onClose()}>
-              No
+              Yes, Delete
             </button>
           </div>
         </div>
       ),
     });
   };
+  
   // const handleDelete2 = async (id, imagePath) => {
   //   confirmAlert({
   //     title: "Confirm to delete",
@@ -693,7 +709,7 @@ const GalleryDetailsWithImages = () => {
       customUI: ({ onClose }) => (
         <div
           style={{
-            textAlign: "left",
+            textAlign: "center",
             padding: "20px",
             backgroundColor: "white",
             borderRadius: "8px",
@@ -702,18 +718,24 @@ const GalleryDetailsWithImages = () => {
             margin: "0 auto",
           }}
         >
-          <h2>Confirm to delete</h2>
-          <p>Are you sure you want to delete this image?</p>
+          <FaTrashAlt size={50} color="red" />
+          <h2 style={{ marginTop: "15px", fontWeight: "bold" }}>Are you sure?</h2>
+          <p style={{ fontSize: "16px", color: "#555" }}>
+            Do you really want to delete this image? This action cannot be undone.
+          </p>
           <div
             style={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "center",
               marginTop: "20px",
             }}
           >
+            <button className="btn btn-secondary" onClick={() => onClose()} style={{ marginRight: "10px" }}>
+              Cancel
+            </button>
             <button
               style={{ marginRight: "10px" }}
-              className="btn btn-primary"
+              className="btn btn-danger"
               onClick={async () => {
                 setLoading(true);
                 const accessToken = localStorage.getItem("accessToken");
@@ -740,11 +762,9 @@ const GalleryDetailsWithImages = () => {
                 onClose();
               }}
             >
-              Yes
+              Yes, Delete
             </button>
-            <button className="btn btn-secondary" onClick={() => onClose()}>
-              No
-            </button>
+
           </div>
         </div>
       ),
