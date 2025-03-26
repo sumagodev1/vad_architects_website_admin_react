@@ -53,8 +53,10 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+ 
     if (validateForm()) {
+
+     
         setLoading(true);
 
         if (!recaptchaValue) {
@@ -83,19 +85,18 @@ const Login = () => {
             const loginResponse = await instance.post(
                 "/auth/login",
                 { email, password },
-                { headers: { "Content-Type": "application/json" } }
+                { headers: { "Content-Type": "application/json" }, withCredentials: true, },
+                
             );
 
             if (loginResponse.data.result) {
-                const { token } = loginResponse.data.responseData;
-                localStorage.setItem("accessToken", token);
-
                 toast.success("Login successful");
                 navigate("/headercontact");
             } else {
                 toast.error("Login failed");
             }
         } catch (error) {
+          console.log(error)
             console.error("Error handling form submission:", error);
             toast.error("Login failed, please enter correct email ID & password");
         } finally {
@@ -171,7 +172,7 @@ const Login = () => {
                   <Image src={logo} alt="Logo" fluid style={{ maxWidth: "140px", width: "100%" }} />
                 </Col>
                 <Col xs={12}>
-                  <h3 className="text-center font-weight-bold">Modearch Steel</h3>
+                  <h3 className="text-center font-weight-bold">VDA Architects</h3>
                 </Col>
               </Row>
 

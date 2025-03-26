@@ -81,21 +81,12 @@ import { toast } from "react-toastify";
 
 const instance = axios.create({
 
-  // baseURL: `http://localhost:8000/`,
-  baseURL: `https://staging-api-v2.modearchsteel.com/`,
+  baseURL: `http://localhost:8000/`,
+  // baseURL: `https://staging-api-v2.modearchsteel.com/`,
   // baseURL: `https://api.modearchsteel.com/`,
 });
 
-instance.interceptors.request.use(
-  async (request) => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      request.headers.Authorization = `Bearer ${token}`;
-    }
-    return request;
-  },
-  (error) => Promise.reject(error)
-);
+
 
 instance.interceptors.response.use(
   async (response) => response,

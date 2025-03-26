@@ -77,11 +77,11 @@ const HeaderContact = () => {
 
   const fetchTeam = async () => {
     setLoading(true);
-    const accessToken = localStorage.getItem("accessToken");
+    // const accessToken = localStorage.getItem("accessToken");
     try {
       const response = await instance.get("header-contact/findheaderContacts", {
         headers: {
-          Authorization: "Bearer " + accessToken,
+          // Authorization: "Bearer " + accessToken,
           "Content-Type": "application/json",
         },
       });
@@ -178,7 +178,7 @@ const HeaderContact = () => {
     e.preventDefault();
     if (validateForm(formData)) {
       setLoading(true);
-      const accessToken = localStorage.getItem("accessToken");
+      // const accessToken = localStorage.getItem("accessToken");
       const data = new FormData();
       for (const key in formData) {
         data.append(key, formData[key]);
@@ -187,9 +187,11 @@ const HeaderContact = () => {
       try {
         await instance.put(`header-contact/headercontact/${editingId}`, data, {
           headers: {
-            Authorization: "Bearer " + accessToken,
             "Content-Type": "application/json",
+            // If needed, uncomment the following line and set accessToken correctly
+            // Authorization: "Bearer " + accessToken,
           },
+          withCredentials: true,  // Correct placement of withCredentials
         });
         toast.success("Data Updated Successfully");
 
