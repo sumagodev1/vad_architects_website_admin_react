@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Form, Button, Container, Row, Col, Card, Image, InputGroup } from "react-bootstrap";
 import instance from "../../api/AxiosInstance";
 import { toast } from "react-toastify";
@@ -160,6 +160,22 @@ const Login = () => {
   //     }
   //   }
   // };
+
+ 
+  //  useEffect(async () => {
+  //   try {
+  //     await instance.get(`header-contact/findheaderContacts`, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         // If needed, uncomment the following line and set accessToken correctly
+  //         // Authorization: "Bearer " + accessToken,
+  //       },
+  //       withCredentials: true,  // Correct placement of withCredentials
+  //     });
+  //   } catch(e){
+  //     console.log("ee",e)
+  //   }
+  //  }, []);
 
   return (
     <Container className="d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">

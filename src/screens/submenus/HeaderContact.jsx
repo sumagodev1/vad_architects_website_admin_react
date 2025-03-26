@@ -81,10 +81,13 @@ const HeaderContact = () => {
     try {
       const response = await instance.get("header-contact/findheaderContacts", {
         headers: {
-          // Authorization: "Bearer " + accessToken,
           "Content-Type": "application/json",
+
         },
+        withCredentials: true,  // Correctly placed here
       });
+      
+        
       const reversedData = response.data.responseData;
       setTeam(reversedData);
       setData(reversedData);

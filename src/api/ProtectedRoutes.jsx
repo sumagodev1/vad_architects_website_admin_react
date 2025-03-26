@@ -12,10 +12,10 @@ const ProtectedRoutes = ({ Component }) => {
       try {
         // Request to verify token and check if authenticated
         const response = await axios.get('/auth/verify-token', { withCredentials: true });
-        console.log("===========>",response)
-        if (!response.status === 401) {
+        console.log("===========>", response);
+        
+        if (response.status !== 401) {  // Corrected this line
           setAuthenticated(true);
-          //navigate('/headercontact');
         } else {
           navigate('/');  // Redirect to login if not authenticated
         }
