@@ -69,7 +69,7 @@ const Login = () => {
         try {
             // Verify CAPTCHA with the server
             const captchaResponse = await instance.post(
-                "auth/verify-captcha",
+                // "auth/verify-captcha",
                 { captcha: recaptchaValue },
                 { headers: { "Content-Type": "application/json" } }
             );
