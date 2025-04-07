@@ -81,7 +81,7 @@ const instance = axios.create({
 
   // baseURL: `http://localhost:8000/`,
 
-  baseURL: `http://staging-api.vadarchitects.com/`,
+  baseURL: `https://staging-api.vadarchitects.com/`,
   // baseURL: `https://api.modearchsteel.com/`,
 });
 
