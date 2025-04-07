@@ -68,17 +68,17 @@ const Login = () => {
 
         try {
             // Verify CAPTCHA with the server
-            // const captchaResponse = await instance.post(
-            //     "auth/verify-captcha",
-            //     { captcha: recaptchaValue },
-            //     { headers: { "Content-Type": "application/json" } }
-            // );
+            const captchaResponse = await instance.post(
+                "auth/verify-captcha",
+                { captcha: recaptchaValue },
+                { headers: { "Content-Type": "application/json" } }
+            );
 
-            // if (!captchaResponse.data.success) {
-            //     alert("CAPTCHA verification failed. Please try again.");
-            //     setLoading(false);
-            //     return;
-            // }
+            if (!captchaResponse.data.success) {
+                alert("CAPTCHA verification failed. Please try again.");
+                setLoading(false);
+                return;
+            }
 
            // toast.success("CAPTCHA verification successful.");
 
