@@ -238,15 +238,10 @@ const Login = () => {
                     <ReCAPTCHA
                       ref={captchaRef}
                           // sitekey="6Le657EpAAAAADHl0EnUi-58y19XOcORV9dehjAz"
-                          // sitekey = "6LeAZfoqAAAAAMc5CwBV3EdVbedy9IhxloDVUFNm"
-                          sitekey = "6LdFwgwrAAAAACd-erqrmZaKx4p30-aktFBG_BbZ"
-
-                          // sitekey="6LcvPesqAAAAADOOYwjQlAP7YuXckifnTPJ9rvVS"
-                          // secretkey="6LcvPesqAAAAAEasHj8-Rc9jAH8znHjyfD_6dgAO"
-
-                          // sitekey = "6LckIvEqAAAAAPdy1kCNcZ-VEnwUf6zcJAw1zjK8"
-                          // secretkey = "6LckIvEqAAAAAJokDpuRBhmJLdCAz2Y3wHkjQhuU"
+                          sitekey = "6LfozQwrAAAAAGyjLxJuYpeyhzEiAY3feUcZTm6X"
+                          // sitekey={process.env.REACT_APP_NOCAPTCHA_SITEKEY}
                       onChange={handleRecaptchaChange}
+
                     />
                   </div>
                   {errors.recaptcha && <small className="text-danger d-flex justify-content-center">{errors.recaptcha}</small>}
