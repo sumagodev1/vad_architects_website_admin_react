@@ -6,7 +6,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import logo from "../../assets/images/logo.png";
-import login from "../../assets/images/login.jpg";
 import { ThreeDots } from 'react-loader-spinner';
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
@@ -179,16 +178,33 @@ const Login = () => {
   //  }, []);
 
   return (
-    <Container fluid className="min-vh-100 d-flex align-items-center bg-light">
-      <Row className="w-100">
-        <Col lg={6} className="d-none d-lg-block p-0">
-          <Image src={login} className="img-fluid w-100 h-100 object-fit-cover" alt="Login" />
-        </Col>
-        <Col lg={6} className="d-flex align-items-center justify-content-center">
-          <Card className="shadow border-0 p-4 w-75" style={{borderRadius:'1rem'}}>
-            <h3 className="text-center mb-2">Welcome back!</h3>
-            <p className="text-muted text-center">Enter your credentials to continue</p>
-            <Form onSubmit={handleSubmit}>
+    <Container className="d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">
+      <Row className="w-100 justify-content-center">
+        <Col xs={12} sm={10} md={8} lg={6} xl={4}>
+          <Card className="shadow-lg border-0 rounded-3">
+            <Card.Body className="p-4 p-md-5 bg-white">
+              <Row className="align-items-center mb-4">
+                <Col xs={12} className="text-center mb-3">
+                  <Image src={logo} alt="Logo" fluid style={{ maxWidth: "140px", width: "100%" }} />
+                </Col>
+                <Col xs={12}>
+                  <h3 className="text-center font-weight-bold">VAD Architects</h3>
+                </Col>
+              </Row>
+
+              {loading ? (
+                <div className="d-flex justify-content-center align-items-center">
+                  <ThreeDots
+                    height="80"
+                    width="80"
+                    radius="9"
+                    color="#007bff"
+                    ariaLabel="three-dots-loading"
+                    visible={true}
+                  />
+                </div>
+              ) : (
+                <Form onSubmit={handleSubmit}>
                   <Form.Group controlId="formBasicEmail" className="mb-4">
                     <Form.Label className="d-flex align-items-center">
                       <FaUser className="me-2 text-secondary" />
@@ -219,7 +235,7 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        className="border-0 px-3 rounded-pill bg-light password_input"
+                        className="border-0 px-3 rounded-pill"
                       />
                       <InputGroup.Text
                         className="bg-light border-0 rounded-pill"
@@ -264,6 +280,8 @@ const Login = () => {
                     </Col>
                   </Row>
                 </Form>
+              )}
+            </Card.Body>
           </Card>
         </Col>
       </Row>

@@ -146,7 +146,7 @@ const Category = () => {
         "/category/get-category",
         {
           headers: {
-            Authorization: "Bearer " + accessToken,
+            // Authorization: "Bearer " + accessToken,
             "Content-Type": "application/json",
           },
         }
@@ -196,9 +196,10 @@ const Category = () => {
         if (editMode) {
           await instance.put(`category/update-category/${editingId}`, data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "application/json",
             },
+            withCredentials: true, 
           });
           toast.success("Data Updated Successfully");
           const updatedTeam = team.map((member) =>
@@ -208,9 +209,10 @@ const Category = () => {
         } else {
           await instance.post("category/create-category", data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "application/json",
             },
+            withCredentials: true, 
           });
           toast.success("Data Submitted Successfully");
         }
@@ -294,9 +296,10 @@ const Category = () => {
                 try {
                   await instance.delete(`category/isdelete-category/${id}`, {
                     headers: {
-                      Authorization: `Bearer ${accessToken}`,
+                      // Authorization: `Bearer ${accessToken}`,
                       "Content-Type": "application/json",
                     },
+                    withCredentials: true, 
                   });
                   toast.success("Data Deleted Successfully");
                   fetchTeam();
@@ -358,9 +361,10 @@ const Category = () => {
                     { isVisible },
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                     }
                   );
                   toast.success(

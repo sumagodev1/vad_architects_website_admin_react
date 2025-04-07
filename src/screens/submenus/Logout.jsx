@@ -62,13 +62,22 @@ const Logout = () => {
             <button
               style={{ marginRight: "10px" }}
               className="btn btn-primary"
-              onClick={() => {
-                const token = localStorage.getItem("accessToken");
-                if (token) {
-                  localStorage.removeItem("accessToken");
-                  toast.success("Logged out successfully.");
-                }
-                navigate("/");
+              onClick={async () => {
+                try {
+                  // Make a POST request to the backend to clear the cookie
+                  await instance.post('auth/logout', {}, { withCredentials: true });
+            
+                  // Optionally, clear any other state or localStorage items
+                  // For example, if you store user data in localStorage:
+                  // localStorage.removeItem('user');
+            
+                  // Redirect to the login page
+                  navigate('/');
+                  toast.success("Logout Successfully");
+                } catch (error) {
+                  console.error('Error logging out:', error);
+                } 
+               
                 onClose();
               }}
             >

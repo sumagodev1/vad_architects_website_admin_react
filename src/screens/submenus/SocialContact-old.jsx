@@ -1,6 +1,3 @@
-
-
-////final
 import React, { useState, useEffect } from "react";
 import {
   Container,
@@ -22,7 +19,7 @@ import { FaEdit } from "react-icons/fa";
 import { ThreeDots } from 'react-loader-spinner';
 import "../../App.scss";
 
-const HeaderContact = () => {
+const SocialContact = () => {
   const { searchQuery, handleSearch, setData, filteredData } = useSearchExport();
   const [team, setTeam] = useState([]);
   const [errors, setErrors] = useState({});
@@ -46,12 +43,28 @@ const HeaderContact = () => {
       selector: (row, index) => (currentPage - 1) * rowsPerPage + index + 1,
     },
     {
-      name: <CustomHeader name="Phone Number 1" />,
-      cell: (row) => <span>{row.phone1}</span>,
+      name: <CustomHeader name="Facebook" />,
+      cell: (row) => <span>{row.facebook}</span>,
     },
     {
-      name: <CustomHeader name="Phone Number 2" />,
-      cell: (row) => <span>{row.phone2}</span>,
+      name: <CustomHeader name="Instagram" />,
+      cell: (row) => <span>{row.instagram}</span>,
+    },
+    {
+      name: <CustomHeader name="Email" />,
+      cell: (row) => <span>{row.email}</span>,
+    },
+    {
+      name: <CustomHeader name="Whatsapp" />,
+      cell: (row) => <span>{row.whatsapp}</span>,
+    },
+    {
+      name: <CustomHeader name="Linkedin" />,
+      cell: (row) => <span>{row.linkedin}</span>,
+    },
+    {
+      name: <CustomHeader name="Twitter" />,
+      cell: (row) => <span>{row.twitter}</span>,
     },
     {
       name: <CustomHeader name="Actions" />,
@@ -77,17 +90,16 @@ const HeaderContact = () => {
 
   const fetchTeam = async () => {
     setLoading(true);
-    // const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     try {
-      const response = await instance.get("header-contact/findheaderContacts", {
+      const response = await instance.get("social-contact/get-socialcontacts", {
         headers: {
+          // Authorization: "Bearer " + accessToken,
           "Content-Type": "application/json",
-
         },
-        withCredentials: true,  // Correctly placed here
       });
-      
-        
+      console.log("response", response);
+
       const reversedData = response.data.responseData;
       setTeam(reversedData);
       setData(reversedData);
@@ -101,78 +113,45 @@ const HeaderContact = () => {
   const validateForm = (formData) => {
     let errors = {};
     let isValid = true;
-  
-    // Indian number must start with +91 and followed by 10 digits starting with 9, 8, 7, or 6
-    const indianNumberRegex = /^\+91[9876]\d{9}$/;
-  
-    // US number must start with +1 and be exactly 10 digits long
-    const usNumberRegex = /^\+1\d{10}$/;
-  
-    // Validate Phone 1
-    if (!formData.phone1?.trim()) {
-      errors.phone1 = "Phone number is required";
-      isValid = false;
-    } else if (!indianNumberRegex.test(formData.phone1)) {
-      // else if (!indianNumberRegex.test(formData.phone1) && !usNumberRegex.test(formData.phone1)) {
-      errors.phone1 = "Phone 1 must be a valid Indian (+91) number";
-      // errors.phone1 = "Phone 1 must be a valid Indian (+91) or US (+1) number";
+
+    if (!formData.facebook?.trim()) {
+      errors.facebook = "Facebook link is required";
       isValid = false;
     }
-  
-    // Validate Phone 2
-    if (!formData.phone2?.trim()) {
-      errors.phone2 = "Phone number is required";
-      isValid = false;
-    } else if (!indianNumberRegex.test(formData.phone2)) {
-      errors.phone2 = "Phone 2 must be a valid Indian (+91)";
+
+    if (!formData.instagram?.trim()) {
+      errors.instagram = "Instagram link is required";
       isValid = false;
     }
-  
+    if (!formData.email?.trim()) {
+      errors.email = "email link is required";
+      isValid = false;
+    }
+    if (!formData.linkedin?.trim()) {
+      errors.linkedin = "linkedin link is required";
+      isValid = false;
+    }
+    if (!formData.twitter?.trim()) {
+      errors.linkedin = "twitter link is required";
+      isValid = false;
+    }
+    if (!formData.whatsapp?.trim()) {
+      errors.whatsapp = "Whatsapp number is required";
+      isValid = false;
+    } else if (!/^\d+$/.test(formData.whatsapp)) {
+      errors.whatsapp = "Whatsapp number must contain only digits";
+      isValid = false;
+    } else if (formData.whatsapp.length !== 10) {
+      errors.whatsapp = "Whatsapp number must be exactly 10 digits";
+      isValid = false;
+    }
+
     setErrors(errors);
     return isValid;
-  };  
-  
-
-  // const validateForm = (formData) => {
-  //   let errors = {};
-  //   let isValid = true;
-
-  //   if (!formData.phone1?.trim()) {
-  //     errors.phone1 = "Mobile number is required";
-  //     isValid = false;
-  //   } else if (!/^\d+$/.test(formData.phone1)) {
-  //     errors.phone1 = "Mobile number must contain only digits";
-  //     isValid = false;
-  //   } else if (formData.phone1.length !== 10) {
-  //     errors.phone1 = "Mobile number must be exactly 10 digits";
-  //     isValid = false;
-  //   }
-
-  //   if (!formData.phone2?.trim()) {
-  //     errors.phone2 = "Mobile number is required";
-  //     isValid = false;
-  //   } else if (!/^\d+$/.test(formData.phone2)) {
-  //     errors.phone2 = "Mobile number must contain only digits";
-  //     isValid = false;
-  //   } else if (formData.phone2.length !== 10) {
-  //     errors.phone2 = "Mobile number must be exactly 10 digits";
-  //     isValid = false;
-  //   }
-
-  //   setErrors(errors);
-  //   return isValid;
-  // };
+  };
 
   const handleChange = (name, value) => {
-
-    const sanitizedValue = value.replace(/[^0-9+]/g, "");
-
-    // Ensure + appears only at the start
-    if (sanitizedValue.length > 0 && sanitizedValue[0] !== "+") {
-      return; // Ignore input if + is not at the start
-    }
-
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: sanitizedValue }));
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
     if (errors[name]) {
       setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
     }
@@ -183,20 +162,19 @@ const HeaderContact = () => {
     e.preventDefault();
     if (validateForm(formData)) {
       setLoading(true);
-      // const accessToken = localStorage.getItem("accessToken");
+      const accessToken = localStorage.getItem("accessToken");
       const data = new FormData();
       for (const key in formData) {
         data.append(key, formData[key]);
       }
 
       try {
-        await instance.put(`header-contact/headercontact/${editingId}`, data, {
+        await instance.put(`social-contact/socialcontact/${editingId}`, data, {
           headers: {
-            "Content-Type": "application/json",
-            // If needed, uncomment the following line and set accessToken correctly
             // Authorization: "Bearer " + accessToken,
+            "Content-Type": "application/json",
           },
-          withCredentials: true,  // Correct placement of withCredentials
+          withCredentials: true, 
         });
         toast.success("Data Updated Successfully");
 
@@ -235,24 +213,19 @@ const HeaderContact = () => {
       <Row>
         <Col>
           <Card>
-            <Card.Header>
-              {/* <Row>
+            {/* <Card.Header>
+              <Row>
                 <Col className="d-flex justify-content-end align-items-center">
-                  {showTable ? (
+                  {showTable && (
                     <SearchInput
                       searchQuery={searchQuery}
                       onSearch={handleSearch}
                       showExportButton={false}
                     />
-                  )
-                    :
-                    <Button variant="outline-secondary" onClick={() => setShowTable(true)}>
-                      View
-                    </Button>
-                  }
+                  )}
                 </Col>
-              </Row> */}
-            </Card.Header>
+              </Row>
+            </Card.Header> */}
 
             <Card.Body>
               {loading ? (
@@ -284,24 +257,73 @@ const HeaderContact = () => {
                   <Row>
                     <Col md={6}>
                       <NewResuableForm
-                        label={<span>Phone 1<span className="text-danger">*</span></span>}
-                        placeholder={"Enter first phone number"}
+                        label={<span>Facebook<span className="text-danger">*</span></span>}
+                        placeholder={"Enter facebook Link"}
                         type={"text"}
-                        name={"phone1"}
+                        name={"facebook"}
                         onChange={handleChange}
                         initialData={formData}
-                        error={errors.phone1}
+                        error={errors.facebook}
                       />
                     </Col>
                     <Col md={6}>
                       <NewResuableForm
-                        label={<span>Phone 2<span className="text-danger">*</span></span>}
-                        placeholder={"Enter second phone number"}
+                        // label={"Instagram"}
+                        label={<span>Instagram<span className="text-danger">*</span></span>}
+                        placeholder={"Enter Instagram Link"}
                         type={"text"}
-                        name={"phone2"}
+                        name={"instagram"}
                         onChange={handleChange}
                         initialData={formData}
-                        error={errors.phone2}
+                        error={errors.instagram}
+                      />
+                    </Col>
+                    <Col md={6} className="mt-2">
+                      <NewResuableForm
+                        // label={"Email Id"}
+                        label={<span>Email Id<span className="text-danger">*</span></span>}
+                        placeholder={"Enter Email Id "}
+                        type={"text"}
+                        name={"email"}
+                        onChange={handleChange}
+                        initialData={formData}
+                        error={errors.email}
+                      />
+                    </Col>
+                    <Col md={6} className="mt-2">
+                      <NewResuableForm
+                        // label={"Whatsapp"}
+                        label={<span>Whatsapp Number<span className="text-danger">*</span></span>}
+                        placeholder={"Enter Whatsapp Number "}
+                        type={"text"}
+                        name={"whatsapp"}
+                        onChange={handleChange}
+                        initialData={formData}
+                        error={errors.whatsapp}
+                      />
+                    </Col>
+                    <Col md={6} className="mt-2">
+                      <NewResuableForm
+                        // label={"LinkedIn"}
+                        label={<span>LinkedIn<span className="text-danger">*</span></span>}
+                        placeholder={"Enter LinkedIn Link "}
+                        type={"text"}
+                        name={"linkedin"}
+                        onChange={handleChange}
+                        initialData={formData}
+                        error={errors.linkedin}
+                      />
+                    </Col>
+                    <Col md={6} className="mt-2">
+                      <NewResuableForm
+                        // label={"Twitter"}
+                        label={<span>Twitter<span className="text-danger">*</span></span>}
+                        placeholder={"Enter Twitter Link "}
+                        type={"text"}
+                        name={"twitter"}
+                        onChange={handleChange}
+                        initialData={formData}
+                        error={errors.twitter}
                       />
                     </Col>
                   </Row>
@@ -329,4 +351,4 @@ const HeaderContact = () => {
   );
 };
 
-export default HeaderContact;
+export default SocialContact;

@@ -246,7 +246,7 @@ const ProjectDetailsWithImages = () => {
         "/projectDetailsWithImages/projects",
         {
           headers: {
-            Authorization: "Bearer " + accessToken,
+            // Authorization: "Bearer " + accessToken,
             "Content-Type": "application/json",
           },
         }
@@ -295,6 +295,91 @@ const ProjectDetailsWithImages = () => {
       }
     }
 
+    // if (!isEditMode || (formData.before_img && Array.isArray(formData.before_img) && formData.before_img.length > 0)) {
+    //   if (Array.isArray(formData.before_img) && formData.before_img.length > 0) {
+    //     formData.before_img.forEach((file) => {
+    //       if (!validateImageSize(file)) {
+    //         errors.before_img = `Before image ${file.name} must be less than 2MB`;
+    //         isValid = false;
+    //       }
+    //     });
+    //   } else {
+    //     errors.before_img = "Before image is required";
+    //     isValid = false;
+    //   }
+    // }    
+
+    // if (!isEditMode || (formData.planning_img && Array.isArray(formData.planning_img) && formData.planning_img.length > 0)) {
+    //   if (Array.isArray(formData.planning_img) && formData.planning_img.length > 0) {
+    //     formData.planning_img.forEach((file) => {
+    //       if (!validateImageSize(file)) {
+    //         errors.planning_img = `Planning image ${file.name} must be less than 2MB`;
+    //         isValid = false;
+    //       }
+    //     });
+    //   } else {
+    //     errors.planning_img = "Planning image is required";
+    //     isValid = false;
+    //   }
+    // }
+
+    // if (!isEditMode || (formData.after_img && Array.isArray(formData.after_img) && formData.after_img.length > 0)) {
+    //   if (Array.isArray(formData.after_img) && formData.after_img.length > 0) {
+    //     formData.after_img.forEach((file) => {
+    //       if (!validateImageSize(file)) {
+    //         errors.after_img = `After image ${file.name} must be less than 2MB`;
+    //         isValid = false;
+    //       }
+    //     });
+    //   } else {
+    //     errors.after_img = "After image is required";
+    //     isValid = false;
+    //   }
+    // }
+
+    if (!isEditMode || (formData.before_img && !(formData.before_img instanceof File) && Array.isArray(formData.before_img) && formData.before_img.length > 0)) {
+      if (Array.isArray(formData.before_img) && formData.before_img.length > 0) {
+        formData.before_img.forEach((file) => {
+          if (!validateImageSize(file)) {
+            errors.before_img = `Before image ${file.name} must be less than 2MB`;
+            isValid = false;
+          }
+        });
+      } else if (!(formData.before_img instanceof File)) {
+        errors.before_img = "Before image is required";
+        isValid = false;
+      }
+    }
+    
+    if (!isEditMode || (formData.planning_img && !(formData.planning_img instanceof File) && Array.isArray(formData.planning_img) && formData.planning_img.length > 0)) {
+      if (Array.isArray(formData.planning_img) && formData.planning_img.length > 0) {
+        formData.planning_img.forEach((file) => {
+          if (!validateImageSize(file)) {
+            errors.planning_img = `Planning image ${file.name} must be less than 2MB`;
+            isValid = false;
+          }
+        });
+      } else if (!(formData.planning_img instanceof File)) {
+        errors.planning_img = "Planning image is required";
+        isValid = false;
+      }
+    }
+    
+    if (!isEditMode || (formData.after_img && !(formData.after_img instanceof File) && Array.isArray(formData.after_img) && formData.after_img.length > 0)) {
+      if (Array.isArray(formData.after_img) && formData.after_img.length > 0) {
+        formData.after_img.forEach((file) => {
+          if (!validateImageSize(file)) {
+            errors.after_img = `After image ${file.name} must be less than 2MB`;
+            isValid = false;
+          }
+        });
+      } else if (!(formData.after_img instanceof File)) {
+        errors.after_img = "After image is required";
+        isValid = false;
+      }
+    }
+    
+
     if (!formData.project_category?.trim()) {
       errors.project_category = "project category is required";
       isValid = false;
@@ -302,6 +387,26 @@ const ProjectDetailsWithImages = () => {
 
     if (!formData.project_name?.trim()) {
       errors.project_name = "project name is required";
+      isValid = false;
+    }
+
+    if (!formData.before_description?.trim()) {
+      errors.before_description = "Before Image description is required";
+      isValid = false;
+    }
+
+    if (!formData.planning_description?.trim()) {
+      errors.planning_description = "Planning Image description is required";
+      isValid = false;
+    }
+
+    if (!formData.after_description?.trim()) {
+      errors.after_description = "After Image description is required";
+      isValid = false;
+    }
+
+    if (!formData.detailed_description?.trim()) {
+      errors.detailed_description = "Detailed Image description is required";
       isValid = false;
     }
 
@@ -332,6 +437,48 @@ const ProjectDetailsWithImages = () => {
     //   errors.desc = "Description must be 1000 characters or less";
     //   isValid = false;
     // }
+
+      // Check if any optional field is filled OR if an image is uploaded
+    const hasAnyOptionalField =
+    formData.client_name?.trim() ||
+    formData.client_designation?.trim() ||
+    formData.star?.trim() ||
+    formData.client_review?.trim() ||
+    formData.client_img; // Check if image is uploaded
+
+  if (hasAnyOptionalField) {
+    // Validate all optional fields
+    if (!formData.client_name?.trim()) {
+      errors.client_name = "Client name is required";
+      isValid = false;
+    }
+
+    if (!formData.client_designation?.trim()) {
+      errors.client_designation = "Designation is required";
+      isValid = false;
+    }
+
+    if (!formData.star?.trim()) {
+      errors.star = "Star is required";
+      isValid = false;
+    } else if (!/^\d$/.test(formData.star)) {
+      errors.star = "Enter only a single digit number";
+      isValid = false;
+    } else if (!/^[1-5]$/.test(formData.star)) {
+      errors.star = "Please enter a digit between 1 to 5 only";
+      isValid = false;
+    }
+
+    if (!formData.client_review?.trim()) {
+      errors.client_review = "Review is required";
+      isValid = false;
+    }
+
+    if (!formData.client_img) {
+      errors.client_img = "Client image is required";
+      isValid = false;
+    }
+  }
 
     setErrors(errors);
     return isValid;
@@ -380,7 +527,9 @@ const ProjectDetailsWithImages = () => {
         "projectDetails/find-projectDetails",
         {
           params: { project_name: projectName },
+          withCredentials: true
         }
+        
       );
 
       const project = response.data.responseData.find(
@@ -593,7 +742,13 @@ useEffect(() => {
 
     const fetchProjectname = async () => {
       try {
-        const response = await instance.get("projectDetails/find-projectDetails");
+        const response = await instance.get("projectDetails/find-projectDetails", {      
+            headers: {
+            // Authorization: "Bearer " + accessToken,
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, 
+        });
         console.log("categories:", response.data.responseData);
 
         setProjectname(
@@ -640,6 +795,17 @@ useEffect(() => {
       data.append("project_category", formData.project_category);
       data.append("project_name_id", formData.project_name_id);
       data.append("project_name", formData.project_name);
+
+      data.append("before_description", formData.before_description);
+      data.append("planning_description", formData.planning_description);
+      data.append("after_description", formData.after_description);
+      data.append("detailed_description", formData.detailed_description);
+
+      if (formData.client_name) data.append("client_name", formData.client_name.trim());
+      if (formData.client_designation) data.append("client_designation", formData.client_designation.trim());
+      if (formData.client_review) data.append("client_review", formData.client_review.trim());
+      if (formData.star !== undefined && formData.star !== null) data.append("star", formData.star);
+      
       // data.append("project_location", formData.project_location);
       // data.append("project_info", formData.project_info);
       // data.append(
@@ -651,6 +817,27 @@ useEffect(() => {
 
       // Check if formData.img is an array and contains files
       console.log(formData.img); // Verify formData.img contains files
+
+          // Append before_img if present
+    // if (formData.before_img) {
+    //   data.append("before_img", formData.before_img);
+    // }
+
+    if (formData.before_img instanceof File) {
+      data.append("before_img", formData.before_img);
+    }
+
+    if (formData.planning_img instanceof File) {
+      data.append("planning_img", formData.planning_img);
+    }
+
+    if (formData.after_img instanceof File) {
+      data.append("after_img", formData.after_img);
+    }
+
+    if (formData.client_img instanceof File) {
+      data.append("client_img", formData.client_img);
+    }
 
       // Append each file from formData.img to FormData
       if (formData.img && Array.isArray(formData.img)) {
@@ -672,9 +859,10 @@ useEffect(() => {
             data,
             {
               headers: {
-                Authorization: "Bearer " + accessToken,
+                // Authorization: "Bearer " + accessToken,
                 "Content-Type": "multipart/form-data",
               },
+              withCredentials: true, 
             }
           );
           toast.success("Data Updated Successfully");
@@ -684,9 +872,10 @@ useEffect(() => {
             data,
             {
               headers: {
-                Authorization: "Bearer " + accessToken,
+                // Authorization: "Bearer " + accessToken,
                 "Content-Type": "multipart/form-data",
               },
+              withCredentials: true, 
             }
           );
           toast.success("Data Added Successfully");
@@ -760,9 +949,10 @@ useEffect(() => {
                     `projectDetailsWithImages/projects/${id}/is-delete`,
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                     }
                   );
                   toast.success("Data Deleted Successfully");
@@ -826,9 +1016,10 @@ useEffect(() => {
                     `projectDetailsWithImages/projects/${id}/delete-image`,
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                       data: { imagePath: imagePath }, // Sending imagePath in the request body
                     }
                   );
@@ -889,9 +1080,10 @@ useEffect(() => {
                     { isVisible },
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                     }
                   );
                   toast.success(
@@ -1002,6 +1194,63 @@ useEffect(() => {
 
   console.log(formData); // Make sure the files are in formData
 
+  const [beforeImagePreview, setBeforeImagePreview] = useState("");
+  const [planningImagePreview, setPlanningImagePreview] = useState("");
+  const [afterImagePreview, setAfterImagePreview] = useState("");
+
+  const [clientImagePreview, setClientImagePreview] = useState("");
+
+  const handleImageChange2 = async (e, field) => {
+  const file = e.target.files[0];
+
+  if (file) {
+    try {
+      await validateImageSize(file);
+      setFormData((prevData) => ({
+        ...prevData,
+        [field]: file,
+      }));
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (field === "before_img") setBeforeImagePreview(reader.result);
+        if (field === "planning_img") setPlanningImagePreview(reader.result);
+        if (field === "after_img") setAfterImagePreview(reader.result);
+        if (field === "client_img") setClientImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      setErrors((prevErrors) => ({ ...prevErrors, [field]: error }));
+    }
+  }
+};
+
+useEffect(() => {
+  if (formData.before_img && typeof formData.before_img === "string") {
+    setBeforeImagePreview(`${baseURL}${formData.before_img}`);
+  }
+  if (formData.planning_img && typeof formData.planning_img === "string") {
+    setPlanningImagePreview(`${baseURL}${formData.planning_img}`);
+  }
+  if (formData.after_img && typeof formData.after_img === "string") {
+    setAfterImagePreview(`${baseURL}${formData.after_img}`);
+  }
+  if (formData.client_img && typeof formData.client_img === "string") {
+    setClientImagePreview(`${baseURL}${formData.client_img}`);
+  }
+}, [formData.before_img, formData.planning_img, formData.after_img, formData.client_img]);
+
+useEffect(() => {
+  if (!editMode) {
+    setBeforeImagePreview("");
+    setPlanningImagePreview("");
+    setAfterImagePreview("");
+    setClientImagePreview("");
+  }
+}, [editMode]);
+
+
+
   return (
     <Container fluid>
       <Row>
@@ -1100,7 +1349,7 @@ useEffect(() => {
               ) : (
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col md={6} className="mt-2">
+                    <Col md={6}>
                       <Form.Group controlId="projectCategory">
                         <Form.Label>Project Category<span className="text-danger">*</span></Form.Label>
                         <Form.Control
@@ -1128,7 +1377,7 @@ useEffect(() => {
                       </Form.Group>
                     </Col>
 
-                    <Col md={6} className="mt-2">
+                    <Col md={6}>
                       <Form.Group controlId="projectName">
                         <Form.Label>Project Name<span className="text-danger">*</span></Form.Label>
                         <Form.Control
@@ -1163,7 +1412,114 @@ useEffect(() => {
                       </Form.Group>
                     </Col>
 
-                    {/* <Col md={6} className="mt-2">
+                    <Col md={6} className="mt-3">
+                    <h5 className="mt-2 mb-4"><span className="number">1</span> Upload Before Image & Description</h5>
+                      <Form.Group controlId="before_img">
+                        <Form.Label>Upload Before Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Control
+                          type="file"
+                          name="before_img"
+                          onChange={(e) => handleImageChange2(e, "before_img")}
+                          isInvalid={errors.before_img}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.before_img}
+                        </Form.Control.Feedback>
+                        {beforeImagePreview && <img src={beforeImagePreview} alt="Before Project" style={{ width: "100px", height: "auto", marginTop: "10px" }} />}
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={6} className="mt-3">
+                    <h5 className="mt-2 mb-4"><span className="number">2</span> Upload Planning Image & Description</h5>
+                      <Form.Group controlId="planning_img">
+                        <Form.Label>Upload Planning Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Control
+                          type="file"
+                          name="planning_img"
+                          onChange={(e) => handleImageChange2(e, "planning_img")}
+                          isInvalid={errors.planning_img}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.planning_img}
+                        </Form.Control.Feedback>
+                        {planningImagePreview && <img src={planningImagePreview} alt="Planning Project" style={{ width: "100px", height: "auto", marginTop: "10px" }} />}
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={6} className="mt-3">
+                      <Form.Group controlId="before_description">
+                        <Form.Label>Before Image Description<span className="text-danger">*</span></Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          name="before_description"
+                          value={formData.before_description || ""}
+                          // onChange={(e) =>
+                          //   handleChange("before_description", e.target.value)
+                          // }
+                          onChange={(e) => {
+                            if (e.target.value.length <= 200) {
+                              handleChange("before_description", e.target.value);
+                            }
+                          }}
+                          maxLength={200}
+                          style={{ height: "120px" }}
+                          isInvalid={errors.before_description}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.before_description}
+                        </Form.Control.Feedback>
+                        <div className="text-muted text-end">
+                          {formData.before_description?.length || 0}/200
+                        </div>
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={6} className="mt-3">
+                      <Form.Group controlId="planning_description">
+                        <Form.Label>Planning Image Description<span className="text-danger">*</span></Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          name="planning_description"
+                          value={formData.planning_description || ""}
+                          // onChange={(e) =>
+                          //   handleChange("planning_description", e.target.value)
+                          // }
+                          onChange={(e) => {
+                            if (e.target.value.length <= 200) {
+                              handleChange("planning_description", e.target.value);
+                            }
+                          }}
+                          maxLength={200}
+                          style={{ height: "120px" }}
+                          isInvalid={errors.planning_description}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.planning_description}
+                        </Form.Control.Feedback>
+                        <div className="text-muted text-end">
+                          {formData.planning_description?.length || 0}/200
+                        </div>
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={6} className="mt-3">
+                    <h5 className="mt-2 mb-4"><span className="number">3</span> Upload After Image & Description</h5>
+                      <Form.Group controlId="after_img">
+                        <Form.Label>Upload After Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Control
+                          type="file"
+                          name="after_img"
+                          onChange={(e) => handleImageChange2(e, "after_img")}
+                          isInvalid={errors.after_img}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.after_img}
+                        </Form.Control.Feedback>
+                        {afterImagePreview && <img src={afterImagePreview} alt="After Project" style={{ width: "100px", height: "auto", marginTop: "10px" }} />}
+                      </Form.Group>
+                    </Col>
+
+                    {/* <Col md={6} className="mt-3">
                       <Form.Group controlId="projectLocation">
                         <Form.Label>Project Location</Form.Label>
                         <Form.Control
@@ -1178,7 +1534,7 @@ useEffect(() => {
                       </Form.Group>
                     </Col>
 
-                    <Col md={6} className="mt-2">
+                    <Col md={6} className="mt-3">
                       <Form.Group controlId="projectTotalTonnage">
                         <Form.Label>Project Total Tonnage</Form.Label>
                         <Form.Control
@@ -1199,7 +1555,7 @@ useEffect(() => {
                       </Form.Group>
                     </Col>
 
-                    <Col md={6} className="mt-2">
+                    <Col md={6} className="mt-3">
                       <Form.Group controlId="projectYearOfCompletion">
                         <Form.Label>Project Completion Year</Form.Label>
                         <Form.Control
@@ -1220,7 +1576,7 @@ useEffect(() => {
                       </Form.Group>
                     </Col>
 
-                    <Col md={6} className="mt-2">
+                    <Col md={6} className="mt-3">
                       <Form.Group controlId="projectStatus">
                         <Form.Label>Project Status</Form.Label>
                         <Form.Control
@@ -1238,7 +1594,7 @@ useEffect(() => {
                       </Form.Group>
                     </Col>
 
-                    <Col md={6} className="mt-2">
+                    <Col md={6} className="mt-3">
                       <Form.Group controlId="projectInfo">
                         <Form.Label>Project Information</Form.Label>
                         <Form.Control
@@ -1256,7 +1612,7 @@ useEffect(() => {
                       </Form.Group>
                     </Col> */}
 
-                    <Col md={12} className="mt-3">
+                    <Col md={6} className="mt-3">
                       {imagePreview && imagePreview.length > 0 && (
                         <div>
                           {imagePreview.map((preview, index) => (
@@ -1274,27 +1630,8 @@ useEffect(() => {
                         </div>
                       )}
 
-                      <Col md={12}>
-                        {formData.project_images &&
-                          formData.project_images.length > 0 && (
-                            <div>
-                              {formData.project_images.map((preview, index) => (
-                                <img
-                                  key={index}
-                                  src={`${baseURL}${preview}`} // Ensure the correct URL format
-                                  alt={`Selected Preview ${index}`}
-                                  style={{
-                                    width: "100px",
-                                    height: "auto",
-                                    margin: "10px",
-                                  }}
-                                />
-                              ))}
-                            </div>
-                          )}
-                      </Col>
-
                       <Form.Group controlId="project_images">
+                      <h5 className="mt-2 mb-4"><span className="number">4</span> Upload Multiple Images & Description</h5>
                         <Form.Label>Upload multiple project Images<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
                         <Form.Control
                           type="file"
@@ -1317,6 +1654,159 @@ useEffect(() => {
                           )}
 
                         
+                      </Form.Group>
+
+                      <Col md={12}>
+                        {formData.project_images &&
+                          formData.project_images.length > 0 && (
+                            <div>
+                              {formData.project_images.map((preview, index) => (
+                                <img
+                                  key={index}
+                                  src={`${baseURL}${preview}`} // Ensure the correct URL format
+                                  alt={`Selected Preview ${index}`}
+                                  style={{
+                                    width: "100px",
+                                    height: "auto",
+                                    margin: "10px",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          )}
+                      </Col>
+
+                    </Col>
+
+                    <Col md={6} className="mt-3">
+                      <Form.Group controlId="after_description">
+                        <Form.Label>After Image Description<span className="text-danger">*</span></Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          name="after_description"
+                          value={formData.after_description || ""}
+                          // onChange={(e) =>
+                          //   handleChange("after_description", e.target.value)
+                          // }
+                          onChange={(e) => {
+                            if (e.target.value.length <= 200) {
+                              handleChange("after_description", e.target.value);
+                            }
+                          }}
+                          maxLength={200}
+                          style={{ height: "120px" }}
+                          isInvalid={errors.after_description}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.after_description}
+                        </Form.Control.Feedback>
+                        <div className="text-muted text-end">
+                          {formData.after_description?.length || 0}/200
+                        </div>
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={6} className="mt-3">
+                      <Form.Group controlId="detailed_description">
+                        <Form.Label>Detailed Description<span className="text-danger">*</span></Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          name="detailed_description"
+                          value={formData.detailed_description || ""}
+                          // onChange={(e) =>
+                          //   handleChange("detailed_description", e.target.value)
+                          // }
+                          onChange={(e) => {
+                            if (e.target.value.length <= 200) {
+                              handleChange("detailed_description", e.target.value);
+                            }
+                          }}
+                          maxLength={200}
+                          style={{ height: "120px" }}
+                          isInvalid={errors.detailed_description}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.detailed_description}
+                        </Form.Control.Feedback>
+                        <div className="text-muted text-end">
+                          {formData.detailed_description?.length || 0}/200
+                        </div>
+                      </Form.Group>
+                    </Col>
+
+                  </Row>
+
+                  <hr></hr>
+
+                  <Row>
+                  <h5 className="mt-2 mb-4"><span className="number">5</span> Testimonial</h5>
+                    {/* <h5 className="text-center">Testimonial</h5> */}
+
+                    <Col md={6} className="mt-2">
+                      <NewResuableForm
+                        label={<span>Client Name (Optinal)</span>}
+                        placeholder="Enter Name"
+                        name="client_name"
+                        type="text"
+                        onChange={handleChange}
+                        initialData={formData}
+                        error={errors.client_name}
+                        // charLimit={1000}
+                      />
+                    </Col>
+                    <Col md={6} className="mt-2">
+                      <NewResuableForm
+                        label={<span>Designation (Optinal)</span>}
+                        placeholder="Enter Designation"
+                        name="client_designation"
+                        type="text"
+                        onChange={handleChange}
+                        initialData={formData}
+                        error={errors.client_designation}
+                        // charLimit={1000}
+                      />
+                    </Col>
+                    <Col md={6} className="mt-2">
+                      <NewResuableForm
+                        label={<span>Star (Optinal)</span>}
+                        placeholder="Enter Star"
+                        name="star"
+                        type="text"
+                        onChange={handleChange}
+                        initialData={formData}
+                        error={errors.star}
+                      />
+                    </Col>
+                    <Col md={6} className="mt-2">
+                      <Form.Group controlId="client_review">
+                        <Form.Label>Review (Optinal)</Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          name="client_review"
+                          value={formData.client_review || ""}
+                          onChange={(e) =>
+                            handleChange("client_review", e.target.value)
+                          }
+                          isInvalid={errors.client_review}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.client_review}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                    <Col md={6} className="mt-3">
+                      <Form.Group controlId="client_img">
+                        <Form.Label>Upload Client Image (Optinal) <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Control
+                          type="file"
+                          name="client_img"
+                          onChange={(e) => handleImageChange2(e, "client_img")}
+                          isInvalid={errors.client_img}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.client_img}
+                        </Form.Control.Feedback>
+                        {clientImagePreview && <img src={clientImagePreview} alt="Client Project" style={{ width: "100px", height: "auto", marginTop: "10px" }} />}
                       </Form.Group>
                     </Col>
                   </Row>

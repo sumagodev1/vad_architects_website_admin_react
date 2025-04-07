@@ -169,9 +169,10 @@ const ProjectDetails = () => {
         "projectDetails/find-projectDetails",
         {
           headers: {
-            Authorization: "Bearer " + accessToken,
+            // Authorization: "Bearer " + accessToken,
             "Content-Type": "application/json",
           },
+          withCredentials: true, 
         }
       );
       const reversedData = response.data.responseData.reverse();
@@ -208,7 +209,7 @@ const ProjectDetails = () => {
     }
 
     if (!formData.project_name?.trim()) {
-      errors.project_name = "project name is required";
+      errors.project_name = "project title is required";
       isValid = false;
     }
 
@@ -217,21 +218,21 @@ const ProjectDetails = () => {
       isValid = false;
     }
 
-    if (!formData.project_total_tonnage?.trim()) {
-      errors.project_total_tonnage = "project total tonnage is required";
-      isValid = false;
-    }
+    // if (!formData.project_total_tonnage?.trim()) {
+    //   errors.project_total_tonnage = "project total tonnage is required";
+    //   isValid = false;
+    // }
     if (!formData.project_year_of_completion) {
       errors.project_year_of_completion =
         "project year of completion is required";
       isValid = false;
     }
-    if (!formData.project_status?.trim()) {
-      errors.project_status = "project status is required";
-      isValid = false;
-    }
+    // if (!formData.project_status?.trim()) {
+    //   errors.project_status = "project status is required";
+    //   isValid = false;
+    // }
     if (!formData.project_info?.trim()) {
-      errors.project_info = "project info is required";
+      errors.project_info = "project tagline is required";
       isValid = false;
     }
 
@@ -435,9 +436,10 @@ useEffect(() => {
             data,
             {
               headers: {
-                Authorization: "Bearer " + accessToken,
+                // Authorization: "Bearer " + accessToken,
                 "Content-Type": "multipart/form-data",
               },
+              withCredentials: true, 
             }
           );
           toast.success("Data Updated Successfully");
@@ -448,9 +450,10 @@ useEffect(() => {
         } else {
           await instance.post("projectDetails/create-projectDetails", data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "multipart/form-data",
             },
+            withCredentials: true, 
           });
           toast.success("Data Submitted Successfully");
         }
@@ -515,9 +518,10 @@ useEffect(() => {
                     `projectDetails/isdelete-projectDetails/${id}`,
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                     }
                   );
                   toast.success("Data Deleted Successfully");
@@ -580,9 +584,10 @@ useEffect(() => {
                     { isVisible },
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                     }
                   );
                   toast.success(
@@ -750,7 +755,7 @@ useEffect(() => {
 
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="projectName">
-                          <Form.Label>Project Name<span className="text-danger">*</span></Form.Label>
+                          <Form.Label>Project Title<span className="text-danger">*</span></Form.Label>
                           <Form.Control
                               type="text"
                               value={formData.project_name || ""} // Allow manual input
@@ -817,27 +822,6 @@ useEffect(() => {
                     </Col>
 
                     <Col md={6} className="mt-2">
-                      <Form.Group controlId="projectTotalTonnage">
-                        <Form.Label>Project Total Tonnage<span className="text-danger">*</span></Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="project_total_tonnage"
-                          value={formData.project_total_tonnage || ""}
-                          onChange={(e) =>
-                            handleChange(
-                              "project_total_tonnage",
-                              e.target.value
-                            )
-                          }
-                          isInvalid={errors.project_total_tonnage}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.project_total_tonnage}
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                    </Col>
-
-                    <Col md={6} className="mt-2">
                       <Form.Group controlId="projectYearOfCompletion">
                         <Form.Label>Project Completion Year<span className="text-danger">*</span></Form.Label>
                         <Form.Control
@@ -858,7 +842,28 @@ useEffect(() => {
                       </Form.Group>
                     </Col>
 
-                    <Col md={6} className="mt-2">
+                    {/* <Col md={6} className="mt-2">
+                      <Form.Group controlId="projectTotalTonnage">
+                        <Form.Label>Project Total Tonnage<span className="text-danger">*</span></Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="project_total_tonnage"
+                          value={formData.project_total_tonnage || ""}
+                          onChange={(e) =>
+                            handleChange(
+                              "project_total_tonnage",
+                              e.target.value
+                            )
+                          }
+                          isInvalid={errors.project_total_tonnage}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.project_total_tonnage}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col> */}
+
+                    {/* <Col md={6} className="mt-2">
                       <Form.Group controlId="projectStatus">
                         <Form.Label>Project Status<span className="text-danger">*</span></Form.Label>
                         <Form.Control
@@ -874,11 +879,11 @@ useEffect(() => {
                           {errors.project_status}
                         </Form.Control.Feedback>
                       </Form.Group>
-                    </Col>
+                    </Col> */}
 
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="projectInfo">
-                        <Form.Label>Project Information<span className="text-danger">*</span></Form.Label>
+                        <Form.Label>Project Tagline<span className="text-danger">*</span></Form.Label>
                         <Form.Control
                           as="textarea"
                           name="project_info"
@@ -908,7 +913,7 @@ useEffect(() => {
                       )}
                       <NewResuableForm
                         // label={"Upload project thumbnail Image"}
-                        label={<span>Upload project thumbnail Image<span className="text-danger">*</span></span>}
+                        label={<span>Upload project hero Image<span className="text-danger">*</span></span>}
                         placeholder={"Upload Image"}
                         name={"img"}
                         type={"file"}

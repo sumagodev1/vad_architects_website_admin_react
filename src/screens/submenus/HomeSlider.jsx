@@ -146,7 +146,7 @@ const HomeSlider = () => {
     try {
       const response = await instance.get("carrousal/find-carrousal", {
         headers: {
-          Authorization: "Bearer " + accessToken,
+          // Authorization: "Bearer " + accessToken,
           "Content-Type": "application/json",
         },
       });
@@ -219,7 +219,7 @@ const HomeSlider = () => {
     e.preventDefault();
     if (validateForm(formData)) {
       setLoading(true);
-      const accessToken = localStorage.getItem("accessToken"); // Retrieve access token
+      // const accessToken = localStorage.getItem("accessToken"); 
       const data = new FormData();
       for (const key in formData) {
         data.append(key, formData[key]);
@@ -229,9 +229,10 @@ const HomeSlider = () => {
         if (editMode) {
           await instance.put(`carrousal/update-carrousal/${editingId}`, data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "multipart/form-data",
             },
+            withCredentials: true,
           });
           toast.success("Data Updated Successfully");
           const updatedTeam = team.map((member) =>
@@ -241,9 +242,10 @@ const HomeSlider = () => {
         } else {
           await instance.post("carrousal/create-carrousal", data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "multipart/form-data",
             },
+            withCredentials: true,
           });
           toast.success("Data Submitted Successfully");
         }
@@ -295,7 +297,7 @@ const HomeSlider = () => {
                 try {
                   await instance.delete(`carrousal/isdelete-carrousal/${id}`, {
                     headers: {
-                      Authorization: `Bearer ${accessToken}`,
+                      // Authorization: `Bearer ${accessToken}`,
                       "Content-Type": "application/json",
                     },
                   });
@@ -359,7 +361,7 @@ const HomeSlider = () => {
                     { isVisible },
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
                     }

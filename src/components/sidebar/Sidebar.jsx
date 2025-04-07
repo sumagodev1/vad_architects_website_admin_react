@@ -71,11 +71,11 @@ const SidebarMenu = [
       //   url: "/about",
       //   icon: <BsBuilding style={{ color: "black" }} size={24} />,
       // },
-      {
-        subMenus: "Services",
-        url: "/infrastructure",
-        icon: <BsBuilding style={{ color: "black" }} size={24} />,
-      },
+      // {
+      //   subMenus: "Services",
+      //   url: "/infrastructure",
+      //   icon: <BsBuilding style={{ color: "black" }} size={24} />,
+      // },
       // {
       //   subMenus: "Leadership",
       //   url: "/leadership",
@@ -125,18 +125,18 @@ const SidebarMenu = [
   //     },
   //   ],
   // },
-  {
-    menu: "Blog",
-    url: "/blog",
-    mainIcon: <FaRegNewspaper size={24} />,
-    subMenu: [
-      {
-        subMenus: "Blog Details",
-        url: "/blogdetails",
-        icon: <FaRegNewspaper style={{ color: "black" }} size={24} />,
-      },
-    ],
-  },
+  // {
+  //   menu: "Blog",
+  //   url: "/blog",
+  //   mainIcon: <FaRegNewspaper size={24} />,
+  //   subMenu: [
+  //     {
+  //       subMenus: "Blog Details",
+  //       url: "/blogdetails",
+  //       icon: <FaRegNewspaper style={{ color: "black" }} size={24} />,
+  //     },
+  //   ],
+  // },
   
   // {
   //   menu: "News and Event",
@@ -330,7 +330,7 @@ const Sidebar = () => {
         <div className="sidebar-brand">
           <img className="w-25" src={logo} alt="Logo" />
           <span className="sidebar-brand-text">
-            Modearch Steel
+            VAD Architechts
           </span>
         </div>
         <Button

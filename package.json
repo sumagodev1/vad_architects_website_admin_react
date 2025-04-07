@@ -34,6 +34,7 @@
     "react-paginate": "^8.2.0",
     "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^6.21.1",
+    "react-switch": "^7.1.0",
     "react-toastify": "^10.0.5",
     "recharts": "^2.10.3",
     "sass": "^1.69.7",

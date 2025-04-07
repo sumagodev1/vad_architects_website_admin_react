@@ -278,6 +278,7 @@ const NewReusableForm = ({
   imageDimensiion,
   charLimit,
   onSubmit,
+  disabled
 }) => {
   const [value, setValue] = useState(initialData[name] || "");
   const [charError, setCharError] = useState("");
@@ -329,6 +330,7 @@ const NewReusableForm = ({
             accept="image/*,.pdf,.doc,.docx, video/*"
             onChange={handleChange}
             isInvalid={!!error || !!charError}
+            disabled={disabled}
           />
           {(error || charError) && (
             <div className="invalid-feedback d-block">
@@ -341,6 +343,7 @@ const NewReusableForm = ({
           <JoditEditor
             value={value}
             onChange={handleEditorChange}
+            disabled={disabled}
           />
           {(error || charError) && (
             <div className="invalid-feedback d-block">
@@ -361,6 +364,7 @@ const NewReusableForm = ({
             value={value}
             onChange={handleChange}
             isInvalid={!!error || !!charError}
+            disabled={disabled}
           />
           {charLimit && (
             <div className="text-muted">
@@ -381,6 +385,7 @@ const NewReusableForm = ({
             value={value}
             onChange={handleChange}
             isInvalid={!!error || !!charError}
+            disabled={disabled}
           />
           {charLimit && (
             <div className="text-muted">

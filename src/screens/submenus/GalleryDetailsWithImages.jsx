@@ -328,7 +328,7 @@ const GalleryDetailsWithImages = () => {
         "/galleryImages/galleryImages",
         {
           headers: {
-            Authorization: "Bearer " + accessToken,
+            // Authorization: "Bearer " + accessToken,
             "Content-Type": "application/json",
           },
         }
@@ -513,22 +513,26 @@ const GalleryDetailsWithImages = () => {
             data,
             {
               headers: {
-                Authorization: "Bearer " + accessToken,
+                // Authorization: "Bearer " + accessToken,
                 "Content-Type": "multipart/form-data",
               },
+              withCredentials: true, 
             }
           );
+          toast.success("Data updated successfully!");
         } else {
           await instance.post(
             "galleryImages/create-galleryImageDetailsWithImages",
             data,
             {
               headers: {
-                Authorization: "Bearer " + accessToken,
+                // Authorization: "Bearer " + accessToken,
                 "Content-Type": "multipart/form-data",
               },
+              withCredentials: true, 
             }
           );
+          toast.success("Data added successfully!");
         }
         fetchTeam();
 
@@ -613,9 +617,10 @@ const GalleryDetailsWithImages = () => {
                     `galleryImages/galleryImages/${id}/is-delete`,
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                     }
                   );
                   toast.success("Data Deleted Successfully");
@@ -745,9 +750,10 @@ const GalleryDetailsWithImages = () => {
                     `galleryImages/galleryImages/${id}/delete-image`,
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                       data: { imagePath: imagePath }, // Sending imagePath in the request body
                     }
                   );
@@ -809,9 +815,10 @@ const GalleryDetailsWithImages = () => {
                     { isVisible },
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                     }
                   );
                   toast.success(

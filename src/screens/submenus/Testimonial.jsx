@@ -20,7 +20,8 @@ import { FaEdit, FaTrash, FaEye, FaEyeSlash, FaListAlt } from "react-icons/fa";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { ThreeDots } from 'react-loader-spinner';
-import { Tooltip, OverlayTrigger, } from 'react-bootstrap';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
+import ReactSwitch from 'react-switch';
 import "../../App.scss";
 const Testimonial = () => {
   const { searchQuery, handleSearch, handleExport, setData, filteredData } =
@@ -94,6 +95,19 @@ const Testimonial = () => {
       ),
     },
     {
+      name: <CustomHeader name="Show on About Page" />,
+      cell: (row) => (
+        <ReactSwitch
+          checked={row.is_feature_testimonial}
+          onChange={() => handleFeatureToggle(row.id, !row.is_feature_testimonial)} // Toggle on/off
+          offColor="#888"
+          onColor="#4CAF50"
+          uncheckedIcon={false}
+          checkedIcon={false}
+        />
+      ),
+    },
+    {
       name: <CustomHeader name="Actions" />,
       cell: (row) => (
         <div className="d-flex">
@@ -153,6 +167,53 @@ const Testimonial = () => {
 
   ];
 
+  const handleFeatureToggle = async (id, status) => {
+    try {
+      const data = { is_feature_testimonial: status };
+  
+      const accessToken = localStorage.getItem("accessToken"); // Retrieve access token if required
+  
+      const response = await instance.put(`testimonials/feature-testimonial/${id}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: "Bearer " + accessToken,
+        },
+        withCredentials: true, 
+      });
+  
+      // Check if the API response indicates success
+      if (response.data.result) {
+        toast.success(response.data.message); // Show success message
+  
+        // Update the local table state with the new testimonial data
+        const updatedTestimonial = response.data.responseData;
+  
+        setTestimonial((prevTestimonials) =>
+          prevTestimonials.map((testimonial) =>
+            testimonial.id === id
+              ? { ...testimonial, is_feature_testimonial: updatedTestimonial.is_feature_testimonial }
+              : testimonial
+          )
+        );
+      } else {
+        // Handle error: Display the error message from backend
+        toast.error(response.data.message || "Failed to update feature status.");
+      }
+    } catch (error) {
+      console.error("Error toggling feature status:", error);
+  
+      // Check if it's a validation error
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.message || "Error toggling feature status.";
+        toast.error(errorMessage); // Show backend validation error message
+      } else {
+        toast.error("Error toggling feature status.");
+      }
+    }
+  };
+  
+   
+
   useEffect(() => {
     fetchTeam();
     // Retrieve and set visibility state from localStorage
@@ -186,7 +247,7 @@ const Testimonial = () => {
     try {
       const response = await instance.get("testimonials/get-testimonials", {
         headers: {
-          Authorization: "Bearer " + accessToken,
+          // Authorization: "Bearer " + accessToken,
           "Content-Type": "application/json",
         },
       });
@@ -233,10 +294,21 @@ const Testimonial = () => {
       errors.experience = "Experience is required";
       isValid = false;
     }
+    // if (!formData.star) {
+    //   errors.star = "Star is required";
+    //   isValid = false;
+    // }
     if (!formData.star) {
       errors.star = "Star is required";
       isValid = false;
+    } else if (!/^\d$/.test(formData.star)) {
+      errors.star = "Enter only a single digit number";
+      isValid = false;
+    } else if (!/^[1-5]$/.test(formData.star)) {
+      errors.star = "Please enter a digit between 1 to 5 only";
+      isValid = false;
     }
+    
 
     if (!formData.company_Name) {
       errors.company_Name = "Company name is required";
@@ -359,9 +431,10 @@ const Testimonial = () => {
         if (editMode) {
           await instance.put(`testimonials/update-testimonials/${editingId}`, data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "multipart/form-data",
             },
+            withCredentials: true,
           });
           toast.success("Data Updated Successfully");
           const updatedTeam = testimonial.map((member) =>
@@ -371,9 +444,10 @@ const Testimonial = () => {
         } else {
           await instance.post("testimonials/create-testimonials", data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "multipart/form-data",
             },
+            withCredentials: true,
           });
           toast.success("Data Submitted Successfully");
         }
@@ -425,9 +499,10 @@ const Testimonial = () => {
                 try {
                   await instance.delete(`testimonials/isdelete-testimonial/${id}`, {
                     headers: {
-                      Authorization: `Bearer ${accessToken}`,
+                      // Authorization: `Bearer ${accessToken}`,
                       "Content-Type": "application/json",
                     },
+                    withCredentials: true,
                   });
                   toast.success("Data Deleted Successfully");
                   fetchTeam();
@@ -489,10 +564,12 @@ const Testimonial = () => {
                     { isVisible },
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true,
                     }
+                    
                   );
                   toast.success(
                     `Data ${isVisible ? "hidden" : "shown"} successfully`
@@ -503,8 +580,17 @@ const Testimonial = () => {
                   }));
                   fetchTeam();
                 } catch (error) {
+
                   console.error("Error updating visibility:", error);
-                  toast.error("Error updating visibility");
+                  // toast.error("Error updating visibility");
+
+                  if (error.response && error.response.data) {
+                    const errorMessage = error.response.data.message || "Error updating visibility status.";
+                    toast.error(errorMessage); // Show backend validation error message
+                  } else {
+                    toast.error("Error updating visibility");
+                  }
+                  
                 } finally {
                   setLoading(false); // Set loading to false
                 }

@@ -15,8 +15,9 @@ import SearchInput from "../../components/search/SearchInput";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import instance from "../../api/AxiosInstance";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaEye, FaEyeSlash } from "react-icons/fa";
 import { ThreeDots } from 'react-loader-spinner';
+import { confirmAlert } from "react-confirm-alert";
 import "../../App.scss";
 
 const SocialContact = () => {
@@ -26,6 +27,7 @@ const SocialContact = () => {
   const [editMode, setEditMode] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({});
+  const [eyeVisibilityById, setEyeVisibilityById] = useState({});
   const [showTable, setShowTable] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -43,28 +45,12 @@ const SocialContact = () => {
       selector: (row, index) => (currentPage - 1) * rowsPerPage + index + 1,
     },
     {
-      name: <CustomHeader name="Facebook" />,
-      cell: (row) => <span>{row.facebook}</span>,
+      name: <CustomHeader name="Name" />,
+      cell: (row) => <span>{row.name}</span>,
     },
     {
-      name: <CustomHeader name="Instagram" />,
-      cell: (row) => <span>{row.instagram}</span>,
-    },
-    {
-      name: <CustomHeader name="Email" />,
-      cell: (row) => <span>{row.email}</span>,
-    },
-    {
-      name: <CustomHeader name="Whatsapp" />,
-      cell: (row) => <span>{row.whatsapp}</span>,
-    },
-    {
-      name: <CustomHeader name="Linkedin" />,
-      cell: (row) => <span>{row.linkedin}</span>,
-    },
-    {
-      name: <CustomHeader name="Twitter" />,
-      cell: (row) => <span>{row.twitter}</span>,
+      name: <CustomHeader name="Url" />,
+      cell: (row) => <span>{row.url}</span>,
     },
     {
       name: <CustomHeader name="Actions" />,
@@ -79,10 +65,38 @@ const SocialContact = () => {
               <FaEdit />
             </Button>
           </OverlayTrigger>
+            <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip id="visibility-tooltip">{eyeVisibilityById[row.id] ? 'Show' : 'Hide'}</Tooltip>}
+            >
+                <Button
+                className="ms-1"
+                style={{
+                    backgroundColor: eyeVisibilityById[row.id] ? 'red' : 'green',
+                    borderColor: eyeVisibilityById[row.id] ? 'red' : 'green',
+                    color: 'white',
+                }}
+                onClick={() => handleIsActive(row.id, !eyeVisibilityById[row.id])}
+                >
+                {eyeVisibilityById[row.id] ? <FaEyeSlash /> : <FaEye />}
+                </Button>
+            </OverlayTrigger>
         </div>
       ),
     },
   ];
+
+    useEffect(() => {
+      fetchTeam();
+      // Retrieve and set visibility state from localStorage
+      const storedVisibility = JSON.parse(localStorage.getItem('eyeVisibilityById')) || {};
+      setEyeVisibilityById(storedVisibility);
+    }, []);
+  
+    useEffect(() => {
+      // Store visibility state in localStorage whenever it changes
+      localStorage.setItem('eyeVisibilityById', JSON.stringify(eyeVisibilityById));
+    }, [eyeVisibilityById]);
 
   useEffect(() => {
     fetchTeam();
@@ -94,7 +108,7 @@ const SocialContact = () => {
     try {
       const response = await instance.get("social-contact/get-socialcontacts", {
         headers: {
-          Authorization: "Bearer " + accessToken,
+          // Authorization: "Bearer " + accessToken,
           "Content-Type": "application/json",
         },
       });
@@ -114,37 +128,69 @@ const SocialContact = () => {
     let errors = {};
     let isValid = true;
 
-    if (!formData.facebook?.trim()) {
-      errors.facebook = "Facebook link is required";
+    if (!formData.name?.trim()) {
+      errors.name = "Name is required";
       isValid = false;
     }
 
-    if (!formData.instagram?.trim()) {
-      errors.instagram = "Instagram link is required";
-      isValid = false;
-    }
-    if (!formData.email?.trim()) {
-      errors.email = "email link is required";
-      isValid = false;
-    }
-    if (!formData.linkedin?.trim()) {
-      errors.linkedin = "linkedin link is required";
-      isValid = false;
-    }
-    if (!formData.twitter?.trim()) {
-      errors.linkedin = "twitter link is required";
-      isValid = false;
-    }
-    if (!formData.whatsapp?.trim()) {
-      errors.whatsapp = "Whatsapp number is required";
-      isValid = false;
-    } else if (!/^\d+$/.test(formData.whatsapp)) {
-      errors.whatsapp = "Whatsapp number must contain only digits";
-      isValid = false;
-    } else if (formData.whatsapp.length !== 10) {
-      errors.whatsapp = "Whatsapp number must be exactly 10 digits";
-      isValid = false;
-    }
+    if (!formData.url?.trim()) {
+        errors.url =
+          formData.name === "Whatsapp Number"
+            ? "Mobile Number is required"
+            : "URL is required";
+        isValid = false;
+      } else {
+        if (formData.name === "Whatsapp Number") {
+          // Validate exactly 10 digits for Mobile Number
+          if (!/^\d{10}$/.test(formData.url)) {
+            errors.url = "Mobile Number must be exactly 10 digits";
+            isValid = false;
+          }
+        } else {
+          // Validate URL format
+          const urlPattern =
+            /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+          if (!urlPattern.test(formData.url)) {
+            errors.url = "Enter a valid URL (e.g., https://example.com)";
+            isValid = false;
+          }
+        }
+      }
+
+    // if (!formData.url?.trim()) {
+    //     errors.url = formData.name === "Whatsapp Number" ? "Mobile Number is required" : "URL is required";
+    //     isValid = false;
+    //   } else if (formData.name === "Whatsapp Number" && !/^\d{10}$/.test(formData.url)) {
+    //     errors.url = "Mobile Number must be enter exactly 10 digits";
+    //     isValid = false;
+    // }
+
+    // if (!formData.url?.trim()) {
+    //   errors.url = "URL link is required";
+    //   isValid = false;
+    // }
+    // if (!formData.email?.trim()) {
+    //   errors.email = "email link is required";
+    //   isValid = false;
+    // }
+    // if (!formData.linkedin?.trim()) {
+    //   errors.linkedin = "linkedin link is required";
+    //   isValid = false;
+    // }
+    // if (!formData.twitter?.trim()) {
+    //   errors.linkedin = "twitter link is required";
+    //   isValid = false;
+    // }
+    // if (!formData.whatsapp?.trim()) {
+    //   errors.whatsapp = "Whatsapp number is required";
+    //   isValid = false;
+    // } else if (!/^\d+$/.test(formData.whatsapp)) {
+    //   errors.whatsapp = "Whatsapp number must contain only digits";
+    //   isValid = false;
+    // } else if (formData.whatsapp.length !== 10) {
+    //   errors.whatsapp = "Whatsapp number must be exactly 10 digits";
+    //   isValid = false;
+    // }
 
     setErrors(errors);
     return isValid;
@@ -171,9 +217,10 @@ const SocialContact = () => {
       try {
         await instance.put(`social-contact/socialcontact/${editingId}`, data, {
           headers: {
-            Authorization: "Bearer " + accessToken,
+            // Authorization: "Bearer " + accessToken,
             "Content-Type": "application/json",
           },
+          withCredentials: true, 
         });
         toast.success("Data Updated Successfully");
 
@@ -193,6 +240,79 @@ const SocialContact = () => {
       }
     }
   };
+
+    const handleIsActive = async (id, isVisible) => {
+      confirmAlert({
+        title: "Confirm to change visibility",
+        customUI: ({ onClose }) => (
+          <div
+            style={{
+              textAlign: "left",
+              padding: "20px",
+              backgroundColor: "white",
+              borderRadius: "8px",
+              boxShadow: "0 4px 8px rgba(5, 5, 5, 0.2)",
+              maxWidth: "400px",
+              margin: "0 auto",
+            }}
+          >
+            <h2>Confirm to change visibility</h2>
+            <p>
+              Are you sure you want to {isVisible ? "hide" : "show"} this data?
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: "20px",
+              }}
+            >
+              <button
+                style={{ marginRight: "10px" }}
+                className="btn btn-primary"
+                onClick={async () => {
+                  setLoading(true);
+                  const accessToken = localStorage.getItem("accessToken");
+                  try {
+                    await instance.put(
+                      `social-contact/isactive-social/${id}`,
+                      { isVisible },
+                      {
+                        headers: {
+                          // Authorization: `Bearer ${accessToken}`,
+                          "Content-Type": "application/json",
+                        },
+                        withCredentials: true, 
+                      }
+                    );
+                    toast.success(
+                      `Data ${isVisible ? "hidden" : "shown"} successfully`
+                    );
+                    setEyeVisibilityById((prev) => ({
+                      ...prev,
+                      [id]: isVisible,
+                    }));
+                    fetchTeam();
+                  } catch (error) {
+                    console.error("Error updating visibility:", error);
+                    toast.error("Error updating visibility");
+                  } finally {
+          setLoading(false); // Set loading to false
+        }
+                  onClose();
+                }}
+              >
+                Yes
+              </button>
+              <button className="btn btn-secondary" onClick={() => onClose()}>
+                No
+              </button>
+            </div>
+          </div>
+        ),
+      });
+    };
+
   const toggleEdit = (id) => {
     const selectedMember = team.find((member) => member.id === id);
     setEditingId(id);
@@ -256,28 +376,74 @@ const SocialContact = () => {
                   <Row>
                     <Col md={6}>
                       <NewResuableForm
-                        label={<span>Facebook<span className="text-danger">*</span></span>}
-                        placeholder={"Enter facebook Link"}
+                        label={<span>name<span className="text-danger">*</span></span>}
+                        placeholder={"Enter name link"}
                         type={"text"}
-                        name={"facebook"}
+                        name={"name"}
                         onChange={handleChange}
                         initialData={formData}
-                        error={errors.facebook}
+                        error={errors.name}
+                        disabled={true} 
                       />
                     </Col>
                     <Col md={6}>
+                        <NewResuableForm
+                            label={
+                            <span>
+                                {formData.name === "Whatsapp Number" ? "Mobile Number" : "Url"}
+                                <span className="text-danger">*</span>
+                            </span>
+                            }
+                            placeholder={
+                            formData.name === "Whatsapp Number" ? "Enter Mobile Number" : "Enter URL"
+                            }
+                            type={"text"}
+                            name={"url"}
+                            onChange={handleChange}
+                            initialData={formData}
+                            error={errors.url}
+                        />
+                    </Col>
+
+                    {/* <Col md={6}>
+                        <NewResuableForm
+                            label={
+                            <span>
+                                {formData.name === "Whatsapp Number" ? "Mobile Number" : "Url"}
+                                <span className="text-danger">*</span>
+                            </span>
+                            }
+                            placeholder={
+                            formData.name === "Whatsapp Number" ? "Enter Mobile Number" : "Enter URL"
+                            }
+                            type={"text"}
+                            name={"url"}
+                            maxLength={formData.name === "Whatsapp Number" ? 10 : undefined} // Restrict max length
+                            onChange={(name, value) => {
+                            if (formData.name === "Whatsapp Number") {
+                                const onlyNums = value.replace(/\D/g, "").slice(0, 10); // Allow only numbers, max 10
+                                handleChange(name, onlyNums);
+                            } else {
+                                handleChange(name, value);
+                            }
+                            }}
+                            initialData={formData}
+                            error={errors.url}
+                        />
+                    </Col> */}
+                    {/* <Col md={6}>
                       <NewResuableForm
                         // label={"Instagram"}
-                        label={<span>Instagram<span className="text-danger">*</span></span>}
-                        placeholder={"Enter Instagram Link"}
+                        label={<span>Url<span className="text-danger">*</span></span>}
+                        placeholder={"Enter url"}
                         type={"text"}
-                        name={"instagram"}
+                        name={"url"}
                         onChange={handleChange}
                         initialData={formData}
-                        error={errors.instagram}
+                        error={errors.url}
                       />
-                    </Col>
-                    <Col md={6}>
+                    </Col> */}
+                    {/* <Col md={6} className="mt-2">
                       <NewResuableForm
                         // label={"Email Id"}
                         label={<span>Email Id<span className="text-danger">*</span></span>}
@@ -288,8 +454,8 @@ const SocialContact = () => {
                         initialData={formData}
                         error={errors.email}
                       />
-                    </Col>
-                    <Col md={6}>
+                    </Col> */}
+                    {/* <Col md={6} className="mt-2">
                       <NewResuableForm
                         // label={"Whatsapp"}
                         label={<span>Whatsapp Number<span className="text-danger">*</span></span>}
@@ -300,8 +466,8 @@ const SocialContact = () => {
                         initialData={formData}
                         error={errors.whatsapp}
                       />
-                    </Col>
-                    <Col md={6}>
+                    </Col> */}
+                    {/* <Col md={6} className="mt-2">
                       <NewResuableForm
                         // label={"LinkedIn"}
                         label={<span>LinkedIn<span className="text-danger">*</span></span>}
@@ -312,8 +478,8 @@ const SocialContact = () => {
                         initialData={formData}
                         error={errors.linkedin}
                       />
-                    </Col>
-                    <Col md={6}>
+                    </Col> */}
+                    {/* <Col md={6} className="mt-2">
                       <NewResuableForm
                         // label={"Twitter"}
                         label={<span>Twitter<span className="text-danger">*</span></span>}
@@ -324,7 +490,7 @@ const SocialContact = () => {
                         initialData={formData}
                         error={errors.twitter}
                       />
-                    </Col>
+                    </Col> */}
                   </Row>
                   <Row>
                     <div className="mt-3 d-flex justify-content-end">

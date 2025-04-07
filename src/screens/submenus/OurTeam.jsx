@@ -160,9 +160,10 @@ const OurTeam = () => {
     try {
       const response = await instance.get("team/find-teammembers", {
         headers: {
-          Authorization: "Bearer " + accessToken,
+          // Authorization: "Bearer " + accessToken,
           "Content-Type": "application/json",
         },
+        withCredentials: true, 
       });
       const reversedData = response.data.responseData.reverse();
       setTeam(reversedData);
@@ -211,10 +212,10 @@ const OurTeam = () => {
       isValid = false;
     }
     // formData.description.split(/\s+/).length > 25
-    if (!formData.position_no) {
-      errors.position_no = "Position no is required";
-      isValid = false;
-    }
+    // if (!formData.position_no) {
+    //   errors.position_no = "Position no is required";
+    //   isValid = false;
+    // }
     setErrors(errors);
 
     return isValid;
@@ -264,9 +265,10 @@ const OurTeam = () => {
         if (editMode) {
           await instance.put(`team/update-teammember/${editingId}`, data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "multipart/form-data",
             },
+            withCredentials: true, 
           });
           toast.success("Data Updated Successfully");
           const updatedTeam = team.map((member) =>
@@ -276,9 +278,10 @@ const OurTeam = () => {
         } else {
           await instance.post("team/create-teammember", data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "multipart/form-data",
             },
+            withCredentials: true, 
           });
           toast.success("Data Submitted Successfully");
         }
@@ -343,9 +346,10 @@ const OurTeam = () => {
                 try {
                   await instance.delete(`team/isdelete-teammember/${id}`, {
                     headers: {
-                      Authorization: `Bearer ${accessToken}`,
+                      // Authorization: `Bearer ${accessToken}`,
                       "Content-Type": "application/json",
                     },
+                    withCredentials: true, 
                   });
                   toast.success("Data Deleted Successfully");
                   fetchTeam();
@@ -407,9 +411,10 @@ const OurTeam = () => {
                     { isVisible },
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                     }
                   );
                   toast.success(
@@ -619,7 +624,7 @@ const OurTeam = () => {
                       error={errors.description}
                     />
                   </Col>
-                  <Col md={6} className="mt-2">
+                  {/* <Col md={6} className="mt-2">
                     <NewResuableForm
                       // label={"Position Number"}
                       label={<span>Position Number<span className="text-danger">*</span></span>}
@@ -630,7 +635,7 @@ const OurTeam = () => {
                       initialData={formData}
                       error={errors.position_no}
                     />
-                  </Col>
+                  </Col> */}
                 </Row>
                 <Row>
                   <div className="mt-3 d-flex justify-content-end">

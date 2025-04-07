@@ -49,9 +49,10 @@ const UploadCv = () => {
     try {
       const response = await instance.get("uploadcv/find-uploadcv", {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          // Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
+        withCredentials: true, 
       });
       const reversedData = response.data.responseData.reverse();
       setTeam(reversedData);
@@ -131,9 +132,10 @@ const UploadCv = () => {
                 try {
                   await instance.delete(`uploadcv/isdelete-uploadcv/${id}`, {
                     headers: {
-                      Authorization: `Bearer ${accessToken}`,
+                      // Authorization: `Bearer ${accessToken}`,
                       "Content-Type": "application/json",
                     },
+                    withCredentials: true, 
                   });
                   toast.success("Data Deleted Successfully");
                   fetchTeam();

@@ -169,9 +169,10 @@ const Carousal = () => {
     try {
       const response = await instance.get("homeslider/find-homeslider", {
         headers: {
-          Authorization: "Bearer " + accessToken,
+          // Authorization: "Bearer " + accessToken,
           "Content-Type": "application/json",
         },
+        withCredentials: true,
       });
       const reversedData = response.data.responseData.reverse();
       setTeam(reversedData);
@@ -324,9 +325,10 @@ const Carousal = () => {
 
           await instance.put(`homeslider/update-homeslider/${editingId}`, data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "multipart/form-data",
             },
+            withCredentials: true,
           });
           toast.success("Data Updated Successfully");
           const updatedTeam = team.map((member) =>
@@ -336,9 +338,10 @@ const Carousal = () => {
         } else {
           await instance.post("homeslider/create-homeslider", data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "multipart/form-data",
             },
+            withCredentials: true,
           });
           toast.success("Data Submitted Successfully");
         }
@@ -390,9 +393,10 @@ const Carousal = () => {
                 try {
                   await instance.delete(`homeslider/isdelete-homeslider/${id}`, {
                     headers: {
-                      Authorization: `Bearer ${accessToken}`,
+                      // Authorization: `Bearer ${accessToken}`,
                       "Content-Type": "application/json",
                     },
+                    withCredentials: true,
                   });
                   toast.success("Data Deleted Successfully");
                   fetchTeam();
@@ -454,9 +458,10 @@ const Carousal = () => {
                     { isVisible },
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true,
                     }
                   );
                   toast.success(
@@ -579,10 +584,18 @@ const Carousal = () => {
                         placeholder={"Upload Media"}
                         name={"img"}
                         type={"file"}
+                        accept="video/*"
                         onChange={(name, value) => {
                           const file = value;
+                      
                           if (file) {
-                            handleChange(name, file);
+                            const fileType = file.type.split("/")[0]; // Get "image" or "video"
+                            
+                            if (fileType === "video") {
+                              handleChange(name, file);
+                            } else {
+                              toast.error("Only video files are allowed!"); // Alert user if an image is selected
+                            }
                           }
                         }}
                         initialData={formData}

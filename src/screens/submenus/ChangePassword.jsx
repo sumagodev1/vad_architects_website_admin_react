@@ -28,12 +28,13 @@ const ChangePassword = () => {
   useEffect(() => {
     // Fetch the profile on component mount to get the user's details
     const fetchProfile = async () => {
-      const accessToken = localStorage.getItem("accessToken");
+      // const accessToken = localStorage.getItem("accessToken");
       try {
         const response = await instance.get("/auth/get-profile", {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            // Authorization: `Bearer ${accessToken}`,
           },
+          withCredentials: true,
         });
 
         // Assuming the password is within the 'responseData' object in the response
@@ -88,7 +89,7 @@ const ChangePassword = () => {
     if (!validateForm()) return;
 
     setLoading(true);
-    const accessToken = localStorage.getItem("accessToken");
+    // const accessToken = localStorage.getItem("accessToken");
 
     try {
       await instance.put(
@@ -99,9 +100,10 @@ const ChangePassword = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            // Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
 

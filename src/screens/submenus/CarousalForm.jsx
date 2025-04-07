@@ -281,13 +281,14 @@ const CarousalForm = () => {
     try {
       const response = await instance.get("carousal-form/find-carousalform", {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          // Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
         params: {
           page,
           limit,
         },
+        withCredentials: true, 
       });
       const reversedData = response.data.responseData.reverse();
       setTeam(reversedData);
@@ -355,9 +356,10 @@ const CarousalForm = () => {
                 try {
                   await instance.delete(`carousal-form/delete/${id}`, {
                     headers: {
-                      Authorization: `Bearer ${accessToken}`,
+                      // Authorization: `Bearer ${accessToken}`,
                       "Content-Type": "application/json",
                     },
+                    withCredentials: true, 
                   });
                   toast.success("Data Deleted Successfully");
                   fetchTeam(currentPage, rowsPerPage);

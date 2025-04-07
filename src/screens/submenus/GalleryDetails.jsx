@@ -161,7 +161,7 @@ const GalleryDetails = () => {
         "galleryDetails/get-galleryDetails",
         {
           headers: {
-            Authorization: "Bearer " + accessToken,
+            // Authorization: "Bearer " + accessToken,
             "Content-Type": "application/json",
           },
         }
@@ -374,9 +374,10 @@ const GalleryDetails = () => {
             data,
             {
               headers: {
-                Authorization: "Bearer " + accessToken,
+                // Authorization: "Bearer " + accessToken,
                 "Content-Type": "multipart/form-data",
               },
+              withCredentials: true, 
             }
           );
           toast.success("Data Updated Successfully");
@@ -389,9 +390,10 @@ const GalleryDetails = () => {
           // Handle creation
           await instance.post("galleryDetails/create-galleryDetails", data, {
             headers: {
-              Authorization: "Bearer " + accessToken,
+              // Authorization: "Bearer " + accessToken,
               "Content-Type": "multipart/form-data",
             },
+            withCredentials: true, 
           });
           toast.success("Data Submitted Successfully");
         }
@@ -462,9 +464,10 @@ const GalleryDetails = () => {
                     `galleryDetails/isdelete-galleryDetails/${id}`,
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                     }
                   );
                   toast.success("Data Deleted Successfully");
@@ -524,9 +527,10 @@ const GalleryDetails = () => {
                     { isVisible },
                     {
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        // Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                       },
+                      withCredentials: true, 
                     }
                   );
                   toast.success(
