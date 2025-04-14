@@ -54,6 +54,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setErrors({});
  
     if (validateForm()) {
 
@@ -97,9 +99,28 @@ const Login = () => {
                 toast.error("Login failed");
             }
         } catch (error) {
-          console.log(error)
-            console.error("Error handling form submission:", error);
-            toast.error("Login failed, please enter correct email ID & password");
+            // console.log(error)
+            // console.error("Error handling form submission:", error);
+            // toast.error("Login failed, please enter correct email ID & password");
+            console.log("Login error:", error);
+            setLoading(false);
+          
+            if (error?.response?.status === 401 || error?.response?.status === 404) {
+              const errorMsg = error?.response?.data?.message || "Login failed";
+              const errorField = error?.response?.data?.errorField;
+          
+              if (errorField) {
+                setErrors((prev) => ({ ...prev, [errorField]: errorMsg }));
+              } else {
+                toast.error(errorMsg);
+              }
+          
+              // Reset only CAPTCHA
+              captchaRef.current?.reset();
+              setRecaptchaValue(null);
+            } else {
+              toast.error("Something went wrong");
+            }
         } finally {
             setLoading(false);
         }
@@ -187,7 +208,7 @@ const Login = () => {
         <Col lg={6} className="d-flex align-items-center justify-content-center">
           <Card className="shadow border-0 p-4 w-75" style={{borderRadius:'1rem'}}>
             <h3 className="text-center mb-2">Welcome back!</h3>
-            <p className="text-muted text-center">Enter your credentials to continue</p>
+            <p className="text-muted text-center">Sign in to continue your journey</p>
             <Form onSubmit={handleSubmit}>
                   <Form.Group controlId="formBasicEmail" className="mb-4">
                     <Form.Label className="d-flex align-items-center">
@@ -203,7 +224,7 @@ const Login = () => {
                       className="bg-light border-0 shadow-sm rounded-pill px-3"
                     />
                     {errors.email && (
-                      <span className="text-danger">{errors.email}</span>
+                      <span className="text-danger mx-3">{errors.email}</span>
                     )}
                   </Form.Group>
 
@@ -229,7 +250,7 @@ const Login = () => {
                       </InputGroup.Text>
                     </InputGroup>
                     {errors.password && (
-                      <span className="text-danger">{errors.password}</span>
+                      <span className="text-danger mx-3">{errors.password}</span>
                     )}
                   </Form.Group>
 

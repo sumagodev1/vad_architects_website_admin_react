@@ -548,9 +548,13 @@ const GalleryDetailsWithImages = () => {
             error.response.data.message ===
             "Gallery category already exists. Please choose another name."
           ) {
-            toast.error(
-              "A gallery category with this name already exists. Please choose another."
-            );
+            setErrors((prev) => ({
+              ...prev,
+              gallery_category: "A gallery category with this name already exists. Please choose another.",
+            }));
+            // toast.error(
+            //   "A gallery category with this name already exists. Please choose another."
+            // );
           } else {
             toast.error(error.response.data.message || "An error occurred");
           }
@@ -1027,7 +1031,35 @@ const GalleryDetailsWithImages = () => {
               ) : (
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col md={12}>
+                  <Col md={6} className="mb-2">
+                      <Form.Group controlId="galleryCategory">
+                        <Form.Label>gallery Category<span className="text-danger">*</span></Form.Label>
+                        <Form.Control
+                          as="select"
+                          value={formData.gallery_category || ""}
+                          onChange={(e) =>
+                            handleChange("gallery_category", e.target.value)
+                          }
+                          isInvalid={errors.gallery_category}
+                          disabled={editMode} 
+                          style={{ appearance: "auto", WebkitAppearance: "auto", MozAppearance: "auto" }}
+                        >
+                          <option disabled value="">
+                            Choose Category
+                          </option>
+                          {gallerycategory.map((a) => (
+                            <option key={a.id} value={a.gallery_category}>
+                              {a.gallery_category}
+                            </option>
+                          ))}
+                        </Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                          {errors.gallery_category}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={12} className="mt-2">
                       {imagePreview && imagePreview.length > 0 && (
                         <div>
                           {imagePreview.map((preview, index) => (
@@ -1087,33 +1119,6 @@ const GalleryDetailsWithImages = () => {
                             ))}
                           </div>
                         )}
-                    </Col>
-                    <Col md={6} className="mt-2">
-                      <Form.Group controlId="galleryCategory">
-                        <Form.Label>gallery Category<span className="text-danger">*</span></Form.Label>
-                        <Form.Control
-                          as="select"
-                          value={formData.gallery_category || ""}
-                          onChange={(e) =>
-                            handleChange("gallery_category", e.target.value)
-                          }
-                          isInvalid={errors.gallery_category}
-                          disabled={editMode} 
-                          style={{ appearance: "auto", WebkitAppearance: "auto", MozAppearance: "auto" }}
-                        >
-                          <option disabled value="">
-                            Choose Category
-                          </option>
-                          {gallerycategory.map((a) => (
-                            <option key={a.id} value={a.gallery_category}>
-                              {a.gallery_category}
-                            </option>
-                          ))}
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                          {errors.gallery_category}
-                        </Form.Control.Feedback>
-                      </Form.Group>
                     </Col>
 
                   </Row>

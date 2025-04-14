@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
 import instance from "../../api/AxiosInstance"; // Make sure this is your Axios instance
 import "../../App.scss";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons from react-icons
+import Swal from 'sweetalert2';
+
 
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
@@ -86,6 +88,38 @@ const ChangePassword = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {};
+
+    // Check required fields
+    if (!formData.oldPassword?.trim()) {
+      newErrors.oldPassword = "Old password is required";
+    }
+    if (!formData.newPassword?.trim()) {
+      newErrors.newPassword = "New password is required";
+    }
+    if (!formData.confirmPassword?.trim()) {
+      newErrors.confirmPassword = "Confirm password is required";
+    }
+  
+    // Set errors and stop if any
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+  
+    // Show confirmation alert
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to change your password?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, change it!",
+      cancelButtonText: "Cancel",
+    });
+  
+    if (!result.isConfirmed) return;
+    
     if (!validateForm()) return;
 
     setLoading(true);
@@ -110,7 +144,15 @@ const ChangePassword = () => {
       toast.success("Password changed successfully");
 
       // Redirect to /logout after password change
-      navigate("/logout");
+      // navigate("/logout");
+
+        // Call logout API directly
+      await instance.post("/auth/logout", {}, { withCredentials: true });
+
+      toast.success("Logged out successfully");
+
+      // Redirect to home page
+      navigate("/");
 
       // Reset form data after successful submission
       setFormData({ oldPassword: "", newPassword: "", confirmPassword: "" });

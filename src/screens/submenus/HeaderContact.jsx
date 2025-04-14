@@ -110,21 +110,25 @@ const HeaderContact = () => {
   
     // Validate Phone 1
     if (!formData.phone1?.trim()) {
-      errors.phone1 = "Phone number is required";
+      errors.phone1 = "Mobile number is required";
+      isValid = false;
+    } else if (!/^\+91\d{10}$/.test(formData.phone1)) {
+      errors.phone1 = "Mobile number must be 12 digits starting with +91";
       isValid = false;
     } else if (!indianNumberRegex.test(formData.phone1)) {
-      // else if (!indianNumberRegex.test(formData.phone1) && !usNumberRegex.test(formData.phone1)) {
-      errors.phone1 = "Phone 1 must be a valid Indian (+91) number";
-      // errors.phone1 = "Phone 1 must be a valid Indian (+91) or US (+1) number";
+      errors.phone1 = "Mobile number must start with 9, 8, 7, or 6 after +91";
       isValid = false;
     }
   
     // Validate Phone 2
     if (!formData.phone2?.trim()) {
-      errors.phone2 = "Phone number is required";
+      errors.phone2 = "Mobile number is required";
+      isValid = false;
+    } else if (!/^\+91\d{10}$/.test(formData.phone2)) {
+      errors.phone2 = "Mobile number must be 12 digits starting with +91";
       isValid = false;
     } else if (!indianNumberRegex.test(formData.phone2)) {
-      errors.phone2 = "Phone 2 must be a valid Indian (+91)";
+      errors.phone2 = "Mobile number must start with 9, 8, 7, or 6 after +91";
       isValid = false;
     }
   
@@ -163,20 +167,53 @@ const HeaderContact = () => {
   //   return isValid;
   // };
 
+  // const handleChange = (name, value) => {
+
+  //   const sanitizedValue = value.replace(/[^0-9+]/g, "");
+
+  //   // Ensure + appears only at the start
+  //   if (sanitizedValue.length > 0 && sanitizedValue[0] !== "+") {
+  //     return; // Ignore input if + is not at the start
+  //   }
+
+  //   setFormData((prevFormData) => ({ ...prevFormData, [name]: sanitizedValue }));
+  //   if (errors[name]) {
+  //     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  //   }
+  // };
+
   const handleChange = (name, value) => {
-
-    const sanitizedValue = value.replace(/[^0-9+]/g, "");
-
-    // Ensure + appears only at the start
-    if (sanitizedValue.length > 0 && sanitizedValue[0] !== "+") {
-      return; // Ignore input if + is not at the start
+    // Remove everything except digits and +
+    let sanitizedValue = value.replace(/[^0-9+]/g, "");
+  
+    // Ensure '+' is only allowed at the beginning
+    if (sanitizedValue.includes("+")) {
+      // If '+' is not at the start, remove all '+'
+      if (sanitizedValue[0] !== "+") {
+        sanitizedValue = sanitizedValue.replace(/\+/g, "");
+      } else {
+        // Keep leading +, remove any others
+        sanitizedValue = "+" + sanitizedValue.slice(1).replace(/\+/g, "");
+      }
     }
-
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: sanitizedValue }));
+  
+    // Enforce max 12 characters only
+    if (sanitizedValue.length > 13) {
+      sanitizedValue = sanitizedValue.slice(0, 13); // Trim to 13 characters
+    }
+  
+    // Final update
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: sanitizedValue,
+    }));
+  
+    // Clear errors if present
     if (errors[name]) {
       setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
     }
   };
+  
 
 
   const handleSubmit = async (e) => {
@@ -198,7 +235,7 @@ const HeaderContact = () => {
           },
           withCredentials: true,  // Correct placement of withCredentials
         });
-        toast.success("Data Updated Successfully");
+        toast.success("Mobile Number Updated Successfully");
 
 
         const updatedTeam = team.map((member) =>
@@ -284,8 +321,8 @@ const HeaderContact = () => {
                   <Row>
                     <Col md={6}>
                       <NewResuableForm
-                        label={<span>Phone 1<span className="text-danger">*</span></span>}
-                        placeholder={"Enter first phone number"}
+                        label={<span>Mobile Number 1<span className="text-danger">*</span></span>}
+                        placeholder={"Enter first mobile number"}
                         type={"text"}
                         name={"phone1"}
                         onChange={handleChange}
@@ -295,8 +332,8 @@ const HeaderContact = () => {
                     </Col>
                     <Col md={6}>
                       <NewResuableForm
-                        label={<span>Phone 2<span className="text-danger">*</span></span>}
-                        placeholder={"Enter second phone number"}
+                        label={<span>Mobile Number 2<span className="text-danger">*</span></span>}
+                        placeholder={"Enter second mobile number"}
                         type={"text"}
                         name={"phone2"}
                         onChange={handleChange}

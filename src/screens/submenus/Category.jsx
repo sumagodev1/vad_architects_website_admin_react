@@ -52,7 +52,7 @@ const Category = () => {
     },
 
     {
-      name: <CustomHeader name="Title" />,
+      name: <CustomHeader name="Project Category Name" />,
       cell: (row) => <span>{row.title}</span>,
     },
     {
@@ -169,7 +169,7 @@ const Category = () => {
     let isValid = true;
 
     if (!formData.title?.trim()) {
-      errors.title = "Title is required";
+      errors.title = "Project Category Name is required";
       isValid = false;
     }
 
@@ -516,8 +516,8 @@ const Category = () => {
                     <Col md={6}>
                       <NewResuableForm
                         // label="Title"
-                        label={<span>Title<span className="text-danger">*</span></span>}
-                        placeholder="Enter Title"
+                        label={<span>Project Category Name<span className="text-danger">*</span></span>}
+                        placeholder="Enter Project Category Name"
                         name="title"
                         type="text"
                         onChange={handleChange}

@@ -679,7 +679,20 @@ const GalleryDetails = () => {
               ) : (
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col md={12}>
+                  <Col md={6}>
+                      <NewResuableForm
+                        // label="Gallery category"
+                        label={<span>Gallery category<span className="text-danger">*</span></span>}
+                        placeholder="Enter Project Category"
+                        name="gallery_category"
+                        type="text"
+                        onChange={handleChange}
+                        initialData={formData}
+                        error={errors.gallery_category}
+                        // charLimit={1000}
+                      />
+                    </Col>
+                    <Col md={12} className="mt-2">
                       {imagePreview && (
                         <img
                           src={imagePreview}
@@ -703,19 +716,7 @@ const GalleryDetails = () => {
                         imageDimensiion="Image must be 338x220 pixels"
                       />
                     </Col>
-                    <Col md={6} className="mt-2">
-                      <NewResuableForm
-                        // label="Gallery category"
-                        label={<span>Gallery category<span className="text-danger">*</span></span>}
-                        placeholder="Enter Project Category"
-                        name="gallery_category"
-                        type="text"
-                        onChange={handleChange}
-                        initialData={formData}
-                        error={errors.gallery_category}
-                        // charLimit={1000}
-                      />
-                    </Col>
+
                   </Row>
                   <Row>
                     <div className="mt-3 d-flex justify-content-end">

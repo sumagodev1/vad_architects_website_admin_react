@@ -223,10 +223,13 @@ const ProjectDetails = () => {
     //   isValid = false;
     // }
     if (!formData.project_year_of_completion) {
-      errors.project_year_of_completion =
-        "project year of completion is required";
+      errors.project_year_of_completion = "Project year of completion is required";
+      isValid = false;
+    } else if (!/^\d{4}$/.test(formData.project_year_of_completion)) {
+      errors.project_year_of_completion = "Only 4-digit numeric year is allowed";
       isValid = false;
     }
+    
     // if (!formData.project_status?.trim()) {
     //   errors.project_status = "project status is required";
     //   isValid = false;

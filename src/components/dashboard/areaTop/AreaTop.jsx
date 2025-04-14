@@ -146,7 +146,7 @@ const AreaTop = ({ buttonValue, tableView }) => {
     }
     // new vivek
     else if (window.location.pathname == "/category") {
-      setHeader("Category");
+      setHeader("Project Category");
     }else if (window.location.pathname == "/projectName") {
       setHeader("Project Name");
     }else if (window.location.pathname == "/projectDetails") {

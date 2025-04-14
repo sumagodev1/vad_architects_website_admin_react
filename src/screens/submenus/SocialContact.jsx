@@ -134,28 +134,38 @@ const SocialContact = () => {
     }
 
     if (!formData.url?.trim()) {
-        errors.url =
-          formData.name === "Whatsapp Number"
-            ? "Mobile Number is required"
-            : "URL is required";
-        isValid = false;
+      errors.url =
+        formData.name === "Whatsapp Number"
+          ? "Mobile Number is required"
+          : formData.name === "Email"
+          ? "Enter valid email id is required"
+          : "URL is required";
+      isValid = false;
+    } else {
+      if (formData.name === "Whatsapp Number") {
+        const mobilePattern = /^[6-9]\d{9}$/;
+        if (!mobilePattern.test(formData.url)) {
+          errors.url =
+            "Mobile Number must be 10 digits and start with 9, 8, 7, or 6";
+          isValid = false;
+        }
+      } else if (formData.name === "Email") {
+        // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(formData.url)) {
+          errors.url = "Enter a valid Email Id (e.g., user@example.com)";
+          isValid = false;
+        }
       } else {
-        if (formData.name === "Whatsapp Number") {
-          // Validate exactly 10 digits for Mobile Number
-          if (!/^\d{10}$/.test(formData.url)) {
-            errors.url = "Mobile Number must be exactly 10 digits";
-            isValid = false;
-          }
-        } else {
-          // Validate URL format
-          const urlPattern =
-            /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-          if (!urlPattern.test(formData.url)) {
-            errors.url = "Enter a valid URL (e.g., https://example.com)";
-            isValid = false;
-          }
+        const urlPattern =
+          /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+        if (!urlPattern.test(formData.url)) {
+          errors.url = "Enter a valid URL (e.g., https://example.com)";
+          isValid = false;
         }
       }
+    }
+    
 
     // if (!formData.url?.trim()) {
     //     errors.url = formData.name === "Whatsapp Number" ? "Mobile Number is required" : "URL is required";
@@ -376,7 +386,7 @@ const SocialContact = () => {
                   <Row>
                     <Col md={6}>
                       <NewResuableForm
-                        label={<span>name<span className="text-danger">*</span></span>}
+                        label={<span>Name<span className="text-danger">*</span></span>}
                         placeholder={"Enter name link"}
                         type={"text"}
                         name={"name"}
@@ -390,12 +400,24 @@ const SocialContact = () => {
                         <NewResuableForm
                             label={
                             <span>
-                                {formData.name === "Whatsapp Number" ? "Mobile Number" : "Url"}
+                                {/* {formData.name === "Whatsapp Number" ? "Mobile Number" : "Url"} */}
+                                {formData.name === "Whatsapp Number"
+                                  ? "Mobile Number"
+                                  : formData.name === "Email"
+                                  ? "Email Id"
+                                  : "Url"}
                                 <span className="text-danger">*</span>
                             </span>
                             }
+                            // placeholder={
+                            // formData.name === "Whatsapp Number" ? "Enter Mobile Number" : "Enter URL"
+                            // }
                             placeholder={
-                            formData.name === "Whatsapp Number" ? "Enter Mobile Number" : "Enter URL"
+                              formData.name === "Whatsapp Number"
+                                ? "Enter Mobile Number"
+                                : formData.name === "Email"
+                                ? "Enter Email Id"
+                                : "Enter URL"
                             }
                             type={"text"}
                             name={"url"}

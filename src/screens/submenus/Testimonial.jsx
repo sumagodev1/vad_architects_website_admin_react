@@ -780,7 +780,8 @@ const Testimonial = () => {
                         label={<span>Experience<span className="text-danger">*</span></span>}
                         placeholder="Enter Experience"
                         name="experience"
-                        type="text"
+                        type="number"
+                        // type="text"
                         onChange={handleChange}
                         initialData={formData}
                         error={errors.experience}

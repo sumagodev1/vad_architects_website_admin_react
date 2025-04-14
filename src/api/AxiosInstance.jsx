@@ -90,13 +90,16 @@ const instance = axios.create({
 instance.interceptors.response.use(
   async (response) => response,
   async (error) => {
-    if (error?.response?.status === 401) {
+    const isLoginPage = window.location.pathname === '/'; // Or match your login route
+
+    if (error?.response?.status === 401 && !isLoginPage) {
       let keysToRemove = ["accessToken"];
       for (let key of keysToRemove) {
         localStorage.removeItem(key);
       }
       toast.error("Unauthorized access - please log in.");
-      window.location.href = "/"; // Redirect to login page
+      window.location.href = "/"; 
+      // Redirect to login page
     }
     //  if (error?.response?.status === 404) {
     //   toast.error("Resource not found.");
