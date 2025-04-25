@@ -413,6 +413,22 @@ const CarousalForm = () => {
       key: "mobile",
     },
     {
+      name: <CustomHeader name="Subject" />,
+      selector: (row) => row.subject,
+      key: "subject",
+      width: "300px",
+      cell: (row) => {
+        const subject = row.subject;
+        const truncatedSubject = subject.length > 40 ? subject.slice(0, 40) + "..." : subject;
+    
+        return (
+          <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+            {truncatedSubject}
+          </div>
+        );
+      },
+    },
+    {
       name: <CustomHeader name="Message" />,
       // selector: (row) => row.message,
       selector: (row) => row.message.length > 30 ? row.message.slice(0, 30) + "..." : row.message,
@@ -586,6 +602,13 @@ const CarousalForm = () => {
                     ? new Date(selectedRecord.createdAt).toLocaleDateString("en-GB").replace(/\//g, "-")
                     : "N/A"}
                     </div>
+                </div>
+              </div>
+
+              <div className="col-12 mt-2">
+                <div className="form-group">
+                  <label><strong>Subject:</strong></label>
+                  <div className="form-control-readonly">{selectedRecord.subject}</div>
                 </div>
               </div>
 

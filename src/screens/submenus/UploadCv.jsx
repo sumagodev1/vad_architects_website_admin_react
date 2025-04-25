@@ -212,28 +212,23 @@ const UploadCv = () => {
       //   </div>
       // ),
     },
-    {
-      name: <CustomHeader name="Message" />,
-      selector: (row) => row.message,
-      key: "message",
-      wrap: true, // Enables text wrapping in the column
-      width: "400px", // Adjust width as per requirement
-      cell: (row) => {
-        const message = row.message;
-        const truncatedMessage = message.length > 60 ? message.slice(0, 60) + "..." : message;
-    
-        return (
-          <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
-            {truncatedMessage}
-          </div>
-        );
-      },
-      // cell: (row) => (
-      //   <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
-      //     {row.message}
-      //   </div>
-      // ),
-    },
+    // {
+    //   name: <CustomHeader name="Message" />,
+    //   selector: (row) => row.message,
+    //   key: "message",
+    //   wrap: true, // Enables text wrapping in the column
+    //   width: "400px", // Adjust width as per requirement
+    //   cell: (row) => {
+    //     const message = row.message || ""; // Fallback to empty string if undefined/null
+    //     const truncatedMessage = message.length > 60 ? message.slice(0, 60) + "..." : message;
+      
+    //     return (
+    //       <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+    //         {truncatedMessage}
+    //       </div>
+    //     );
+    //   },      
+    // },
     {
       name: <CustomHeader name="Docs" />,
       cell: (row) => (
@@ -404,14 +399,14 @@ const UploadCv = () => {
                 </div>
               </div>
 
-              <div className="col-12 mt-2">
+              {/* <div className="col-12 mt-2">
                 <div className="form-group">
                   <label><strong>Message:</strong></label>
                   <div className="form-control-readonly message-textarea">
                     {selectedRecord.message}
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="col-12 mt-2">
                 <div className="form-group">
