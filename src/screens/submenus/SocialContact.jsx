@@ -137,9 +137,9 @@ const SocialContact = () => {
       errors.url =
         formData.name === "Whatsapp Number"
           ? "Mobile Number is required"
-          : formData.name === "Email"
+          : formData.name === "Email Id"
           ? "Enter valid email id is required"
-          : "URL is required";
+          : "Enter valid URL is required";
       isValid = false;
     } else {
       if (formData.name === "Whatsapp Number") {
@@ -149,7 +149,7 @@ const SocialContact = () => {
             "Mobile Number must be 10 digits and start with 9, 8, 7, or 6";
           isValid = false;
         }
-      } else if (formData.name === "Email") {
+      } else if (formData.name === "Email Id") {
         // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailPattern.test(formData.url)) {
@@ -403,7 +403,7 @@ const SocialContact = () => {
                                 {/* {formData.name === "Whatsapp Number" ? "Mobile Number" : "Url"} */}
                                 {formData.name === "Whatsapp Number"
                                   ? "Mobile Number"
-                                  : formData.name === "Email"
+                                  : formData.name === "Email Id"
                                   ? "Email Id"
                                   : "Url"}
                                 <span className="text-danger">*</span>

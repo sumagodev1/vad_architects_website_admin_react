@@ -418,7 +418,7 @@ const CarousalForm = () => {
       key: "subject",
       width: "300px",
       cell: (row) => {
-        const subject = row.subject;
+        const subject = row.subject || "";
         const truncatedSubject = subject.length > 40 ? subject.slice(0, 40) + "..." : subject;
     
         return (
@@ -431,13 +431,16 @@ const CarousalForm = () => {
     {
       name: <CustomHeader name="Message" />,
       // selector: (row) => row.message,
-      selector: (row) => row.message.length > 30 ? row.message.slice(0, 30) + "..." : row.message,
-      key: "message",
-      grow: 3, // Assign even more space for the "Message" column
-      style: {
-        whiteSpace: "normal", // Enable text wrapping
-        wordWrap: "break-word", // Break long words to prevent overflow
-      },
+      cell: (row) => {
+        const message = row.message || ""; // Fallback to empty string if undefined/null
+        const truncatedMessage = message.length > 60 ? message.slice(0, 60) + "..." : message;
+      
+        return (
+          <div style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+            {truncatedMessage}
+          </div>
+        );
+      },      
     },
     {
       name: <CustomHeader name="Date" />,

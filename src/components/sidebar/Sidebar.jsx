@@ -330,7 +330,7 @@ const Sidebar = () => {
         <div className="sidebar-brand">
           <img className="w-25" src={logo} alt="Logo" />
           <span className="sidebar-brand-text">
-            VAD Architechts
+            VAD Architects
           </span>
         </div>
         <Button

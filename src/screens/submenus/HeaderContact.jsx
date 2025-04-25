@@ -110,25 +110,25 @@ const HeaderContact = () => {
   
     // Validate Phone 1
     if (!formData.phone1?.trim()) {
-      errors.phone1 = "Mobile number is required";
+      errors.phone1 = "Mobile number 1 is required";
       isValid = false;
     } else if (!/^\+91\d{10}$/.test(formData.phone1)) {
-      errors.phone1 = "Mobile number must be 12 digits starting with +91";
+      errors.phone1 = "Mobile 1 number must be 12 digits starting with +91";
       isValid = false;
     } else if (!indianNumberRegex.test(formData.phone1)) {
-      errors.phone1 = "Mobile number must start with 9, 8, 7, or 6 after +91";
+      errors.phone1 = "Mobile 1 number must start with 9, 8, 7, or 6 after +91";
       isValid = false;
     }
   
     // Validate Phone 2
     if (!formData.phone2?.trim()) {
-      errors.phone2 = "Mobile number is required";
+      errors.phone2 = "Mobile number 2 is required";
       isValid = false;
     } else if (!/^\+91\d{10}$/.test(formData.phone2)) {
-      errors.phone2 = "Mobile number must be 12 digits starting with +91";
+      errors.phone2 = "Mobile number 2 must be 12 digits starting with +91";
       isValid = false;
     } else if (!indianNumberRegex.test(formData.phone2)) {
-      errors.phone2 = "Mobile number must start with 9, 8, 7, or 6 after +91";
+      errors.phone2 = "Mobile number 2 must start with 9, 8, 7, or 6 after +91";
       isValid = false;
     }
   

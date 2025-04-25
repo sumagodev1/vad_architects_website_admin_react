@@ -24,6 +24,7 @@ import { ThreeDots } from "react-loader-spinner";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import "../../App.scss";
 import axios from "axios";
+import ReactSwitch from 'react-switch';
 const ProjectDetails = () => {
   // const {  setData, filteredData } =
   //   useSearchExport();
@@ -42,6 +43,7 @@ const ProjectDetails = () => {
   const [projectcategory, setProjectcategory] = useState([]);
   const [projectname, setProjectname] = useState([]);
   const [filteredProjectNames, setFilteredProjectNames] = useState([]);
+  // const [project, setProject] = useState([]);
 
   const [loading, setLoading] = useState(false);
   const CustomHeader = ({ name }) => (
@@ -75,6 +77,19 @@ const ProjectDetails = () => {
           src={row.img}
           alt="ProjectDetails"
           style={{ width: "100px", height: "auto" }}
+        />
+      ),
+    },
+    {
+      name: <CustomHeader name="Show on Home Page" />,
+      cell: (row) => (
+        <ReactSwitch
+          checked={row.is_feature_project}
+          onChange={() => handleFeatureToggle(row.id, !row.is_feature_project)} // Toggle on/off
+          offColor="#888"
+          onColor="#4CAF50"
+          uncheckedIcon={false}
+          checkedIcon={false}
         />
       ),
     },
@@ -130,6 +145,51 @@ const ProjectDetails = () => {
       ),
     },
   ];
+
+      const handleFeatureToggle = async (id, status) => {
+        try {
+          const data = { is_feature_project: status };
+      
+          const accessToken = localStorage.getItem("accessToken"); // Retrieve access token if required
+      
+          const response = await instance.put(`projectDetails/feature-project/${id}`, data, {
+            headers: {
+              "Content-Type": "application/json",
+              // Authorization: "Bearer " + accessToken,
+            },
+            withCredentials: true, 
+          });
+      
+          // Check if the API response indicates success
+          if (response.data.result) {
+            toast.success(response.data.message); // Show success message
+      
+            // Update the local table state with the new testimonial data
+            const updatedProject = response.data.responseData;
+      
+            setTeam((prevProjects) =>
+              prevProjects.map((project) =>
+                project.id === id
+                  ? { ...project, is_feature_project: updatedProject.is_feature_project }
+                  : project
+              )
+            );
+          } else {
+            // Handle error: Display the error message from backend
+            toast.error(response.data.message || "Failed to update feature status.");
+          }
+        } catch (error) {
+          console.error("Error toggling feature status:", error);
+      
+          // Check if it's a validation error
+          if (error.response && error.response.data) {
+            const errorMessage = error.response.data.message || "Error toggling feature status.";
+            toast.error(errorMessage); // Show backend validation error message
+          } else {
+            toast.error("Error toggling feature status.");
+          }
+        }
+      };
 
   useEffect(() => {
     fetchTeam();
@@ -891,11 +951,15 @@ useEffect(() => {
                           as="textarea"
                           name="project_info"
                           value={formData.project_info || ""}
+                          maxLength={31}
                           onChange={(e) =>
                             handleChange("project_info", e.target.value)
                           }
                           isInvalid={errors.project_info}
                         />
+                        <Form.Text className="text-muted">
+                          {(formData.project_info?.length || 0)}/31
+                        </Form.Text>
                         <Form.Control.Feedback type="invalid">
                           {errors.project_info}
                         </Form.Control.Feedback>

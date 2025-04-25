@@ -207,17 +207,17 @@ const Login = () => {
         </Col>
         <Col lg={6} className="d-flex align-items-center justify-content-center">
           <Card className="shadow border-0 p-4 w-75" style={{borderRadius:'1rem'}}>
-            <h3 className="text-center mb-2">Welcome back!</h3>
-            <p className="text-muted text-center">Sign in to continue your journey</p>
+            <h3 className="text-center mb-2">Welcome Back!</h3>
+            <p className="text-muted text-center">Sign In To Continue Your Journey</p>
             <Form onSubmit={handleSubmit}>
                   <Form.Group controlId="formBasicEmail" className="mb-4">
                     <Form.Label className="d-flex align-items-center">
                       <FaUser className="me-2 text-secondary" />
-                      Email id
+                      Email Id
                     </Form.Label>
                     <Form.Control
                       type="email"
-                      placeholder="Enter email id"
+                      placeholder="Enter Email Id"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required

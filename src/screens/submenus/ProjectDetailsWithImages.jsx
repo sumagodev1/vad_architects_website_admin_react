@@ -378,6 +378,20 @@ const ProjectDetailsWithImages = () => {
         isValid = false;
       }
     }
+
+    if (!isEditMode || (formData.hero_img && !(formData.hero_img instanceof File) && Array.isArray(formData.hero_img) && formData.hero_img.length > 0)) {
+      if (Array.isArray(formData.hero_img) && formData.hero_img.length > 0) {
+        formData.hero_img.forEach((file) => {
+          if (!validateHeroImage(file)) {
+            errors.hero_img = `Hero image ${file.name} must be less than 2MB`;
+            isValid = false;
+          }
+        });
+      } else if (!(formData.hero_img instanceof File)) {
+        errors.hero_img = "Hero image is required";
+        isValid = false;
+      }
+    }
     
 
     if (!formData.project_category?.trim()) {
@@ -503,6 +517,33 @@ const ProjectDetailsWithImages = () => {
     const maxSize = 2 * 1024 * 1024; // 2MB in bytes
     return file.size <= maxSize; // Returns true if file size is within limit
   };
+
+  const validateHeroImage = (file) => {
+    return new Promise((resolve, reject) => {
+      const maxSize = 2 * 1024 * 1024; // 2MB
+  
+      if (file.size > maxSize) {
+        return reject("File size must be less than or equal to 2MB.");
+      }
+  
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          if (img.width === 1425 && img.height === 507) {
+            resolve(true);
+          } else {
+            reject("Image dimensions must be 1425x507 pixels.");
+          }
+        };
+        img.onerror = () => reject("Invalid image file.");
+        img.src = event.target.result;
+      };
+      reader.onerror = () => reject("Failed to read the file.");
+      reader.readAsDataURL(file);
+    });
+  };
+  
 
   //   const handleChange = async (name, value) => {
   //     if (name === "img" && value instanceof File) {
@@ -833,6 +874,10 @@ useEffect(() => {
 
     if (formData.after_img instanceof File) {
       data.append("after_img", formData.after_img);
+    }
+
+    if (formData.hero_img instanceof File) {
+      data.append("hero_img", formData.hero_img);
     }
 
     if (formData.client_img instanceof File) {
@@ -1200,6 +1245,8 @@ useEffect(() => {
 
   const [clientImagePreview, setClientImagePreview] = useState("");
 
+  const [heroImagePreview, setHeroImagePreview] = useState("");
+
   const handleImageChange2 = async (e, field) => {
   const file = e.target.files[0];
 
@@ -1217,6 +1264,7 @@ useEffect(() => {
         if (field === "planning_img") setPlanningImagePreview(reader.result);
         if (field === "after_img") setAfterImagePreview(reader.result);
         if (field === "client_img") setClientImagePreview(reader.result);
+        if (field === "hero_img") setHeroImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
     } catch (error) {
@@ -1238,7 +1286,10 @@ useEffect(() => {
   if (formData.client_img && typeof formData.client_img === "string") {
     setClientImagePreview(`${baseURL}${formData.client_img}`);
   }
-}, [formData.before_img, formData.planning_img, formData.after_img, formData.client_img]);
+  if (formData.hero_img && typeof formData.hero_img === "string") {
+    setHeroImagePreview(`${baseURL}${formData.hero_img}`);
+  }
+}, [formData.before_img, formData.planning_img, formData.after_img, formData.client_img, formData.hero_img]);
 
 useEffect(() => {
   if (!editMode) {
@@ -1246,6 +1297,7 @@ useEffect(() => {
     setPlanningImagePreview("");
     setAfterImagePreview("");
     setClientImagePreview("");
+    setHeroImagePreview("");
   }
 }, [editMode]);
 
@@ -1734,12 +1786,29 @@ useEffect(() => {
                       </Form.Group>
                     </Col>
 
+                    <Col md={6} className="mt-3">
+                    <h5 className="mt-2 mb-4"><span className="number">5</span> Upload Project Hero Image</h5>
+                      <Form.Group controlId="hero_img">
+                        <Form.Label>Upload Hero Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB and 1425*507 pixels)</small></Form.Label>
+                        <Form.Control
+                          type="file"
+                          name="hero_img"
+                          onChange={(e) => handleImageChange2(e, "hero_img")}
+                          isInvalid={errors.hero_img}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.hero_img}
+                        </Form.Control.Feedback>
+                        {heroImagePreview && <img src={heroImagePreview} alt="Hero Project" style={{ width: "100px", height: "auto", marginTop: "10px" }} />}
+                      </Form.Group>
+                    </Col>
+
                   </Row>
 
                   <hr></hr>
 
                   <Row>
-                  <h5 className="mt-2 mb-4"><span className="number">5</span> Testimonial</h5>
+                  <h5 className="mt-2 mb-4"><span className="number">6</span> Testimonial</h5>
                     {/* <h5 className="text-center">Testimonial</h5> */}
 
                     <Col md={6} className="mt-2">
