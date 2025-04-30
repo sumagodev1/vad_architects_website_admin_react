@@ -382,7 +382,7 @@ const ProjectDetailsWithImages = () => {
     if (!isEditMode || (formData.hero_img && !(formData.hero_img instanceof File) && Array.isArray(formData.hero_img) && formData.hero_img.length > 0)) {
       if (Array.isArray(formData.hero_img) && formData.hero_img.length > 0) {
         formData.hero_img.forEach((file) => {
-          if (!validateHeroImage(file)) {
+          if (!validateImageSize(file)) {
             errors.hero_img = `Hero image ${file.name} must be less than 2MB`;
             isValid = false;
           }
@@ -1509,7 +1509,7 @@ useEffect(() => {
                           //   handleChange("before_description", e.target.value)
                           // }
                           onChange={(e) => {
-                            if (e.target.value.length <= 200) {
+                            if (e.target.value.length <= 551) {
                               handleChange("before_description", e.target.value);
                             }
                           }}
@@ -1537,7 +1537,7 @@ useEffect(() => {
                           //   handleChange("planning_description", e.target.value)
                           // }
                           onChange={(e) => {
-                            if (e.target.value.length <= 200) {
+                            if (e.target.value.length <= 551) {
                               handleChange("planning_description", e.target.value);
                             }
                           }}
@@ -1741,7 +1741,7 @@ useEffect(() => {
                           //   handleChange("after_description", e.target.value)
                           // }
                           onChange={(e) => {
-                            if (e.target.value.length <= 200) {
+                            if (e.target.value.length <= 551) {
                               handleChange("after_description", e.target.value);
                             }
                           }}
@@ -1789,7 +1789,7 @@ useEffect(() => {
                     <Col md={6} className="mt-3">
                     <h5 className="mt-2 mb-4"><span className="number">5</span> Upload Project Hero Image</h5>
                       <Form.Group controlId="hero_img">
-                        <Form.Label>Upload Hero Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB and 1425*507 pixels)</small></Form.Label>
+                        <Form.Label>Upload Hero Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
                         <Form.Control
                           type="file"
                           name="hero_img"
