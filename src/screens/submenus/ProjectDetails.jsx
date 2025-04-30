@@ -254,13 +254,13 @@ const ProjectDetails = () => {
     let isValid = true;
 
     if (!formData.img) {
-      errors.img = "Image is not 338x220 pixels";
+      errors.img = "Image is not 836x1022 pixels";
       isValid = false;
     } else if (
       formData.img instanceof File &&
       !validateImageSize(formData.img)
     ) {
-      errors.img = "Image is required with 338x220 pixels";
+      errors.img = "Image is required with 836x1022 pixels";
       isValid = false;
     }
     if (!formData.project_category?.trim()) {
@@ -307,10 +307,10 @@ const ProjectDetails = () => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
-        if (img.width === 338 && img.height === 220) {
+        if (img.width === 836 && img.height === 1022) {
           resolve();
         } else {
-          reject("Image is required with 338x220 pixels");
+          reject("Image is required with 836x1022 pixels");
         }
       };
       img.onerror = () => reject("Error loading image");
@@ -987,7 +987,7 @@ useEffect(() => {
                         onChange={handleChange}
                         initialData={formData}
                         error={errors.img}
-                        imageDimensiion="Image must be 338x220 pixels"
+                        imageDimensiion="Image must be 836x1022 pixels"
                       />
                     </Col>
                   </Row>
