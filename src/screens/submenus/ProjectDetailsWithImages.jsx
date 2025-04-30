@@ -1513,7 +1513,7 @@ useEffect(() => {
                               handleChange("before_description", e.target.value);
                             }
                           }}
-                          maxLength={200}
+                          maxLength={551}
                           style={{ height: "120px" }}
                           isInvalid={errors.before_description}
                         />
@@ -1521,7 +1521,7 @@ useEffect(() => {
                           {errors.before_description}
                         </Form.Control.Feedback>
                         <div className="text-muted text-end">
-                          {formData.before_description?.length || 0}/200
+                          {formData.before_description?.length || 0}/551
                         </div>
                       </Form.Group>
                     </Col>
@@ -1541,7 +1541,7 @@ useEffect(() => {
                               handleChange("planning_description", e.target.value);
                             }
                           }}
-                          maxLength={200}
+                          maxLength={551}
                           style={{ height: "120px" }}
                           isInvalid={errors.planning_description}
                         />
@@ -1549,7 +1549,7 @@ useEffect(() => {
                           {errors.planning_description}
                         </Form.Control.Feedback>
                         <div className="text-muted text-end">
-                          {formData.planning_description?.length || 0}/200
+                          {formData.planning_description?.length || 0}/551
                         </div>
                       </Form.Group>
                     </Col>
@@ -1745,7 +1745,7 @@ useEffect(() => {
                               handleChange("after_description", e.target.value);
                             }
                           }}
-                          maxLength={200}
+                          maxLength={551}
                           style={{ height: "120px" }}
                           isInvalid={errors.after_description}
                         />
@@ -1753,7 +1753,7 @@ useEffect(() => {
                           {errors.after_description}
                         </Form.Control.Feedback>
                         <div className="text-muted text-end">
-                          {formData.after_description?.length || 0}/200
+                          {formData.after_description?.length || 0}/551
                         </div>
                       </Form.Group>
                     </Col>
@@ -1773,7 +1773,7 @@ useEffect(() => {
                               handleChange("detailed_description", e.target.value);
                             }
                           }}
-                          maxLength={200}
+                          maxLength={600}
                           style={{ height: "120px" }}
                           isInvalid={errors.detailed_description}
                         />
@@ -1781,7 +1781,7 @@ useEffect(() => {
                           {errors.detailed_description}
                         </Form.Control.Feedback>
                         <div className="text-muted text-end">
-                          {formData.detailed_description?.length || 0}/200
+                          {formData.detailed_description?.length || 0}/600
                         </div>
                       </Form.Group>
                     </Col>

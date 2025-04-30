@@ -55,57 +55,137 @@ const Category = () => {
       name: <CustomHeader name="Project Category Name" />,
       cell: (row) => <span>{row.title}</span>,
     },
+    // {
+    //   name: <CustomHeader name="Actions" />,
+    //   cell: (row) => (
+    //     <div className="d-flex">
+    //       <OverlayTrigger
+    //         placement="top"
+    //         overlay={<Tooltip id="edit-tooltip">Edit</Tooltip>}
+    //       >
+    //         <Button className="ms-1" onClick={() => toggleEdit(row.id)}>
+    //           <FaEdit />
+    //         </Button>
+    //       </OverlayTrigger>
+    //       <OverlayTrigger
+    //         placement="top"
+    //         overlay={<Tooltip id="delete-tooltip">Delete</Tooltip>}
+    //       >
+    //         <Button
+    //           className="ms-1"
+    //           style={{
+    //             backgroundColor: "red",
+    //             color: "white",
+    //             borderColor: "red",
+    //           }}
+    //           onClick={() => handleDelete(row.id)}
+    //         >
+    //           <FaTrash />
+    //         </Button>
+    //       </OverlayTrigger>
+    //       <OverlayTrigger
+    //         placement="top"
+    //         overlay={
+    //           <Tooltip id="visibility-tooltip">
+    //             {eyeVisibilityById[row.id] ? "Hide" : "Show"}
+    //           </Tooltip>
+    //         }
+    //       >
+    //         <Button
+    //           className="ms-1"
+    //           style={{
+    //             backgroundColor: eyeVisibilityById[row.id] ? "red" : "green",
+    //             borderColor: eyeVisibilityById[row.id] ? "red" : "green",
+    //             color: "white",
+    //           }}
+    //           onClick={() => handleIsActive(row.id, !eyeVisibilityById[row.id])}
+    //         >
+    //           {eyeVisibilityById[row.id] ? <FaEyeSlash /> : <FaEye />}
+    //         </Button>
+    //       </OverlayTrigger>
+    //     </div>
+    //   ),
+    // },
     {
       name: <CustomHeader name="Actions" />,
-      cell: (row) => (
-        <div className="d-flex">
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip id="edit-tooltip">Edit</Tooltip>}
-          >
-            <Button className="ms-1" onClick={() => toggleEdit(row.id)}>
-              <FaEdit />
-            </Button>
-          </OverlayTrigger>
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip id="delete-tooltip">Delete</Tooltip>}
-          >
-            <Button
-              className="ms-1"
-              style={{
-                backgroundColor: "red",
-                color: "white",
-                borderColor: "red",
-              }}
-              onClick={() => handleDelete(row.id)}
+      cell: (row, index) => {
+        const isFirstCategory = index === 0;
+    
+        return (
+          <div className="d-flex">
+            {/* Edit Button */}
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip id="edit-tooltip">Edit</Tooltip>}
             >
-              <FaTrash />
-            </Button>
-          </OverlayTrigger>
-          <OverlayTrigger
-            placement="top"
-            overlay={
-              <Tooltip id="visibility-tooltip">
-                {eyeVisibilityById[row.id] ? "Hide" : "Show"}
-              </Tooltip>
-            }
-          >
-            <Button
-              className="ms-1"
-              style={{
-                backgroundColor: eyeVisibilityById[row.id] ? "red" : "green",
-                borderColor: eyeVisibilityById[row.id] ? "red" : "green",
-                color: "white",
-              }}
-              onClick={() => handleIsActive(row.id, !eyeVisibilityById[row.id])}
+              <span>
+                <Button
+                  className="ms-1"
+                  onClick={() => toggleEdit(row.id)}
+                  disabled={isFirstCategory}
+                  style={isFirstCategory ? { cursor: "not-allowed", opacity: 0.5 } : {}}
+                >
+                  <FaEdit />
+                </Button>
+              </span>
+            </OverlayTrigger>
+    
+            {/* Delete Button */}
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip id="delete-tooltip">Delete</Tooltip>}
             >
-              {eyeVisibilityById[row.id] ? <FaEyeSlash /> : <FaEye />}
-            </Button>
-          </OverlayTrigger>
-        </div>
-      ),
-    },
+              <span>
+                <Button
+                  className="ms-1"
+                  style={{
+                    backgroundColor: "red",
+                    color: "white",
+                    borderColor: "red",
+                    cursor: isFirstCategory ? "not-allowed" : "pointer",
+                    opacity: isFirstCategory ? 0.5 : 1,
+                  }}
+                  onClick={() => !isFirstCategory && handleDelete(row.id)}
+                  disabled={isFirstCategory}
+                >
+                  <FaTrash />
+                </Button>
+              </span>
+            </OverlayTrigger>
+    
+            {/* Visibility Toggle Button */}
+            <OverlayTrigger
+              placement="top"
+              overlay={
+                <Tooltip id="visibility-tooltip">
+                  {eyeVisibilityById[row.id] ? "Hide" : "Show"}
+                </Tooltip>
+              }
+            >
+              <span>
+                <Button
+                  className="ms-1"
+                  style={{
+                    backgroundColor: eyeVisibilityById[row.id] ? "red" : "green",
+                    borderColor: eyeVisibilityById[row.id] ? "red" : "green",
+                    color: "white",
+                    cursor: isFirstCategory ? "not-allowed" : "pointer",
+                    opacity: isFirstCategory ? 0.5 : 1,
+                  }}
+                  onClick={() =>
+                    !isFirstCategory && handleIsActive(row.id, !eyeVisibilityById[row.id])
+                  }
+                  disabled={isFirstCategory}
+                >
+                  {eyeVisibilityById[row.id] ? <FaEyeSlash /> : <FaEye />}
+                </Button>
+              </span>
+            </OverlayTrigger>
+          </div>
+        );
+      },
+    }
+    
   ];
 
   useEffect(() => {
