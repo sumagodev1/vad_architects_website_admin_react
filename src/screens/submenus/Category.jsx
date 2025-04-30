@@ -108,8 +108,8 @@ const Category = () => {
     // },
     {
       name: <CustomHeader name="Actions" />,
-      cell: (row, index) => {
-        const isFirstCategory = index === 0;
+      cell: (row) => {
+        const isRestrictedCategory = row.id === 1;
     
         return (
           <div className="d-flex">
@@ -122,8 +122,8 @@ const Category = () => {
                 <Button
                   className="ms-1"
                   onClick={() => toggleEdit(row.id)}
-                  disabled={isFirstCategory}
-                  style={isFirstCategory ? { cursor: "not-allowed", opacity: 0.5 } : {}}
+                  disabled={isRestrictedCategory}
+                  style={isRestrictedCategory ? { cursor: "not-allowed", opacity: 0.5 } : {}}
                 >
                   <FaEdit />
                 </Button>
@@ -142,11 +142,11 @@ const Category = () => {
                     backgroundColor: "red",
                     color: "white",
                     borderColor: "red",
-                    cursor: isFirstCategory ? "not-allowed" : "pointer",
-                    opacity: isFirstCategory ? 0.5 : 1,
+                    cursor: isRestrictedCategory ? "not-allowed" : "pointer",
+                    opacity: isRestrictedCategory ? 0.5 : 1,
                   }}
-                  onClick={() => !isFirstCategory && handleDelete(row.id)}
-                  disabled={isFirstCategory}
+                  onClick={() => !isRestrictedCategory && handleDelete(row.id)}
+                  disabled={isRestrictedCategory}
                 >
                   <FaTrash />
                 </Button>
@@ -169,13 +169,13 @@ const Category = () => {
                     backgroundColor: eyeVisibilityById[row.id] ? "red" : "green",
                     borderColor: eyeVisibilityById[row.id] ? "red" : "green",
                     color: "white",
-                    cursor: isFirstCategory ? "not-allowed" : "pointer",
-                    opacity: isFirstCategory ? 0.5 : 1,
+                    cursor: isRestrictedCategory ? "not-allowed" : "pointer",
+                    opacity: isRestrictedCategory ? 0.5 : 1,
                   }}
                   onClick={() =>
-                    !isFirstCategory && handleIsActive(row.id, !eyeVisibilityById[row.id])
+                    !isRestrictedCategory && handleIsActive(row.id, !eyeVisibilityById[row.id])
                   }
-                  disabled={isFirstCategory}
+                  disabled={isRestrictedCategory}
                 >
                   {eyeVisibilityById[row.id] ? <FaEyeSlash /> : <FaEye />}
                 </Button>
