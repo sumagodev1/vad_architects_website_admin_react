@@ -183,10 +183,10 @@ const OurTeam = () => {
     let isValid = true;
 
     if (!formData.img) {
-      errors.img = "Image is required with 443x435 pixels";
+      errors.img = "Image is required with 678x650 pixels";
       isValid = false;
     } else if (formData.img instanceof File && !validateImageSize(formData.img)) {
-      errors.img = "Image is not 443x435 pixels";
+      errors.img = "Image is not 678x650 pixels";
       isValid = false;
     }
 
@@ -225,10 +225,10 @@ const OurTeam = () => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
-        if (img.width === 443 && img.height === 435) {
+        if (img.width === 678 && img.height === 650) {
           resolve();
         } else {
-          reject("Image must be 443x435 pixels");
+          reject("Image must be 678x650 pixels");
         }
       };
       img.onerror = () => reject("Error loading image");
@@ -584,7 +584,7 @@ const OurTeam = () => {
                       onChange={handleChange}
                       initialData={formData}
                       error={errors.img}
-                      imageDimensiion="Image must be 443*435 pixels" 
+                      imageDimensiion="Image must be 678*650 pixels" 
                     />
                     </Col>
                     <Col md={6} className="mt-2">
