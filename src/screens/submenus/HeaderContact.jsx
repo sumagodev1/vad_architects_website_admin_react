@@ -46,11 +46,11 @@ const HeaderContact = () => {
       selector: (row, index) => (currentPage - 1) * rowsPerPage + index + 1,
     },
     {
-      name: <CustomHeader name="Phone Number 1" />,
+      name: <CustomHeader name="Mobile Number 1" />,
       cell: (row) => <span>{row.phone1}</span>,
     },
     {
-      name: <CustomHeader name="Phone Number 2" />,
+      name: <CustomHeader name="Mobile Number 2" />,
       cell: (row) => <span>{row.phone2}</span>,
     },
     {
