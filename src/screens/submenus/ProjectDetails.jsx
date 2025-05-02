@@ -505,7 +505,7 @@ useEffect(() => {
               withCredentials: true, 
             }
           );
-          toast.success("Data Updated Successfully");
+          toast.success("Project Details Updated Successfully");
           const updatedTeam = team.map((member) =>
             member.id === editingId ? formData : member
           );
@@ -518,7 +518,7 @@ useEffect(() => {
             },
             withCredentials: true, 
           });
-          toast.success("Data Submitted Successfully");
+          toast.success("Project Details Submitted Successfully");
         }
         fetchTeam();
 
@@ -587,7 +587,7 @@ useEffect(() => {
                       withCredentials: true, 
                     }
                   );
-                  toast.success("Data Deleted Successfully");
+                  toast.success("Project Details Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);
@@ -654,7 +654,7 @@ useEffect(() => {
                     }
                   );
                   toast.success(
-                    `Data ${isVisible ? "hidden" : "shown"} successfully`
+                    `Project Details ${isVisible ? "hidden" : "shown"} successfully`
                   );
                   setEyeVisibilityById((prev) => ({
                     ...prev,

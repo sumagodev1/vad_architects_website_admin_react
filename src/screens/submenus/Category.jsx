@@ -281,7 +281,7 @@ const Category = () => {
             },
             withCredentials: true, 
           });
-          toast.success("Data Updated Successfully");
+          toast.success("Project Category Updated Successfully");
           const updatedTeam = team.map((member) =>
             member.id === editingId ? formData : member
           );
@@ -294,7 +294,7 @@ const Category = () => {
             },
             withCredentials: true, 
           });
-          toast.success("Data Submitted Successfully");
+          toast.success("Project Category Submitted Successfully");
         }
         fetchTeam();
 
@@ -381,7 +381,7 @@ const Category = () => {
                     },
                     withCredentials: true, 
                   });
-                  toast.success("Data Deleted Successfully");
+                  toast.success("Project Category Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);
@@ -448,7 +448,7 @@ const Category = () => {
                     }
                   );
                   toast.success(
-                    `Data ${isVisible ? "hidden" : "shown"} successfully`
+                    `Project Category ${isVisible ? "hidden" : "shown"} successfully`
                   );
                   setEyeVisibilityById((prev) => ({
                     ...prev,

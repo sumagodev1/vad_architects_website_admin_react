@@ -910,7 +910,7 @@ useEffect(() => {
               withCredentials: true, 
             }
           );
-          toast.success("Data Updated Successfully");
+          toast.success("Project Details With Images Updated Successfully");
         } else {
           await instance.post(
             "projectDetailsWithImages/create-projectDetailsWithImages",
@@ -923,7 +923,7 @@ useEffect(() => {
               withCredentials: true, 
             }
           );
-          toast.success("Data Added Successfully");
+          toast.success("Project Details With Images Added Successfully");
         }
 
         fetchTeam();
@@ -1000,7 +1000,7 @@ useEffect(() => {
                       withCredentials: true, 
                     }
                   );
-                  toast.success("Data Deleted Successfully");
+                  toast.success("Project Details With Images Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);
@@ -1068,7 +1068,7 @@ useEffect(() => {
                       data: { imagePath: imagePath }, // Sending imagePath in the request body
                     }
                   );
-                  toast.success("Image Deleted Successfully");
+                  toast.success("Project Details Image Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);
@@ -1132,7 +1132,7 @@ useEffect(() => {
                     }
                   );
                   toast.success(
-                    `Data ${isVisible ? "hidden" : "shown"} successfully`
+                    `Project Details With Images ${isVisible ? "hidden" : "shown"} successfully`
                   );
                   setEyeVisibilityById((prev) => ({
                     ...prev,

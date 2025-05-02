@@ -436,7 +436,7 @@ const Testimonial = () => {
             },
             withCredentials: true,
           });
-          toast.success("Data Updated Successfully");
+          toast.success("Testimonial Updated Successfully");
           const updatedTeam = testimonial.map((member) =>
             member.id === editingId ? adjustedFormData : member
           );
@@ -449,7 +449,7 @@ const Testimonial = () => {
             },
             withCredentials: true,
           });
-          toast.success("Data Submitted Successfully");
+          toast.success("Testimonial Submitted Successfully");
         }
         fetchTeam();
   
@@ -504,7 +504,7 @@ const Testimonial = () => {
                     },
                     withCredentials: true,
                   });
-                  toast.success("Data Deleted Successfully");
+                  toast.success("Testimonial Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);
@@ -572,7 +572,7 @@ const Testimonial = () => {
                     
                   );
                   toast.success(
-                    `Data ${isVisible ? "hidden" : "shown"} successfully`
+                    `Testimonial ${isVisible ? "hidden" : "shown"} successfully`
                   );
                   setEyeVisibilityById((prev) => ({
                     ...prev,

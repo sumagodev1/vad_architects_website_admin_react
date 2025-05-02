@@ -361,7 +361,7 @@ const CarousalForm = () => {
                     },
                     withCredentials: true, 
                   });
-                  toast.success("Data Deleted Successfully");
+                  toast.success("Contact Deleted Successfully");
                   fetchTeam(currentPage, rowsPerPage);
                 } catch (error) {
                   console.error("Error deleting data:", error);

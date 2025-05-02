@@ -232,7 +232,8 @@ const SocialContact = () => {
           },
           withCredentials: true, 
         });
-        toast.success("Data Updated Successfully");
+        // toast.success("Data Updated Successfully");
+        toast.success("Social Contacts Successfully");
 
 
         const updatedTeam = team.map((member) =>
@@ -296,7 +297,7 @@ const SocialContact = () => {
                       }
                     );
                     toast.success(
-                      `Data ${isVisible ? "hidden" : "shown"} successfully`
+                      `Social Contacts ${isVisible ? "hidden" : "shown"} successfully`
                     );
                     setEyeVisibilityById((prev) => ({
                       ...prev,

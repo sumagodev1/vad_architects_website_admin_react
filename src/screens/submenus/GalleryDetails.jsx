@@ -380,7 +380,7 @@ const GalleryDetails = () => {
               withCredentials: true, 
             }
           );
-          toast.success("Data Updated Successfully");
+          toast.success("Gallery Details Updated Successfully");
   
           const updatedTeam = team.map((member) =>
             member.id === editingId ? formData : member
@@ -395,7 +395,7 @@ const GalleryDetails = () => {
             },
             withCredentials: true, 
           });
-          toast.success("Data Submitted Successfully");
+          toast.success("Gallery Details Submitted Successfully");
         }
   
         fetchTeam();
@@ -470,7 +470,7 @@ const GalleryDetails = () => {
                       withCredentials: true, 
                     }
                   );
-                  toast.success("Data Deleted Successfully");
+                  toast.success("Gallery Details Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);
@@ -534,7 +534,7 @@ const GalleryDetails = () => {
                     }
                   );
                   toast.success(
-                    `Data ${isVisible ? "hidden" : "shown"} successfully`
+                    `Gallery Details ${isVisible ? "hidden" : "shown"} successfully`
                   );
                   setEyeVisibilityById((prev) => ({
                     ...prev,

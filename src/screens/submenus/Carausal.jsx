@@ -330,7 +330,7 @@ const Carousal = () => {
             },
             withCredentials: true,
           });
-          toast.success("Data Updated Successfully");
+          toast.success("Home Slider Updated Successfully");
           const updatedTeam = team.map((member) =>
             member.id === editingId ? formData : member
           );
@@ -343,7 +343,7 @@ const Carousal = () => {
             },
             withCredentials: true,
           });
-          toast.success("Data Submitted Successfully");
+          toast.success("Home Slider Submitted Successfully");
         }
         fetchTeam();
 
@@ -398,7 +398,7 @@ const Carousal = () => {
                     },
                     withCredentials: true,
                   });
-                  toast.success("Data Deleted Successfully");
+                  toast.success("Home Slider Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);
@@ -465,7 +465,7 @@ const Carousal = () => {
                     }
                   );
                   toast.success(
-                    `Data ${isVisible ? "hidden" : "shown"} successfully`
+                    `Home Slider ${isVisible ? "hidden" : "shown"} successfully`
                   );
                   setEyeVisibilityById((prev) => ({
                     ...prev,

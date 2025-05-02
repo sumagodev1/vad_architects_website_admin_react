@@ -519,7 +519,7 @@ const GalleryDetailsWithImages = () => {
               withCredentials: true, 
             }
           );
-          toast.success("Data updated successfully!");
+          toast.success("Gallery Details With Images updated successfully!");
         } else {
           await instance.post(
             "galleryImages/create-galleryImageDetailsWithImages",
@@ -532,7 +532,7 @@ const GalleryDetailsWithImages = () => {
               withCredentials: true, 
             }
           );
-          toast.success("Data added successfully!");
+          toast.success("Gallery Details With Images added successfully!");
         }
         fetchTeam();
 
@@ -627,7 +627,7 @@ const GalleryDetailsWithImages = () => {
                       withCredentials: true, 
                     }
                   );
-                  toast.success("Data Deleted Successfully");
+                  toast.success("Gallery Details With Images Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);
@@ -761,7 +761,7 @@ const GalleryDetailsWithImages = () => {
                       data: { imagePath: imagePath }, // Sending imagePath in the request body
                     }
                   );
-                  toast.success("Image Deleted Successfully");
+                  toast.success("Gallery Details Image Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);

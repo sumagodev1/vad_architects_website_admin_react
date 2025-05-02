@@ -137,7 +137,7 @@ const UploadCv = () => {
                     },
                     withCredentials: true, 
                   });
-                  toast.success("Data Deleted Successfully");
+                  toast.success("CV Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);

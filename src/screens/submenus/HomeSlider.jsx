@@ -234,7 +234,7 @@ const HomeSlider = () => {
             },
             withCredentials: true,
           });
-          toast.success("Data Updated Successfully");
+          toast.success("Home Sliding Media Updated Successfully");
           const updatedTeam = team.map((member) =>
             member.id === editingId ? formData : member
           );
@@ -247,7 +247,7 @@ const HomeSlider = () => {
             },
             withCredentials: true,
           });
-          toast.success("Data Submitted Successfully");
+          toast.success("Home Slider Submitted Successfully");
         }
         fetchTeam();
 
@@ -301,7 +301,7 @@ const HomeSlider = () => {
                       "Content-Type": "application/json",
                     },
                   });
-                  toast.success("Data Deleted Successfully");
+                  toast.success("Home Sliding Media Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);
@@ -367,7 +367,7 @@ const HomeSlider = () => {
                     }
                   );
                   toast.success(
-                    `Data ${isVisible ? "hidden" : "shown"} successfully`
+                    `Home Sliding Media ${isVisible ? "hidden" : "shown"} successfully`
                   );
                   setEyeVisibilityById((prev) => ({
                     ...prev,
