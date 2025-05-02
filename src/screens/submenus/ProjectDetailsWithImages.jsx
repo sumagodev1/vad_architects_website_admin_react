@@ -369,7 +369,7 @@ const ProjectDetailsWithImages = () => {
       if (Array.isArray(formData.after_img) && formData.after_img.length > 0) {
         formData.after_img.forEach((file) => {
           if (!validateImageSize(file)) {
-            errors.after_img = `After image ${file.name} must be less than 2MB`;
+            errors.after_img = `After image ${file.name} must be less than 2MB and dimension must be 1425*507`;
             isValid = false;
           }
         });
@@ -382,7 +382,7 @@ const ProjectDetailsWithImages = () => {
     if (!isEditMode || (formData.hero_img && !(formData.hero_img instanceof File) && Array.isArray(formData.hero_img) && formData.hero_img.length > 0)) {
       if (Array.isArray(formData.hero_img) && formData.hero_img.length > 0) {
         formData.hero_img.forEach((file) => {
-          if (!validateImageSize(file)) {
+          if (!validateHeroImage(file)) {
             errors.hero_img = `Hero image ${file.name} must be less than 2MB`;
             isValid = false;
           }
