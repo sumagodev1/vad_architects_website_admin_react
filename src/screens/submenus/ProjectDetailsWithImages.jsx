@@ -514,13 +514,13 @@ const ProjectDetailsWithImages = () => {
   // };
 
   const validateImageSize = (file) => {
-    const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+    const maxSize = 1 * 1024 * 1024; // 1MB in bytes
     return file.size <= maxSize; // Returns true if file size is within limit
   };
 
   const validateHeroImage = (file) => {
     return new Promise((resolve, reject) => {
-      const maxSize = 2 * 1024 * 1024; // 2MB
+      const maxSize = 1 * 1024 * 1024; // 1MB
   
       if (file.size > maxSize) {
         return reject("File size must be less than or equal to 2MB.");
@@ -1467,7 +1467,7 @@ useEffect(() => {
                     <Col md={6} className="mt-3">
                     <h5 className="mt-2 mb-4"><span className="number">1</span> Upload Before Image & Description</h5>
                       <Form.Group controlId="before_img">
-                        <Form.Label>Upload Before Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Label>Upload Before Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 1MB)</small></Form.Label>
                         <Form.Control
                           type="file"
                           name="before_img"
@@ -1484,7 +1484,7 @@ useEffect(() => {
                     <Col md={6} className="mt-3">
                     <h5 className="mt-2 mb-4"><span className="number">2</span> Upload Planning Image & Description</h5>
                       <Form.Group controlId="planning_img">
-                        <Form.Label>Upload Planning Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Label>Upload Planning Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 1MB)</small></Form.Label>
                         <Form.Control
                           type="file"
                           name="planning_img"
@@ -1557,7 +1557,7 @@ useEffect(() => {
                     <Col md={6} className="mt-3">
                     <h5 className="mt-2 mb-4"><span className="number">3</span> Upload After Image & Description</h5>
                       <Form.Group controlId="after_img">
-                        <Form.Label>Upload After Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Label>Upload After Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 1MB)</small></Form.Label>
                         <Form.Control
                           type="file"
                           name="after_img"
@@ -1684,7 +1684,7 @@ useEffect(() => {
 
                       <Form.Group controlId="project_images">
                       <h5 className="mt-2 mb-4"><span className="number">4</span> Upload Multiple Images & Description</h5>
-                        <Form.Label>Upload multiple project Images<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Label>Upload multiple project Images<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 1MB)</small></Form.Label>
                         <Form.Control
                           type="file"
                           name="project_images"
@@ -1789,7 +1789,7 @@ useEffect(() => {
                     <Col md={6} className="mt-3">
                     <h5 className="mt-2 mb-4"><span className="number">5</span> Upload Project Hero Image</h5>
                       <Form.Group controlId="hero_img">
-                        <Form.Label>Upload Hero Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Label>Upload Hero Image<span className="text-danger">*</span> <small className="text-danger">(Image size must be less than 1MB and dimension must be 1425*507)</small></Form.Label>
                         <Form.Control
                           type="file"
                           name="hero_img"
@@ -1865,7 +1865,7 @@ useEffect(() => {
                     </Col>
                     <Col md={6} className="mt-3">
                       <Form.Group controlId="client_img">
-                        <Form.Label>Upload Client Image (Optinal) <small className="text-danger">(Image size must be less than 2MB)</small></Form.Label>
+                        <Form.Label>Upload Client Image (Optinal) <small className="text-danger">(Image size must be less than 1MB)</small></Form.Label>
                         <Form.Control
                           type="file"
                           name="client_img"
