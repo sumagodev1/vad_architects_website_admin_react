@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/new_logo.jpg";
 import { Sidebar as MenuBar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
 import {
@@ -328,7 +328,7 @@ const Sidebar = () => {
     <nav ref={navbarRef} className={`sidebar ${isSidebarOpen ? "sidebar-show" : ""}`}>
       <div className="sidebar-top">
         <div className="sidebar-brand">
-          <img className="w-25" src={logo} alt="Logo" />
+          <img className="" src={logo} alt="Logo" style={{width:'32%'}} />
           <span className="sidebar-brand-text">
             VAD Architects
           </span>
