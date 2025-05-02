@@ -1769,11 +1769,11 @@ useEffect(() => {
                           //   handleChange("detailed_description", e.target.value)
                           // }
                           onChange={(e) => {
-                            if (e.target.value.length <= 200) {
+                            if (e.target.value.length <= 551) {
                               handleChange("detailed_description", e.target.value);
                             }
                           }}
-                          maxLength={600}
+                          maxLength={551}
                           style={{ height: "120px" }}
                           isInvalid={errors.detailed_description}
                         />
@@ -1781,7 +1781,7 @@ useEffect(() => {
                           {errors.detailed_description}
                         </Form.Control.Feedback>
                         <div className="text-muted text-end">
-                          {formData.detailed_description?.length || 0}/600
+                          {formData.detailed_description?.length || 0}/551
                         </div>
                       </Form.Group>
                     </Col>
@@ -1848,7 +1848,7 @@ useEffect(() => {
                     </Col>
                     <Col md={6} className="mt-2">
                       <Form.Group controlId="client_review">
-                        <Form.Label>Review (Optinal)</Form.Label>
+                        <Form.Label>Review (Optional)</Form.Label>
                         <Form.Control
                           as="textarea"
                           name="client_review"
