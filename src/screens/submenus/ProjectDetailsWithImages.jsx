@@ -520,7 +520,7 @@ const ProjectDetailsWithImages = () => {
   const validateImageSize = (file) => {
     const maxSize = 1 * 1024 * 1024; // 1MB in bytes
     if (file.size > maxSize) {
-      throw "Upload less than 1MB image and 1425×507 pixels";
+      throw "Upload less than 1MB image";
     }
   };
 
