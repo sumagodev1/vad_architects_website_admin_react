@@ -285,7 +285,7 @@ const ProjectDetailsWithImages = () => {
       if (formData.img && formData.img.length > 0) {
         formData.img.forEach((file) => {
           if (!validateImageSize(file)) {
-            errors.img = `Image ${file.name} must be less than 2MB`;
+            errors.img = `Image ${file.name} must be less than 1MB`;
             isValid = false;
           }
         });
@@ -299,7 +299,7 @@ const ProjectDetailsWithImages = () => {
     //   if (Array.isArray(formData.before_img) && formData.before_img.length > 0) {
     //     formData.before_img.forEach((file) => {
     //       if (!validateImageSize(file)) {
-    //         errors.before_img = `Before image ${file.name} must be less than 2MB`;
+    //         errors.before_img = `Before image ${file.name} must be less than 1MB`;
     //         isValid = false;
     //       }
     //     });
@@ -313,7 +313,7 @@ const ProjectDetailsWithImages = () => {
     //   if (Array.isArray(formData.planning_img) && formData.planning_img.length > 0) {
     //     formData.planning_img.forEach((file) => {
     //       if (!validateImageSize(file)) {
-    //         errors.planning_img = `Planning image ${file.name} must be less than 2MB`;
+    //         errors.planning_img = `Planning image ${file.name} must be less than 1MB`;
     //         isValid = false;
     //       }
     //     });
@@ -327,7 +327,7 @@ const ProjectDetailsWithImages = () => {
     //   if (Array.isArray(formData.after_img) && formData.after_img.length > 0) {
     //     formData.after_img.forEach((file) => {
     //       if (!validateImageSize(file)) {
-    //         errors.after_img = `After image ${file.name} must be less than 2MB`;
+    //         errors.after_img = `After image ${file.name} must be less than 1MB`;
     //         isValid = false;
     //       }
     //     });
@@ -341,7 +341,7 @@ const ProjectDetailsWithImages = () => {
       if (Array.isArray(formData.before_img) && formData.before_img.length > 0) {
         formData.before_img.forEach((file) => {
           if (!validateImageSize(file)) {
-            errors.before_img = `Before image ${file.name} must be less than 2MB`;
+            errors.before_img = `Before image ${file.name} must be less than 1MB`;
             isValid = false;
           }
         });
@@ -355,7 +355,7 @@ const ProjectDetailsWithImages = () => {
       if (Array.isArray(formData.planning_img) && formData.planning_img.length > 0) {
         formData.planning_img.forEach((file) => {
           if (!validateImageSize(file)) {
-            errors.planning_img = `Planning image ${file.name} must be less than 2MB`;
+            errors.planning_img = `Planning image ${file.name} must be less than 1MB`;
             isValid = false;
           }
         });
@@ -369,7 +369,7 @@ const ProjectDetailsWithImages = () => {
       if (Array.isArray(formData.after_img) && formData.after_img.length > 0) {
         formData.after_img.forEach((file) => {
           if (!validateImageSize(file)) {
-            errors.after_img = `After image ${file.name} must be less than 2MB`;
+            errors.after_img = `After image ${file.name} must be less than 1MB`;
             isValid = false;
           }
         });
@@ -383,7 +383,7 @@ const ProjectDetailsWithImages = () => {
       if (Array.isArray(formData.hero_img) && formData.hero_img.length > 0) {
         formData.hero_img.forEach((file) => {
           if (!validateHeroImage(file)) {
-            errors.hero_img = `Hero image ${file.name} must be less than 2MB and dimension must be 1425*507`;
+            errors.hero_img = `Hero image ${file.name} must be less than 1MB and dimension must be 1425*507`;
             isValid = false;
           }
         });
@@ -513,17 +513,42 @@ const ProjectDetailsWithImages = () => {
   //   });
   // };
 
+  // const validateImageSize = (file) => {
+  //   const maxSize = 1 * 1024 * 1024; // 1MB in bytes
+  //   return file.size <= maxSize; // Returns true if file size is within limit
+  // };
   const validateImageSize = (file) => {
     const maxSize = 1 * 1024 * 1024; // 1MB in bytes
-    return file.size <= maxSize; // Returns true if file size is within limit
+    if (file.size > maxSize) {
+      throw "Upload less than 1MB image and 1425×507 pixels";
+    }
   };
+
+  const validateHeroImageDimensions = (file) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        if (img.width === 1425 && img.height === 507) {
+          resolve();
+        } else {
+          reject("Hero image must be exactly 1425×507 pixels");
+        }
+      };
+      img.onerror = () => {
+        reject("Invalid image file");
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  };
+  
+  
 
   const validateHeroImage = (file) => {
     return new Promise((resolve, reject) => {
       const maxSize = 1 * 1024 * 1024; // 1MB
   
       if (file.size > maxSize) {
-        return reject("File size must be less than or equal to 2MB.");
+        return reject("File size must be less than or equal to 1MB.");
       }
   
       const reader = new FileReader();
@@ -1253,6 +1278,11 @@ useEffect(() => {
   if (file) {
     try {
       await validateImageSize(file);
+
+      if (field === "hero_img") {
+        await validateHeroImageDimensions(file);
+      }
+
       setFormData((prevData) => ({
         ...prevData,
         [field]: file,
@@ -1267,8 +1297,21 @@ useEffect(() => {
         if (field === "hero_img") setHeroImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
+      setErrors((prevErrors) => ({ ...prevErrors, [field]: null }));
     } catch (error) {
       setErrors((prevErrors) => ({ ...prevErrors, [field]: error }));
+
+      if (e.target) {
+        e.target.value = ""; // This clears the file input
+      }
+
+      // Optionally clear preview if needed
+      if (field === "before_img") setBeforeImagePreview(null);
+      if (field === "planning_img") setPlanningImagePreview(null);
+      if (field === "after_img") setAfterImagePreview(null);
+      if (field === "client_img") setClientImagePreview(null);
+      if (field === "hero_img") setHeroImagePreview(null);
+
     }
   }
 };
