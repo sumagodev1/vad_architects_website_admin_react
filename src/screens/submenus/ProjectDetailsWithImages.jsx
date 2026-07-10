@@ -517,11 +517,16 @@ const ProjectDetailsWithImages = () => {
   //   const maxSize = 1 * 1024 * 1024; // 1MB in bytes
   //   return file.size <= maxSize; // Returns true if file size is within limit
   // };
+  // const validateImageSize = (file) => {
+  //   const maxSize = 1 * 1024 * 1024; // 1MB in bytes
+  //   if (file.size > maxSize) {
+  //     throw "Upload less than 1MB image";
+  //   }
+  // };
+
   const validateImageSize = (file) => {
-    const maxSize = 1 * 1024 * 1024; // 1MB in bytes
-    if (file.size > maxSize) {
-      throw "Upload less than 1MB image";
-    }
+    const maxSize = 1 * 1024 * 1024; // 1MB
+    return file.size <= maxSize; // ✅ allow equal 1MB
   };
 
   const validateHeroImageDimensions = (file) => {

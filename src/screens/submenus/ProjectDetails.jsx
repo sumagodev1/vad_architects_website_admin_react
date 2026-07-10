@@ -591,7 +591,14 @@ useEffect(() => {
                   fetchTeam();
                 } catch (error) {
                   console.error("Error deleting data:", error);
-                  toast.error("Error deleting data");
+
+                  if (error.response && error.response.data) {
+                    const backendMessage = error.response.data.message;
+
+                    toast.error(backendMessage || "Failed to delete project details");
+                  } else {
+                    toast.error("Something went wrong while deleting");
+                  }
                 } finally {
                   setLoading(false);
                 }

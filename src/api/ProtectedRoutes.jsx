@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import instance from "../api/AxiosInstance";
 
 const ProtectedRoutes = ({ Component }) => {
   const [loading, setLoading] = useState(true);
@@ -11,7 +12,7 @@ const ProtectedRoutes = ({ Component }) => {
     const checkAuth = async () => {
       try {
         // Request to verify token and check if authenticated
-        const response = await axios.get('/auth/verify-token', { withCredentials: true });
+        const response = await instance.get('/auth/verify-token', { withCredentials: true });
         console.log("===========>", response);
         
         if (response.status !== 401) {  // Corrected this line

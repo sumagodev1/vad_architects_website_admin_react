@@ -384,8 +384,15 @@ const Category = () => {
                   toast.success("Project Category Deleted Successfully");
                   fetchTeam();
                 } catch (error) {
-                  console.error("Error deleting data:", error);
-                  toast.error("Error deleting data");
+                  // console.error("Error deleting data:", error);
+
+                  if (error.response && error.response.data) {
+                    const backendMessage = error.response.data.message;
+
+                    toast.error(backendMessage || "Failed to delete category");
+                  } else {
+                    toast.error("Something went wrong while deleting");
+                  }
                 } finally {
                   setLoading(false);
                 }

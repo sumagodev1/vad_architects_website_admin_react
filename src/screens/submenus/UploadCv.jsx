@@ -231,11 +231,27 @@ const UploadCv = () => {
     // },
     {
       name: <CustomHeader name="Docs" />,
-      cell: (row) => (
-        <a href={row.cv} target="_blank" rel="noopener noreferrer">
-          view cv
-        </a>
-      ),
+      cell: (row) => {
+        const cleanUrl = (url) => {
+          if (!url) return "#";
+
+          const base = "https://production-api.vadarchitects.com/";
+
+          // Fix double base URL issue
+          const parts = url.split(base);
+          if (parts.length > 2) {
+            return base + parts[parts.length - 1];
+          }
+
+          return url;
+        };
+
+        return (
+          <a href={cleanUrl(row.cv)} target="_blank" rel="noopener noreferrer">
+            view cv
+          </a>
+        );
+      },
       key: "cv",
     },
     {
